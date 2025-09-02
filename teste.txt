@@ -1,0 +1,13 @@
+curl -X POST http://localhost:3000/gerar-pdf -H "Content-Type: application/json" -d '{
+    "nomeCredenciada": "CLÍNICA SAÚDE BEM-ESTAR LTDA",
+    "enderecoSede": "Rua das Palmeiras, 123 - Centro - São Paulo/SP",
+    "cnpjCredenciada": "12.345.678/0001-99",
+    "nomeRepresentante": "Maria Fernanda Oliveira",
+    "rgRepresentante": "12.345.678-9",
+    "cpfRepresentante": "123.456.789-00",
+    "dataAtual": "28/08/2025",
+    "exameAdc1": "Exame x",
+    "exameAdc1Valor": "124",
+    "exameAdc2": "Exame y",
+    "exameAdc2Valor": "125"
+}' --output contrato.pdf

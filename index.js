@@ -22,7 +22,25 @@ app.use(bodyParser.json());
 
 // Função para substituir {{variavel}} no HTML
 function preencherTemplate(html, variaveis) {
-    return html.replace(/{{(.*?)}}/g, (_, chave) => variaveis[chave.trim()] || '');
+    const htmlComExames = html.replace("{{examesAdicionais}}", gerarLinhasExamesAdicionais(variaveis));
+    return htmlComExames.replace(/{{(.*?)}}/g, (_, chave) => variaveis[chave.trim()] || '');
+
+}
+
+function gerarLinhasExamesAdicionais(dados) {
+    const linhas = [];
+
+    Object.keys(dados).forEach((key) => {
+        if (key.startsWith("exameAdc") && !key.includes("Valor")) {
+            const numero = key.replace("exameAdc", "");
+            const nome = dados[key];
+            const valor = dados[`exameAdc${numero}Valor`] || "0,00";
+
+            linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
+        }
+    });
+
+    return linhas.join("\n");
 }
 
 app.post('/gerar-pdf', async (req, res) => {
@@ -40,7 +58,9 @@ app.post('/gerar-pdf', async (req, res) => {
         const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
 
         // Inicia o Puppeteer (modo headless)
-        const browser = await puppeteer.launch();
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
         const page = await browser.newPage();
 
         // Carrega o HTML como string

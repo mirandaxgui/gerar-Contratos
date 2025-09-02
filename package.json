@@ -1,4 +1,11 @@
 {
+  "name": "gerador-contrato",
+  "version": "1.0.0",
+  "description": "API para gerar contratos em PDF a partir de template HTML",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
   "dependencies": {
     "body-parser": "^2.2.0",
     "express": "^5.1.0",
