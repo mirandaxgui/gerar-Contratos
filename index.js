@@ -6,7 +6,7 @@ const puppeteer = require('puppeteer');
 const bodyParser = require('body-parser');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Imagens do cabeçalho e rodapé (convertidas para base64)
 const headerPath = path.resolve(__dirname, 'assets', 'header.png');
