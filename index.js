@@ -49,6 +49,10 @@ app.post('/gerar-pdf', async (req, res) => {
     try {
         const dados = req.body || {};
 
+        // ✅ LOG 1: Verifica se já chega corrompido no body
+        console.log('\n[LOG 1] nomeCredenciada recebido no req.body:');
+        console.log(req.body.nomeCredenciada);
+
         // Injeta as imagens como data URL
         const dadosComImagem = {
             ...dados,
@@ -65,35 +69,35 @@ app.post('/gerar-pdf', async (req, res) => {
         // Lê o HTML base
         let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
+        // ✅ LOG 2: Verifica se o template está lido corretamente (com acentos)
+        console.log('\n[LOG 2] Primeiros 500 caracteres do template.html:');
+        console.log(htmlBase.slice(0, 500));
+
         // Preferido: placeholder BASE64_FONT
         htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
-
-        // Compatibilidade: se o template ainda usar {{CAMINHO_FONT}}, injeta a mesma data URL
         htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
         // Substitui os placeholders pelas variáveis do contrato
         const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
 
-        // Inicia o Puppeteer (flags necessárias em hosts como Railway)
+        // ✅ LOG 3: Conteúdo final que o Puppeteer vai renderizar
+        console.log('\n[LOG 3] HTML final enviado ao Puppeteer (primeiros 500 caracteres):');
+        console.log(htmlFinal.slice(0, 500));
+
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
-        console.log(htmlFinal);
-        // Carrega o HTML gerado
+
         await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
 
-        // Gera o PDF
         const pdfBuffer = await page.pdf({
             format: 'A4',
             printBackground: true
-            // Se precisar respeitar margens do header/footer da sua página, pode ajustar margins aqui
-            // margin: { top: '0', right: '0', bottom: '0', left: '0' }
         });
 
         await browser.close();
 
-        // Retorna o PDF para download
         res.set({
             'Content-Type': 'application/pdf',
             'Content-Disposition': 'attachment; filename=contrato.pdf',
