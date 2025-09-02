@@ -57,6 +57,8 @@ app.post('/gerar-pdf', async (req, res) => {
         // Caminho absoluto da fonte Roboto no formato file:///
         const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
         const fontUrl = `file:///${fontPath.replace(/\\/g, '/')}`; // Corrige para Windows
+        console.log("Caminho da fonte usado:", fontUrl);
+
 
         // Lê o HTML base
         let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
@@ -100,5 +102,5 @@ app.post('/gerar-pdf', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em http://localhost:${PORT}`);
+    console.log(`Servidor rodando em ${PORT}`);
 });
