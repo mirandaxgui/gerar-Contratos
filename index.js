@@ -56,7 +56,8 @@ app.post('/gerar-pdf', async (req, res) => {
 
         // Caminho absoluto da fonte Roboto no formato file:///
         const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
-        const fontUrl = `file:///${fontPath.replace(/\\/g, '/')}`; // Corrige para Windows
+        const fontUrl = 'file://' + fontPath.replace(/\\/g, '/'); // => file:///app/...
+
         console.log("Caminho da fonte usado:", fontUrl);
 
 
