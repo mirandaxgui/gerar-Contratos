@@ -24,89 +24,95 @@ app.use(bodyParser.json({ limit: '5mb' }));
 
 // Função para substituir {{variavel}} no HTML
 function preencherTemplate(html, variaveis) {
-  const htmlComExames = html.replace("{{examesAdicionais}}", gerarLinhasExamesAdicionais(variaveis));
-  return htmlComExames.replace(/{{(.*?)}}/g, (_, chave) => {
-    const k = (chave || '').trim();
-    return (variaveis[k] ?? '');
-  });
+    const htmlComExames = html.replace("{{examesAdicionais}}", gerarLinhasExamesAdicionais(variaveis));
+    return htmlComExames.replace(/{{(.*?)}}/g, (_, chave) => {
+        const k = (chave || '').trim();
+        return (variaveis[k] ?? '');
+    });
 }
 
 // Gera as linhas da tabela de exames adicionais
 function gerarLinhasExamesAdicionais(dados) {
-  const linhas = [];
-  Object.keys(dados).forEach((key) => {
-    if (key.startsWith('exameAdc') && !key.includes('Valor')) {
-      const numero = key.replace('exameAdc', '');
-      const nome = dados[key];
-      const valor = dados[`exameAdc${numero}Valor`] || '0,00';
-      if (nome) linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
-    }
-  });
-  return linhas.join('\n');
+    const linhas = [];
+    Object.keys(dados).forEach((key) => {
+        if (key.startsWith('exameAdc') && !key.includes('Valor')) {
+            const numero = key.replace('exameAdc', '');
+            const nome = dados[key];
+            const valor = dados[`exameAdc${numero}Valor`] || '0,00';
+            if (nome) linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
+        }
+    });
+    return linhas.join('\n');
 }
 
 app.post('/gerar-pdf', async (req, res) => {
-  try {
-    const dados = req.body || {};
+    try {
 
-    // Injeta as imagens como data URL
-    const dadosComImagem = {
-      ...dados,
-      headerImage: `data:${imageMime};base64,${imageBase64}`,
-      footerImage: `data:${imageMime};base64,${imageFooterBase64}`
-    };
+        console.log('nomeCredenciada recebido:', req.body?.nomeCredenciada);
+        const dados = req.body || {};
 
-    // Lê e embute a fonte Roboto em Base64 (solução definitiva p/ acentos)
-    const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
-    const fontBuffer = fs.readFileSync(fontPath);
-    const base64Font = fontBuffer.toString('base64');
-    const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
+        // Injeta as imagens como data URL
+        const dadosComImagem = {
+            ...dados,
+            headerImage: `data:${imageMime};base64,${imageBase64}`,
+            footerImage: `data:${imageMime};base64,${imageFooterBase64}`
+        };
 
-    // Lê o HTML base
-    let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+        // Lê e embute a fonte Roboto em Base64 (solução definitiva p/ acentos)
+        const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
+        const fontBuffer = fs.readFileSync(fontPath);
+        const base64Font = fontBuffer.toString('base64');
+        const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
 
-    // Preferido: placeholder BASE64_FONT
-    htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
+        // Lê o HTML base
+        let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
 
-    // Compatibilidade: se o template ainda usar {{CAMINHO_FONT}}, injeta a mesma data URL
-    htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
+        // Preferido: placeholder BASE64_FONT
+        htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
 
-    // Substitui os placeholders pelas variáveis do contrato
-    const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
+        // Compatibilidade: se o template ainda usar {{CAMINHO_FONT}}, injeta a mesma data URL
+        htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
-    // Inicia o Puppeteer (flags necessárias em hosts como Railway)
-    const browser = await puppeteer.launch({
-      args: ['--no-sandbox', '--disable-setuid-sandbox']
-    });
-    const page = await browser.newPage();
+        // Substitui os placeholders pelas variáveis do contrato
+        const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
 
-    // Carrega o HTML gerado
-    await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
+        // Inicia o Puppeteer (flags necessárias em hosts como Railway)
+        const browser = await puppeteer.launch({
+            args: ['--no-sandbox', '--disable-setuid-sandbox']
+        });
+        const page = await browser.newPage();
 
-    // Gera o PDF
-    const pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true
-      // Se precisar respeitar margens do header/footer da sua página, pode ajustar margins aqui
-      // margin: { top: '0', right: '0', bottom: '0', left: '0' }
-    });
+        // Carrega o HTML gerado
+        await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
 
-    await browser.close();
+        // Aguarda a @font-face ficar pronta
+        await page.evaluateHandle('document.fonts.ready');
 
-    // Retorna o PDF para download
-    res.set({
-      'Content-Type': 'application/pdf',
-      'Content-Disposition': 'attachment; filename=contrato.pdf',
-      'Content-Length': pdfBuffer.length
-    });
-    res.send(pdfBuffer);
+        // (Opcional) dá um micro-respiro para layout final
+        await page.waitForTimeout(50);
 
-  } catch (error) {
-    console.error('Erro ao gerar PDF:', error);
-    res.status(500).send('Erro ao gerar PDF');
-  }
+        // Gera o PDF
+        const pdfBuffer = await page.pdf({
+            format: 'A4',
+            printBackground: true
+        });
+
+        await browser.close();
+
+        // Retorna o PDF para download
+        res.set({
+            'Content-Type': 'application/pdf',
+            'Content-Disposition': 'attachment; filename=contrato.pdf',
+            'Content-Length': pdfBuffer.length
+        });
+        res.send(pdfBuffer);
+
+    } catch (error) {
+        console.error('Erro ao gerar PDF:', error);
+        res.status(500).send('Erro ao gerar PDF');
+    }
 });
 
 app.listen(PORT, () => {
-  console.log(`Servidor rodando em ${PORT}`);
+    console.log(`Servidor rodando em ${PORT}`);
 });
