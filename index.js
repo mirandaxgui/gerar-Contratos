@@ -8,87 +8,75 @@ const bodyParser = require('body-parser');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Imagens do cabeçalho e rodapé (convertidas para base64)
+// Caminhos das imagens
 const headerPath = path.resolve(__dirname, 'assets', 'header.png');
 const footerPath = path.resolve(__dirname, 'assets', 'footer.png');
-
 const imageMime = 'image/png';
-const imageBuffer = fs.readFileSync(headerPath);
-const imageBase64 = imageBuffer.toString('base64');
 
-const imageFooterBuffer = fs.readFileSync(footerPath);
-const imageFooterBase64 = imageFooterBuffer.toString('base64');
+// Base64 das imagens
+const imageBase64 = fs.readFileSync(headerPath).toString('base64');
+const imageFooterBase64 = fs.readFileSync(footerPath).toString('base64');
 
-app.use(bodyParser.json({ limit: '5mb' })); // ou sem nenhuma opção, se preferir
+// Middleware para ler JSON
+app.use(bodyParser.json({ limit: '5mb' }));
 
+// Função para gerar a tabela de exames dinamicamente
+function gerarTabelaExames(dados) {
+    const linhas = [];
+    const exames = dados.exames || {};
 
-// Função para substituir {{variavel}} no HTML
+    Object.keys(exames).forEach((key) => {
+        if (!key.includes('Valor')) {
+            const sufixo = key.replace('exame', '');
+            const nome = exames[key];
+            const valor = exames[`exame${sufixo}Valor`] || '0,00';
+            if (nome) {
+                linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
+            }
+        }
+    });
+
+    return linhas.join('\n');
+}
+
+// Função para substituir variáveis no HTML
 function preencherTemplate(html, variaveis) {
-    const htmlComExames = html.replace("{{examesAdicionais}}", gerarLinhasExamesAdicionais(variaveis));
-    return htmlComExames.replace(/{{(.*?)}}/g, (_, chave) => {
+    const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
+    return htmlComTabela.replace(/{{(.*?)}}/g, (_, chave) => {
         const k = (chave || '').trim();
         return (variaveis[k] ?? '');
     });
-}
-
-// Gera as linhas da tabela de exames adicionais
-function gerarLinhasExamesAdicionais(dados) {
-    const linhas = [];
-    Object.keys(dados).forEach((key) => {
-        if (key.startsWith('exameAdc') && !key.includes('Valor')) {
-            const numero = key.replace('exameAdc', '');
-            const nome = dados[key];
-            const valor = dados[`exameAdc${numero}Valor`] || '0,00';
-            if (nome) linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
-        }
-    });
-    return linhas.join('\n');
 }
 
 app.post('/gerar-pdf', async (req, res) => {
     try {
         const dados = req.body || {};
 
-        // ✅ LOG 1: Verifica se já chega corrompido no body
-        console.log('\n[LOG 1] nomeCredenciada recebido no req.body:');
-        console.log(req.body.nomeCredenciada);
-
-        // Injeta as imagens como data URL
+        // Adiciona imagens base64 ao objeto de dados
         const dadosComImagem = {
             ...dados,
             headerImage: `data:${imageMime};base64,${imageBase64}`,
             footerImage: `data:${imageMime};base64,${imageFooterBase64}`
         };
 
-        // Lê e embute a fonte Roboto em Base64 (solução definitiva p/ acentos)
+        // Lê e embute a fonte em base64
         const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
-        const fontBuffer = fs.readFileSync(fontPath);
-        const base64Font = fontBuffer.toString('base64');
+        const base64Font = fs.readFileSync(fontPath).toString('base64');
         const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
 
-        // Lê o HTML base
+        // Carrega HTML base
         let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
-
-        // ✅ LOG 2: Verifica se o template está lido corretamente (com acentos)
-        console.log('\n[LOG 2] Primeiros 500 caracteres do template.html:');
-        console.log(htmlBase.slice(0, 500));
-
-        // Preferido: placeholder BASE64_FONT
         htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
         htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
-        // Substitui os placeholders pelas variáveis do contrato
+        // Substitui variáveis e gera HTML final
         const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
 
-        // ✅ LOG 3: Conteúdo final que o Puppeteer vai renderizar
-        console.log('\n[LOG 3] HTML final enviado ao Puppeteer (primeiros 500 caracteres):');
-        console.log(htmlFinal.slice(0, 500));
-
+        // Gera PDF com Puppeteer
         const browser = await puppeteer.launch({
             args: ['--no-sandbox', '--disable-setuid-sandbox']
         });
         const page = await browser.newPage();
-
         await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
 
         const pdfBuffer = await page.pdf({
@@ -112,5 +100,5 @@ app.post('/gerar-pdf', async (req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando em ${PORT}`);
+    console.log(`Servidor rodando na porta ${PORT}`);
 });
