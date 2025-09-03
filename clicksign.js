@@ -1,5 +1,5 @@
 // === clicksign.js ===
-import fetch from 'node-fetch';
+
 
 const ACCESS_TOKEN = process.env.CLICKSIGN_ACCESS_TOKEN;
 const BASE_URL = 'https://app.clicksign.com/api/v3';
