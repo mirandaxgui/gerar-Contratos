@@ -1,10 +1,15 @@
 // index.js atualizado com integração Clicksign
-const express = require('express');
-const fs = require('fs');
-const path = require('path');
-const puppeteer = require('puppeteer');
-const bodyParser = require('body-parser');
-const { enviarParaClicksign } = require('./clicksign');
+
+import express from 'express';
+import fs from 'fs';
+import path, { dirname } from 'path';
+import puppeteer from 'puppeteer';
+import bodyParser from 'body-parser';
+import { fileURLToPath } from 'url';
+import { enviarParaClicksign } from './clicksign.js';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
 
 const app = express();
 const PORT = process.env.PORT || 3000;
