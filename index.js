@@ -1,4 +1,4 @@
-// index.js atualizado com integração Clicksign
+// index.js atualizado com integração Clicksign e logs de depuração
 
 import express from 'express';
 import fs from 'fs';
@@ -24,82 +24,94 @@ const imageFooterBase64 = fs.readFileSync(footerPath).toString('base64');
 app.use(bodyParser.json({ limit: '5mb' }));
 
 function gerarTabelaExames(dados) {
-    const linhas = [];
-    const exames = dados.exames || {};
+  const linhas = [];
+  const exames = dados.exames || {};
 
-    Object.keys(exames).forEach((key) => {
-        if (!key.includes('Valor')) {
-            const sufixo = key.replace('exame', '');
-            const nome = exames[key];
-            const valor = exames[`exame${sufixo}Valor`] || '0,00';
-            if (nome) {
-                linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
-            }
-        }
-    });
+  Object.keys(exames).forEach((key) => {
+    if (!key.includes('Valor')) {
+      const sufixo = key.replace('exame', '');
+      const nome = exames[key];
+      const valor = exames[`exame${sufixo}Valor`] || '0,00';
+      if (nome) {
+        linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
+      }
+    }
+  });
 
-    return linhas.join('\n');
+  return linhas.join('\n');
 }
 
 function preencherTemplate(html, variaveis) {
-    const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
-    return htmlComTabela.replace(/{{(.*?)}}/g, (_, chave) => {
-        const k = (chave || '').trim();
-        return (variaveis[k] ?? '');
-    });
+  const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
+
+  const placeholders = html.match(/{{(.*?)}}/g) || [];
+  console.log('🔍 Placeholders encontrados no HTML:', placeholders);
+
+  return htmlComTabela.replace(/{{(.*?)}}/g, (_, chave) => {
+    const k = (chave || '').trim();
+    const valor = variaveis[k];
+    if (valor === undefined) {
+      console.warn(`⚠️ Variável não encontrada: {{${k}}}`);
+    }
+    return valor ?? '';
+  });
 }
 
 app.post('/gerar-pdf', async (req, res) => {
-    try {
-        const dados = req.body || {};
+  try {
+    const dados = req.body || {};
+    console.log('🟢 Body recebido:', JSON.stringify(dados, null, 2));
 
-        const dadosComImagem = {
-            ...dados,
-            headerImage: `data:${imageMime};base64,${imageBase64}`,
-            footerImage: `data:${imageMime};base64,${imageFooterBase64}`
-        };
+    const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
+    const base64Font = fs.readFileSync(fontPath).toString('base64');
+    const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
 
-        const fontPath = path.resolve(__dirname, 'fonts', 'Roboto-Regular.ttf');
-        const base64Font = fs.readFileSync(fontPath).toString('base64');
-        const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
+    let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
+    htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
+    htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
-        let htmlBase = fs.readFileSync(path.join(__dirname, 'template.html'), 'utf8');
-        htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
-        htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
+    const variaveisParaTemplate = {
+      ...dados.campos,
+      headerImage: `data:${imageMime};base64,${imageBase64}`,
+      footerImage: `data:${imageMime};base64,${imageFooterBase64}`
+    };
 
-        const htmlFinal = preencherTemplate(htmlBase, dadosComImagem);
+    console.log('📄 Variáveis usadas no template:', JSON.stringify(variaveisParaTemplate, null, 2));
 
-        const browser = await puppeteer.launch({
-            args: ['--no-sandbox', '--disable-setuid-sandbox']
-        });
-        const page = await browser.newPage();
-        await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
+    const htmlFinal = preencherTemplate(htmlBase, variaveisParaTemplate);
 
-        const pdfBuffer = await page.pdf({
-            format: 'A4',
-            printBackground: true
-        });
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
+    });
 
-        await browser.close();
+    const page = await browser.newPage();
+    await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
 
-        if (dados.enviarParaClicksign === true) {
-            const result = await enviarParaClicksign(dados, pdfBuffer);
-            return res.json(result);
-        }
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true
+    });
 
-        res.set({
-            'Content-Type': 'application/pdf',
-            'Content-Disposition': 'attachment; filename=contrato.pdf',
-            'Content-Length': pdfBuffer.length
-        });
-        res.send(pdfBuffer);
+    await browser.close();
 
-    } catch (error) {
-        console.error('Erro ao gerar PDF:', error);
-        res.status(500).send('Erro ao gerar PDF');
+    if (dados.enviarParaClicksign === true) {
+      const result = await enviarParaClicksign(dados, pdfBuffer);
+      return res.json(result);
     }
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': 'attachment; filename=contrato.pdf',
+      'Content-Length': pdfBuffer.length
+    });
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error('❌ Erro ao gerar PDF:', error);
+    res.status(500).send('Erro ao gerar PDF');
+  }
 });
 
 app.listen(PORT, () => {
-    console.log(`Servidor rodando na porta ${PORT}`);
+  console.log(`🚀 Servidor rodando na porta ${PORT}`);
 });
