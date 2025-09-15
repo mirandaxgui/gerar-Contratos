@@ -27,12 +27,41 @@ function gerarTabelaExames(dados) {
   const linhas = [];
   const exames = dados.exames || {};
 
+  // 🔄 Normaliza examesTipos
+  let examesTipos = [];
+  if (exames.examesTipos) {
+    if (Array.isArray(exames.examesTipos)) {
+      examesTipos = exames.examesTipos;
+    } else if (typeof exames.examesTipos === 'string') {
+      try {
+        examesTipos = JSON.parse(exames.examesTipos);
+      } catch (e) {
+        console.warn('⚠️ examesTipos veio em formato inválido:', exames.examesTipos);
+      }
+    }
+  }
+
+  // 🩺 1. Exames principais
   Object.keys(exames).forEach((key) => {
-    if (!key.includes('Valor')) {
+    if (key.startsWith('exame') && !key.includes('Valor') && !key.includes('Adc')) {
       const sufixo = key.replace('exame', '');
       const nome = exames[key];
       const valor = exames[`exame${sufixo}Valor`] || '0,00';
-      if (nome) {
+
+      if (nome && examesTipos.includes(nome)) {
+        linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
+      }
+    }
+  });
+
+  // ➕ 2. Exames adicionais (só se nome e valor não forem vazios)
+  Object.keys(exames).forEach((key) => {
+    if (key.startsWith('exameAdc') && !key.includes('Valor')) {
+      const sufixo = key.replace('exameAdc', '');
+      const nome = exames[key]?.trim();
+      const valor = exames[`exameAdc${sufixo}Valor`]?.trim();
+
+      if (nome && valor) {
         linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
       }
     }
@@ -40,6 +69,9 @@ function gerarTabelaExames(dados) {
 
   return linhas.join('\n');
 }
+
+
+
 
 function preencherTemplate(html, variaveis) {
   const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
