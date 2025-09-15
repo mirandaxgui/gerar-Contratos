@@ -1,4 +1,4 @@
-// index.js atualizado com integração Clicksign e logs de depuração
+// index.js atualizado com integração Clicksign, data por extenso e validações de exames
 
 import express from 'express';
 import fs from 'fs';
@@ -23,25 +23,63 @@ const imageFooterBase64 = fs.readFileSync(footerPath).toString('base64');
 
 app.use(bodyParser.json({ limit: '5mb' }));
 
+/** Util: data de hoje em pt-BR por extenso (ex.: "15 de setembro de 2025") */
+function dataHojePtBrExtenso() {
+  const tz = 'America/Sao_Paulo';
+  // Intl já retorna mês em minúsculas; se quiser capitalizar, pode ajustar depois.
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    timeZone: tz
+  }).format(new Date());
+}
+
+/** Util: data de hoje em pt-BR curta (ex.: "15/09/2025") */
+function dataHojePtBrCurta() {
+  const tz = 'America/Sao_Paulo';
+  return new Intl.DateTimeFormat('pt-BR', {
+    day: '2-digit',
+    month: '2-digit',
+    year: 'numeric',
+    timeZone: tz
+  }).format(new Date());
+}
+
+/** Normaliza examesTipos (aceita array real ou string JSON) */
+function normalizeExamesTipos(exames) {
+  let examesTipos = [];
+  if (!exames) return examesTipos;
+
+  const bruto = exames.examesTipos;
+  if (!bruto) return examesTipos;
+
+  if (Array.isArray(bruto)) {
+    examesTipos = bruto;
+  } else if (typeof bruto === 'string') {
+    try {
+      const parsed = JSON.parse(bruto);
+      if (Array.isArray(parsed)) examesTipos = parsed;
+      else console.warn('⚠️ examesTipos string não é um array após parse:', parsed);
+    } catch (e) {
+      console.warn('⚠️ Não foi possível converter examesTipos em array. Valor recebido:', bruto);
+    }
+  } else {
+    console.warn('⚠️ examesTipos veio em tipo inesperado:', typeof bruto);
+  }
+
+  return examesTipos;
+}
+
+/** Monta a tabela HTML dos exames de acordo com examesTipos e adicionais */
 function gerarTabelaExames(dados) {
   const linhas = [];
   const exames = dados.exames || {};
 
-  // 🔄 Normaliza examesTipos
-  let examesTipos = [];
-  if (exames.examesTipos) {
-    if (Array.isArray(exames.examesTipos)) {
-      examesTipos = exames.examesTipos;
-    } else if (typeof exames.examesTipos === 'string') {
-      try {
-        examesTipos = JSON.parse(exames.examesTipos);
-      } catch (e) {
-        console.warn('⚠️ examesTipos veio em formato inválido:', exames.examesTipos);
-      }
-    }
-  }
+  // Normaliza examesTipos (pode vir array ou string JSON)
+  const examesTipos = normalizeExamesTipos(exames);
 
-  // 🩺 1. Exames principais
+  // 1) Exames principais (exame1, exame2, ...) — só entram se estiverem em examesTipos
   Object.keys(exames).forEach((key) => {
     if (key.startsWith('exame') && !key.includes('Valor') && !key.includes('Adc')) {
       const sufixo = key.replace('exame', '');
@@ -54,12 +92,12 @@ function gerarTabelaExames(dados) {
     }
   });
 
-  // ➕ 2. Exames adicionais (só se nome e valor não forem vazios)
+  // 2) Exames adicionais (exameAdc1, exameAdc2, ...) — só entram se nome e valor não forem vazios
   Object.keys(exames).forEach((key) => {
     if (key.startsWith('exameAdc') && !key.includes('Valor')) {
       const sufixo = key.replace('exameAdc', '');
-      const nome = exames[key]?.trim();
-      const valor = exames[`exameAdc${sufixo}Valor`]?.trim();
+      const nome = (exames[key] ?? '').toString().trim();
+      const valor = (exames[`exameAdc${sufixo}Valor`] ?? '').toString().trim();
 
       if (nome && valor) {
         linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
@@ -70,9 +108,7 @@ function gerarTabelaExames(dados) {
   return linhas.join('\n');
 }
 
-
-
-
+/** Preenche placeholders {{chave}} no HTML base */
 function preencherTemplate(html, variaveis) {
   const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
 
@@ -83,7 +119,7 @@ function preencherTemplate(html, variaveis) {
     const k = (chave || '').trim();
     const valor = variaveis[k];
     if (valor === undefined) {
-      console.warn(`⚠️ Variável não encontrada: {{${k}}}`);
+      console.warn(`⚠️ Variável não encontrada no template: {{${k}}}`);
     }
     return valor ?? '';
   });
@@ -102,10 +138,16 @@ app.post('/gerar-pdf', async (req, res) => {
     htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
     htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
+    // Data automática (não precisa vir do JSON)
+    const dataAtualExtenso = dataHojePtBrExtenso(); // ex.: "15 de setembro de 2025"
+    const dataAtualCurta = dataHojePtBrCurta();     // ex.: "15/09/2025"
+
     const variaveisParaTemplate = {
-      ...dados.campos,
+      ...(dados.campos || {}),
       headerImage: `data:${imageMime};base64,${imageBase64}`,
-      footerImage: `data:${imageMime};base64,${imageFooterBase64}`
+      footerImage: `data:${imageMime};base64,${imageFooterBase64}`,
+      dataAtualExtenso: dataAtualExtenso,
+      dataAtual: dataAtualCurta
     };
 
     console.log('📄 Variáveis usadas no template:', JSON.stringify(variaveisParaTemplate, null, 2));
