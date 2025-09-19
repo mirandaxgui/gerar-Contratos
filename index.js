@@ -48,57 +48,75 @@ function dataHojePtBrCurta() {
 
 /** Normaliza examesTipos (aceita array real ou string JSON) */
 function normalizeExamesTipos(exames) {
-  let examesTipos = [];
-  if (!exames) return examesTipos;
+  const bruto = exames?.examesTipos;
+  if (!bruto) return [];
 
-  const bruto = exames.examesTipos;
-  if (!bruto) return examesTipos;
+  // Transformar em array e explodir por vírgula quando necessário
+  const arr = Array.isArray(bruto) ? bruto : [bruto];
 
-  if (Array.isArray(bruto)) {
-    examesTipos = bruto;
-  } else if (typeof bruto === 'string') {
-    try {
-      const parsed = JSON.parse(bruto);
-      if (Array.isArray(parsed)) examesTipos = parsed;
-      else console.warn('⚠️ examesTipos string não é um array após parse:', parsed);
-    } catch (e) {
-      console.warn('⚠️ Não foi possível converter examesTipos em array. Valor recebido:', bruto);
-    }
-  } else {
-    console.warn('⚠️ examesTipos veio em tipo inesperado:', typeof bruto);
-  }
+  // Achata, separa por vírgula e normaliza
+  const tipos = arr
+    .flatMap(item => {
+      if (typeof item === 'string') return item.split(',');
+      if (Array.isArray(item)) return item; // raro, mas tolerante
+      return [];
+    })
+    .map(s => (s ?? '').toString().trim())
+    .filter(Boolean)
+    .map(s => s.normalize('NFD').replace(/\p{Diacritic}/gu, '').toLowerCase());
 
-  return examesTipos;
+  // Remover duplicados
+  return Array.from(new Set(tipos));
 }
+
 
 /** Monta a tabela HTML dos exames de acordo com examesTipos e adicionais */
 function gerarTabelaExames(dados) {
   const linhas = [];
   const exames = dados.exames || {};
 
-  // Normaliza examesTipos (pode vir array ou string JSON)
-  const examesTipos = normalizeExamesTipos(exames);
+  const canon = (s) => (s ?? '')
+    .toString()
+    .trim()
+    .normalize('NFD')
+    .replace(/\p{Diacritic}/gu, '')
+    .toLowerCase();
 
-  // 1) Exames principais (exame1, exame2, ...) — só entram se estiverem em examesTipos
+  // Normaliza examesTipos (pode vir array, string CSV, etc.)
+  const examesTiposCanon = normalizeExamesTipos(exames); // já vem canonizado
+
+  // Função auxiliar para decidir inclusão dos principais
+  const deveIncluirPrincipal = (nome, valor) => {
+    const nomeOk = !!(nome && nome.trim());
+    const valorOk = !!(valor && valor.toString().trim());
+    if (!nomeOk || !valorOk) return false;
+
+    // Se não chegou lista válida, inclui todos os principais com valor
+    if (examesTiposCanon.length === 0) return true;
+
+    // Compara canônico
+    return examesTiposCanon.includes(canon(nome));
+  };
+
+  // 1) Exames principais (exame1, exame2, ...) — depende de examesTipos (com fallback)
   Object.keys(exames).forEach((key) => {
     if (key.startsWith('exame') && !key.includes('Valor') && !key.includes('Adc')) {
       const sufixo = key.replace('exame', '');
-      const nome = exames[key];
-      const valor = exames[`exame${sufixo}Valor`] || '0,00';
+      const nome = (exames[key] ?? '').toString().trim();
+      const valor = (exames[`exame${sufixo}Valor`] ?? '').toString().trim();
 
-      if (nome && examesTipos.includes(nome)) {
+      if (deveIncluirPrincipal(nome, valor)) {
         linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
       }
     }
   });
 
-  // 2) Exames adicionais (exameAdc1, exameAdc2, ...) — só entram se nome e valor não forem vazios
+  // 2) Exames adicionais (exameAdc1, exameAdc2, ...) — entra se nome e valor não vazios
   Object.keys(exames).forEach((key) => {
     if (key.startsWith('exameAdc') && !key.includes('Valor')) {
       const sufixo = key.replace('exameAdc', '');
       const nome = (exames[key] ?? '').toString().trim();
       const valor = (exames[`exameAdc${sufixo}Valor`] ?? '').toString().trim();
-
       if (nome && valor) {
         linhas.push(`<tr><td>${nome}</td><td>${valor}</td></tr>`);
       }
@@ -107,6 +125,7 @@ function gerarTabelaExames(dados) {
 
   return linhas.join('\n');
 }
+
 
 /** Preenche placeholders {{chave}} no HTML base */
 function preencherTemplate(html, variaveis) {
