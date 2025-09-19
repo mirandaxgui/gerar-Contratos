@@ -46,7 +46,7 @@ function dataHojePtBrCurta() {
   }).format(new Date());
 }
 
-/** Normaliza examesTipos (aceita array real ou string JSON) */
+/** Normaliza examesTipos (aceita array real ou string com tipos separados por vírgula) */
 function normalizeExamesTipos(exames) {
   let examesTipos = [];
   if (!exames) return examesTipos;
@@ -54,16 +54,14 @@ function normalizeExamesTipos(exames) {
   const bruto = exames.examesTipos;
   if (!bruto) return examesTipos;
 
-  if (Array.isArray(bruto)) {
+  // Verifica se examesTipos é uma string
+  if (typeof bruto === 'string') {
+    // Se for uma string, divide por vírgula e remove espaços extras
+    examesTipos = bruto.split(',').map(tipo => tipo.trim());
+  } 
+  // Caso seja um array, mantém a lógica original
+  else if (Array.isArray(bruto)) {
     examesTipos = bruto;
-  } else if (typeof bruto === 'string') {
-    try {
-      const parsed = JSON.parse(bruto);
-      if (Array.isArray(parsed)) examesTipos = parsed;
-      else console.warn('⚠️ examesTipos string não é um array após parse:', parsed);
-    } catch (e) {
-      console.warn('⚠️ Não foi possível converter examesTipos em array. Valor recebido:', bruto);
-    }
   } else {
     console.warn('⚠️ examesTipos veio em tipo inesperado:', typeof bruto);
   }
