@@ -81,9 +81,8 @@ async function processarSolicitacoes() {
                             { empresa: 'N' },
                             { funcionario: 'N' },
                             { fornecedor: 'S' },
-                            { outro: 'S' }
-                        ],
-                        destinatarios_email_outro: 'guilherme.miranda@demaisaude.com'
+                            { outro: 'N' }
+                        ]
                     };
 
                     const putResp = await axios.put(
@@ -98,14 +97,15 @@ async function processarSolicitacoes() {
                         }
                     );
 
-                    const raw = putResp.data;
-                    let result = raw;
+                    let result = putResp.data;
 
-                    if (typeof result.returnInfo === 'string') {
-                        try {
+                    // 🔍 Garante que returnInfo seja objeto
+                    try {
+                        if (typeof result.returnInfo === 'string') {
                             result.returnInfo = JSON.parse(result.returnInfo);
-                        } catch {
                         }
+                    } catch (e) {
+                        console.error(`❌ Erro ao fazer parse do returnInfo para ID ${s.id_solicitacao}:`, result.returnInfo);
                     }
 
                     const info = result.returnInfo;
@@ -117,9 +117,7 @@ async function processarSolicitacoes() {
                         erros.push({
                             id: String(s.id_solicitacao),
                             erro: 'Status inesperado',
-                            result: typeof result === 'object' ? result : (() => {
-                                try { return JSON.parse(result); } catch { return { raw: result }; }
-                            })()
+                            result: result
                         });
 
                     }
