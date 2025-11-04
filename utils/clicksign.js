@@ -1,4 +1,4 @@
-const ACCESS_TOKEN = process.env.CLICKSIGN_ACCESS_TOKEN;;
+const ACCESS_TOKEN = process.env.CLICKSIGN_ACCESS_TOKEN;
 const BASE_URL = 'https://app.clicksign.com/api/v3';
 
 export async function criarEnvelope(nomeEmpresa, deadline_at) {

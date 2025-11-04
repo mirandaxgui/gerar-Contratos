@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposta Comercial</title>
+
+    <style>
+        @page {
+            size: 558mm 314mm;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+        }
+
+        /* --- Estrutura das páginas --- */
+        .page {
+            width: 558mm;
+            height: 314mm;
+            margin: auto;
+            position: relative;
+            page-break-after: always;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+
+        .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        .header,
+        .footer {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            z-index: 1;
+        }
+
+        .header {
+            top: 0;
+            height: 125px;
+        }
+
+        .footer {
+            bottom: 0;
+            height: 80px;
+        }
+
+        .header img,
+        .footer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 15mm;
+            padding-bottom: 30mm;
+            padding-left: 15mm;
+            padding-right: 15mm;
+            height: calc(100% - 50mm);
+            text-align: justify;
+        }
+
+        .page-content h2,
+        .page-content h3,
+        .page-content h4 {
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+
+        .page-content p {
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .page-content ul {
+            margin: 10px 0 10px 30px;
+            padding-left: 15px;
+            list-style-type: disc;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======== PÁGINAS 1 A 12 ======== -->
+    <div class="page"><img src="{{pagina1}}" style="width: 558mm; height: 314mm;" alt="Página 1"></div>
+    <div class="page"><img src="{{pagina2}}" style="width: 558mm; height: 314mm;" alt="Página 2"></div>
+    <div class="page"><img src="{{pagina3}}" style="width: 558mm; height: 314mm;" alt="Página 3"></div>
+    <div class="page"><img src="{{pagina4}}" style="width: 558mm; height: 314mm;" alt="Página 4"></div>
+    <div class="page"><img src="{{pagina5}}" style="width: 558mm; height: 314mm;" alt="Página 5"></div>
+    <div class="page"><img src="{{pagina6}}" style="width: 558mm; height: 314mm;" alt="Página 6"></div>
+    <div class="page"><img src="{{pagina7}}" style="width: 558mm; height: 314mm;" alt="Página 7"></div>
+    <div class="page"><img src="{{pagina8}}" style="width: 558mm; height: 314mm;" alt="Página 8"></div>
+    <div class="page"><img src="{{pagina9}}" style="width: 558mm; height: 314mm;" alt="Página 9"></div>
+    <div class="page"><img src="{{pagina10}}" style="width: 558mm; height: 314mm;" alt="Página 10"></div>
+    <div class="page"><img src="{{pagina11}}" style="width: 558mm; height: 314mm;" alt="Página 11"></div>
+    <div class="page"><img src="{{pagina12}}" style="width: 558mm; height: 314mm;" alt="Página 12"></div>
+
+    <!-- ======== PÁGINA 13 (TABELA DE PLANOS) ======== -->
+    <div class="page" style="
+  width: 558mm;
+  height: 314mm;
+  background:#071F1F;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  position:relative;
+  padding-top:0mm; 
+  padding-bottom:20mm;
+  page-break-after:always;
+">
+
+        <div class="page-content" style="
+    width:90%;
+    max-width:500mm;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    gap:25px;
+  ">
+
+            <!-- Cabeçalho -->
+            <div style="
+      display:grid;
+      grid-template-columns:44% 16% 16% 16%;
+      align-items:end; 
+      width:115%;
+      gap:50px;
+    ">
+                <div style="text-align:left;">
+                    <h2 style="color:#00e08a; font-size:42px; line-height:1.2; margin:0 0 6px;">Saúde Ocupacional</h2>
+                    <p style="margin:0; font-size:32px; opacity:.9;">Plano para {{qtdColaboradores}} colaboradores</p>
+                </div>
+
+                <div style="background:#0f3b32; border-radius:8px; padding:14px 8px; text-align:center;">
+                    <h3 style="font-size:20px; margin:0 0 6px;">Plano Básico</h3>
+                    <p style="font-size:26px; font-weight:700; color:#00e08a; margin:0;">{{precoBasico}}</p>
+                    <small style="font-size:14px;">MÊS</small>
+                </div>
+
+                <div style="background:#0f3b32; border-radius:8px; padding:14px 8px; text-align:center;">
+                    <h3 style="font-size:20px; margin:0 0 6px;">Plano Essencial</h3>
+                    <p style="font-size:26px; font-weight:700; color:#00e08a; margin:0;">{{precoEssencial}}</p>
+                    <small style="font-size:14px;">MÊS</small>
+                </div>
+
+                <div style="background:#0f3b32; border-radius:8px; padding:14px 8px; text-align:center;">
+                    <h3 style="font-size:20px; margin:0 0 6px;">Plano Premium</h3>
+                    <p style="font-size:26px; font-weight:700; color:#00e08a; margin:0;">{{precoPremium}}</p>
+                    <small style="font-size:14px;">MÊS</small>
+                </div>
+            </div>
+
+            <!-- Tabela -->
+            <table style="
+            width:110%;
+            border-collapse:collapse;
+            table-layout:fixed;
+            font-size:20px;
+            line-height:1.7;
+            border-radius:8px;
+            transform:scale(1.05);
+            transform-origin:top center;
+            ">
+                <colgroup>
+                    <col style="width:46%;">
+                    <col style="width:18%;">
+                    <col style="width:18%;">
+                    <col style="width:18%;">
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Portal cliente
+                            (Atendimentos, Agendamentos e Documentos)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Gestão ativa
+                            vencimentos (Controle proativo de exames, laudos e obrigatoriedades)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Exames clínicos
+                            incluídos</td>
+                        <td style="border:1px solid #193b33; text-align:center;">Faturados</td>
+                        <td style="border:1px solid #193b33; text-align:center;">Clínicas Próprias<br>Santana e Tatuapé
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;">Clínicas Próprias e Rede Credenciada
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Laudos Regulatórios
+                            (PCMSO, PGR e LTCATs)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Tabela única de preços
+                            exames complementares Brasil</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">SLA exame clínico</td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão mesmo dia.<br>Máximo 24h úteis</td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão mesmo dia.<br>Máximo 24h úteis</td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão mesmo dia.<br>Máximo 24h úteis</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">SLA exame complementar
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão até 72h úteis</td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão até 72h úteis</td>
+                        <td style="border:1px solid #193b33; text-align:center; font-size:12px;">98% nível
+                            Brasil.<br>Padrão até 72h úteis</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">AI – Agendamento
+                            Inteligente via WhatsApp (Automatização do contato com colaboradores para agendamento de
+                            exames)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">AI - Gestão Atestados
+                            e Prontuário digital (Monitoramento de afastamentos e atestados médicos com relatórios
+                            inteligentes)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Painel BI saúde
+                            (Indicadores de saúde ocupacional com visão estratégica)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Integração com o
+                            eSocial (Envio automatizado de eventos de SST)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">S-2240</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Emissão de PPP (Perfil
+                            Profissiográfico Previdenciário)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Emissão de CAT</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                    <tr>
+                        <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Adequação à Nova NR-01
+                            – Avaliação de Riscos Psicossociais (Diagnóstico completo e plano de ação com foco na saúde
+                            mental)</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
+                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+
+        <!-- Linha inferior -->
+        <hr style="
+            position:absolute;
+            bottom:0;
+            left:0;
+            width:100%;
+            height:10px;
+            border:none;
+            background-color:#00e08a;
+            margin:0;
+        ">
+    </div>
+
+
+    <!-- ======== PÁGINAS 14 E 15 ======== -->
+    <div class="page"><img src="{{pagina14}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>
+    <div class="page"><img src="{{pagina15}}" style="width: 558mm; height: 314mm;" alt="Página 15"></div>
+
+</body>
+
+</html>

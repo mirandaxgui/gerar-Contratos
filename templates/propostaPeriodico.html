@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposta Comercial - D+Saúde</title>
+    <style>
+        :root {
+            --verde: #00652c;
+            --max: 800px;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f6f7;
+            color: #333;
+            margin: 0;
+        }
+
+        /* HEADER FULL-WIDTH */
+        .header {
+            background: #114A27;
+            color: #fff;
+            width: 100%;
+            border-radius: 0 0 25px 25px;
+        }
+
+        .header__content {
+            max-width: var(--max);
+            margin: 10px;
+            height: 100%;
+            padding: 30px 40px;
+        }
+
+        .header h1 {
+            margin: 0;
+            font-size: 26px;
+            font-weight: 700;
+        }
+
+        .header p {
+            margin: 6px 0 0;
+            font-size: 24px;
+            color: #d3f7e5;
+        }
+
+        /* WRAPPER DO RESTO DA PÁGINA */
+        .page {
+            max-width: var(--max);
+            margin: 0 auto;
+            padding: 0;
+            background-color: #fff;
+            position: relative;
+            /* ✅ necessário para o footer absoluto */
+        }
+
+        .container {
+            background: #fff;
+            padding: 40px 60px 60px 60px;
+            /* ✅ espaço extra pro footer */
+            border-radius: 15px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, .1);
+        }
+
+        .container>*:first-child {
+            margin-top: 0 !important;
+        }
+
+        h2 {
+            text-align: center;
+            color: #444;
+            font-size: 18px;
+            margin: 0 0 25px;
+        }
+
+        h3 {
+            color: #444;
+            font-size: 17px;
+        }
+
+        p {
+            line-height: 1.6;
+            text-align: justify;
+            margin: 0;
+        }
+
+        ul {
+            margin: 0;
+        }
+
+        li {
+            margin-bottom: 8px;
+        }
+
+        .footerComponent {
+            border-top: 2px solid #eee;
+            border-radius: 25px 25px 0 0;
+            padding-top: 20px;
+            font-size: 14px;
+            background-color: #114A27;
+            height: 40px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            margin: 0;
+        }
+
+        .footer {
+            margin-top: 40px;
+            padding-top: 20px;
+            font-size: 14px;
+            width: 100%;
+        }
+
+        strong {
+            color: #000;
+        }
+
+        /* responsividade simples */
+        @media (max-width: 640px) {
+            .container {
+                padding: 24px;
+            }
+
+            .header__content {
+                padding: 24px;
+            }
+        }
+
+        /* IMPRESSÃO / PDF */
+        @media print {
+            @page {
+                margin: 0;
+                /* ✅ ESSENCIAL para eliminar o espaço branco */
+            }
+
+            .page {
+                page-break-before: always !important;
+                page-break-after: always !important;
+                page-break-inside: avoid !important;
+
+                width: 210mm;
+                /* ✅ tamanho A4 */
+                height: 297mm;
+                position: relative;
+                margin: 0 auto;
+            }
+
+            .container {
+                box-shadow: none !important;
+                margin: 0 !important;
+            }
+
+            .header,
+            .page {
+                max-width: 100% !important;
+            }
+        }
+    </style>
+
+</head>
+
+<body>
+
+
+
+    <!-- CONTEÚDO LIMITADO À LARGURA -->
+    <div class="page">
+        <!-- HEADER FULL WIDTH -->
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header__content" style="display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="margin: 0;">Proposta Comercial</h1>
+                <hr
+                    style="width: 45px; height: 5px; background-color: #FFF176; border-radius: 10px; border: none; margin: 8px 0 8px 0;">
+                <p style="margin: 0;">Atendimento in-loco</p>
+            </div>
+
+            <img src="/assets/d+_white.png" alt="" style="padding-right: 50px; ">
+        </div>
+        <hr
+            style="width: 40px; height: 8px; background-color: #FFF176; border-radius: 10px; align-items: start; border: none">
+        <div class="container">
+
+            <h2>TERMO DE ACEITE DA PROPOSTA IN COMPANY - D+SAÚDE</h2>
+            <h3>TERMO DE ACEITE</h3>
+            <p>O atendimento in-loco é uma modalidade de serviço oferecida pela <strong>D+Saúde</strong> que
+                consiste na realização de exames ocupacionais diretamente nas dependências da empresa contratante.
+                Esse modelo proporciona maior comodidade e otimização do tempo, reduzindo o impacto na rotina dos
+                colaboradores e garantindo mais agilidade nos processos de saúde ocupacional.</p>
+
+            <h3>Apresentação do Atendimento In-Loco</h3>
+            <h3>PROPOSTA IN COMPANY</h3>
+
+            <h3>Benefícios do atendimento in-loco:</h3>
+            <ul>
+                <li>Redução de custos com deslocamentos;</li>
+                <li>Maior adesão dos colaboradores ao processo de avaliação;</li>
+                <li>Agilidade no cumprimento das exigências legais do PCMSO;</li>
+                <li>Acompanhamento presencial de profissional da D+Saúde para garantir a qualidade do atendimento;</li>
+                <li>Diminuição do impacto na produtividade da equipe.</li>
+            </ul>
+
+            <p>Por meio deste documento, as partes abaixo identificadas concordam com os termos da proposta:</p>
+
+            <p><strong>CONTRATADA:<br>
+                    D+SAÚDE MEDICINA E SEGURANÇA DO TRABALHO LTDA, inscrita no CNPJ sob o nº
+                    05.456.287/0001-82, com sede na Rua Gomes de Carvalho, nº1327 – São Paulo/SP, neste
+                    ato
+                    representada na forma de seu contrato social, doravante denominada simplesmente
+                    “CONTRATADA”.</strong>
+
+            <p><strong>CONTRATANTE:<br>
+                    [MTK ACESS CONFECCOES DE ROUPAS LTDA], inscrita no CNPJ sob o nº
+                    05.651.801/0001-30, doravante denominada “CONTRATANTE”.</strong>
+            </p>
+        </div>
+
+
+        <footer class="footerComponent"></footer>
+    </div>
+    <!-- CONTEÚDO LIMITADO À LARGURA -->
+    <div class="page">
+        <!-- HEADER FULL WIDTH -->
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header__content" style="display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="margin: 0;">Proposta Comercial</h1>
+                <hr
+                    style="width: 45px; height: 5px; background-color: #FFF176; border-radius: 10px; border: none; margin: 8px 0 8px 0;">
+                <p style="margin: 0;">Atendimento in-loco</p>
+            </div>
+
+            <img src="/assets/d+_white.png" alt="" style="padding-right: 50px; ">
+        </div>
+        <hr
+            style="width: 40px; height: 8px; background-color: #FFF176; border-radius: 10px; align-items: start; border: none">
+        <div class="container">
+            <h2>1.OBJETIVO</h2>
+            <p>O presente termo tem por finalidade confirmar a aceitação da proposta comercial
+                da CONTRATADA para a realização de exames periódicos ocupacionais
+                incompany, conforme condições descritas neste documento e proposta
+                apresentada previamente.</p>
+
+            <h3>2. MODELO DE CONTRATAÇÃO E FINALIZAÇÃO DO ATENDIMENTO</h3>
+            <p>A prestação dos serviços será realizada com base em modelo misto de
+                atendimento, que considera</p>
+            <ul>
+                <li>A quantidade estimada de colaboradores a serem atendidos; e
+                </li>
+                <li>A duração previamente estipulada de horas de atendimento.
+                </li>
+
+            </ul>
+
+            <p>O atendimento será considerado finalizado a partir do atingimento do primeiro
+                critério a seguir:
+                a) Quando todos os colaboradores previstos forem atendidos, ainda que antes do
+                término das horas contratadas; ou<br>
+                b) Quando o tempo máximo de atendimento estipulado for alcançado, ainda que
+                não tenha sido possível atender todos os colaboradores estimados.
+                Parágrafo único– A CONTRATADA não se responsabiliza por atendimentos não
+                realizados em decorrência de atrasos, ausências ou quaisquer imprevistos de
+                responsabilidade da CONTRATANTE. A extensão do tempo de atendimento
+                dependerá de disponibilidade da equipe e deverá ser negociada previamente,
+                podendo gerar custos adicionais.
+                <br>
+            </p>
+            <p>Este atendimento in-loco contempla:
+                <strong><br>19 colaboradores
+                    <ul>
+                        <li>17 Audiometrias tonais
+                        </li>
+                    </ul>
+                </strong>
+            </p>
+            <h3>Total geral do atendimento: R$ 2.020,00</h3>
+            <p>em um único plantão. Recomendamos concentrar, na mesma data, todos os
+                colaboradores com exames vencendo ainda neste ano; dessa forma, evita‑se a
+                contratação de novos plantões e facilita‑se o controle dos vencimentos, garantindo
+                maior economia e melhor organização do cronograma anual de saúde
+                ocupacional.</p>
+        </div>
+        <footer class="footerComponent"></footer>
+    </div>
+    <!-- CONTEÚDO LIMITADO À LARGURA -->
+    <div class="page">
+        <!-- HEADER FULL WIDTH -->
+        <div class="header" style="display: flex; justify-content: space-between; align-items: center;">
+            <div class="header__content" style="display: flex; flex-direction: column; justify-content: center;">
+                <h1 style="margin: 0;">Proposta Comercial</h1>
+                <hr
+                    style="width: 45px; height: 5px; background-color: #FFF176; border-radius: 10px; border: none; margin: 8px 0 8px 0;">
+                <p style="margin: 0;">Atendimento in-loco</p>
+            </div>
+
+            <img src="/assets/d+_white.png" alt="" style="padding-right: 50px; ">
+        </div>
+        <hr
+            style="width: 40px; height: 8px; background-color: #FFF176; border-radius: 10px; align-items: start; border: none">
+        <div class="container">
+            <h3>3. ACOMPANHAMENTO CLÍNICO
+            </h3>
+            <p>A CONTRATADA acompanhará a execução dos atendimentos por meio de
+                colaborador próprio, integrante de sua equipe de corpo clínico ou remotamente,
+                com o objetivo de garantir a qualidade do serviço e dar suporte técnico durante
+                toda a ação.
+            </p>
+
+            <h3>4. VALOR E FORMA DE PAGAMENTO
+            </h3>
+            <p>O valor final do atendimento in loco será de <strong>R$ 2.020,00</strong>, em 6X no cartão de
+                crédito
+                O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
+                previamente estabelecidas.
+            </p>
+            <h3>5. DISPOSIÇÕES FINAIS
+
+            </h3>
+            <p>Ambas as partes declaram estar de comum acordo com as cláusulas acima e
+                firmam este termo em duas vias de igual teor e forma, para que produza seus
+                jurídicos e legais efeitos.
+                São Paulo/SP, ____ de ______________ de 2025.
+            </p>
+            <h3>Pela CONTRATADA:
+                D+SAÚDE MEDICINA E SEGURANÇA DO TRABALHO LTDA
+                <br>Nome: ______________________________________
+                <br>Cargo: ______________________________________
+                <br>Assinatura: _________________________________
+                <br><br>
+                <br>Pela CONTRATANTE:
+                <br>MTK ACESS CONFECCOES DE ROUPAS LTDA
+                <br>Nome: ______________________________________
+                <br>Cargo: ______________________________________
+                <br>Assinatura: _________________________________
+            </h3>
+
+
+        </div>
+        <footer class="footerComponent"></footer>
+    </div>
+
+</body>
+
+</html>
