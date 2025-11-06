@@ -135,7 +135,7 @@ router.post('/gerar-pdf', async (req, res) => {
     };
 
 
-
+console.log(dados.enviarParaClicksign)
 
     // ✅ Se o payload tiver idCard, envia o PDF também para o Pipefy
     if (dados.idCard && !dados.enviarParaClicksign) {
@@ -169,7 +169,7 @@ router.post('/gerar-pdf', async (req, res) => {
         console.error("❌ Erro ao enviar PDF para Pipefy:", err.message);
       }
     }
-
+    console.log(dados.enviarParaClicksign)
     // ✅ Mantém o envio ao Clicksign se solicitado
     if (dados.enviarParaClicksign === true) {
       const result = await enviarParaClicksign(dados, pdfBuffer);

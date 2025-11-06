@@ -216,8 +216,8 @@
                     “CONTRATADA”.</strong>
 
             <p><strong>CONTRATANTE:<br>
-                    [MTK ACESS CONFECCOES DE ROUPAS LTDA], inscrita no CNPJ sob o nº
-                    05.651.801/0001-30, doravante denominada “CONTRATANTE”.</strong>
+                    {{nomeEmpresa}}, inscrita no CNPJ sob o nº
+                    {{cnpjEmpresa}}, doravante denominada “CONTRATANTE”.</strong>
             </p>
         </div>
 
@@ -271,14 +271,14 @@
                 <br>
             </p>
             <p>Este atendimento in-loco contempla:
-                <strong><br>19 colaboradores
+                <strong><br>{{qtdColaboradores}} colaboradores
                     <ul>
-                        <li>17 Audiometrias tonais
+                        <li>{{complementaresAdc}}
                         </li>
                     </ul>
                 </strong>
             </p>
-            <h3>Total geral do atendimento: R$ 2.020,00</h3>
+            <h3>Total geral do atendimento: R$ {{valorTotal}}</h3>
             <p>em um único plantão. Recomendamos concentrar, na mesma data, todos os
                 colaboradores com exames vencendo ainda neste ano; dessa forma, evita‑se a
                 contratação de novos plantões e facilita‑se o controle dos vencimentos, garantindo
@@ -313,8 +313,7 @@
 
             <h3>4. VALOR E FORMA DE PAGAMENTO
             </h3>
-            <p>O valor final do atendimento in loco será de <strong>R$ 2.020,00</strong>, em 6X no cartão de
-                crédito
+            <p>O valor final do atendimento in loco será de <strong>R$ {{valorTotal}}</strong>, em {{qtdParcelas}}X na modalidade {{formaPagamento}}.
                 O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
                 previamente estabelecidas.
             </p>
@@ -324,7 +323,7 @@
             <p>Ambas as partes declaram estar de comum acordo com as cláusulas acima e
                 firmam este termo em duas vias de igual teor e forma, para que produza seus
                 jurídicos e legais efeitos.
-                São Paulo/SP, ____ de ______________ de 2025.
+                São Paulo, {{dataAtualExtenso}}.
             </p>
             <h3>Pela CONTRATADA:
                 D+SAÚDE MEDICINA E SEGURANÇA DO TRABALHO LTDA
@@ -333,7 +332,7 @@
                 <br>Assinatura: _________________________________
                 <br><br>
                 <br>Pela CONTRATANTE:
-                <br>MTK ACESS CONFECCOES DE ROUPAS LTDA
+                <br>{{nomeEmpresa}}
                 <br>Nome: ______________________________________
                 <br>Cargo: ______________________________________
                 <br>Assinatura: _________________________________

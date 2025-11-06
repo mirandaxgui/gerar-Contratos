@@ -101,10 +101,11 @@ router.get('/empresa', async (req, res) => {
 });
 
 // Rota para buscar setores de uma empresa no SGG
-router.get('/setor', async (req, res) => {
+router.get('/setor/', async (req, res) => {
   const { id_empresa } = req.query;  // Agora recebendo o id_empresa como query parameter
 
   try {
+    console.log('ID da empresa recebido:', id_empresa);
     // Buscar setores da empresa com o ID da empresa
     const setoresResponse = await axios.get(`https://app.sgg.net.br/api/v3/setor/?id_empresa=${id_empresa}`, {
       headers: {
@@ -112,6 +113,8 @@ router.get('/setor', async (req, res) => {
         'Authorization': `Basic ${SGG_TOKEN}`,
       },
     });
+
+    console.log('Setores recebidos:', setoresResponse.data);
 
     res.status(200).json(setoresResponse.data.resultado || []);  // Retornando a resposta da API
   } catch (error) {
@@ -121,7 +124,7 @@ router.get('/setor', async (req, res) => {
 });
 
 // Rota para buscar cargos de um setor no SGG
-router.get('/cargos', async (req, res) => {
+router.get('/cargo/', async (req, res) => {
   const { id_setor } = req.query;  // Agora recebendo o id_setor como query parameter
 
   try {
@@ -132,12 +135,32 @@ router.get('/cargos', async (req, res) => {
         'Authorization': `Basic ${SGG_TOKEN}`,
       },
     });
-
+    console.log("Cargos recebidos:", cargosResponse.data);
     res.status(200).json(cargosResponse.data.resultado || []);  // Retornando a resposta da API
   } catch (error) {
     console.error('Erro ao buscar cargos no SGG:', error);
     res.status(500).json({ error: 'Erro ao buscar cargos' });
   }
 });
+
+router.post('/submit-form/', (req, res) => {
+  const formData = req.body;
+  try {
+    console.log('Dados do formulário recebidos:', formData);
+
+    const n9nResponse = axios.post('https://n8n.srv964086.hstgr.cloud/webhook/a191de90-3590-479b-b530-a6e30d9c04d5', formData, {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }); 
+    console.log('Resposta do n8n:', n9nResponse.data);
+
+    res.status(200).json({ message: 'Formulário enviado com sucesso' });
+  } catch (error) {
+    console.error('Erro ao processar o formulário:', error);
+    res.status(500).json({ error: 'Erro ao processar o formulário' });
+  }
+});
+
 
 export default router;

@@ -134,15 +134,22 @@ export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner
     }
 }
 
-async function criarRequisitos(envelopeId, documentoId, signersIds) {
+async function criarRequisitos(envelopeId, documentoId, signersIds, roleVendedorSigner) {
     try {
         const [vendedorId, clienteId, fabricioId] = signersIds;
-        const requisitos = [
+        let requisitos = [];
+        if (roleVendedorSigner === "witness") {
+        requisitos = [
             { role: "witness", id: vendedorId },
             { role: "contractee", id: clienteId },
             { role: "contractor", id: fabricioId }
-        ];
-
+        ]};
+        if (roleVendedorSigner === "seller") {
+        requisitos = [
+            { role: "seller", id: vendedorId },
+            { role: "legal_representative", id: clienteId },
+            { role: "legal_representative", id: fabricioId }
+        ]};
         for (const { role, id } of requisitos) {
             const baseReq = {
                 document: { data: { type: "documents", id: documentoId } },
@@ -266,7 +273,7 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
 
         const signersIds = await criarSignatarios(envelopeId, dados.vendedorSigner, dados.clienteSigner);
 
-        await criarRequisitos(envelopeId, documentoId, signersIds);
+        await criarRequisitos(envelopeId, documentoId, signersIds, dados.roleVendedorSigner);
         await atualizarEnvelope(envelopeId, deadlineFormatado);
         await enviarNotificacao(envelopeId);
 
