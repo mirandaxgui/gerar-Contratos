@@ -1,72 +1,13 @@
 import express from 'express';
 import axios from 'axios';
+import { fetchFornecedores } from '../utils/pipefyFetchFornecedores.js';
 
 // Criar o roteador
 const router = express.Router();
 
 // Variáveis de token, usei variáveis de ambiente como exemplo
-const PIPEFY_TOKEN = "Bearer eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NDI0ODI1MjEsImp0aSI6ImUxZjU0Y2ZkLTEzYzItNDQ2Yy05OGU0LWU0NDljY2MxY2IzYSIsInN1YiI6MzA2MDUxNzg3LCJ1c2VyIjp7ImlkIjozMDYwNTE3ODcsImVtYWlsIjoiZ3VpbGhlcm1lLm1pcmFuZGFAZGVtYWlzYXVkZS5jb20ifX0.LVlemZuqRl98fHsWxCpIBU5M0VeM2rM3hE24d9tIR9jX0O4nvQeX5zqRHywYBtlumTqK42bN-E6HDIQ0YLpmkg";
-const SGG_TOKEN = 'aWE2b2E3eFRUaWQ3dXg4S3RjV1E2Sm9QejNLRGlsMkg6';
+const SGG_TOKEN = process.env.USER_SGG;
 
-// Função para buscar fornecedores no Pipefy
-const fetchFornecedores = async () => {
-  let fornecedores = [];
-  let endCursor = null;
-
-  do {
-    const query = {
-      query: `
-        query {
-          table_records(table_id: "306299748", first: 50${endCursor ? `, after: "${endCursor}"` : ''}) {
-            pageInfo {
-              hasNextPage
-              endCursor
-            }
-            edges {
-              node {
-                done
-                id
-                title
-                record_fields {
-                  name
-                  value
-                }
-              }
-            }
-          }
-        }
-      `,
-    };
-
-    try {
-      const response = await axios.post('https://api.pipefy.com/graphql', query, {
-        headers: {
-          Authorization: `Bearer ${PIPEFY_TOKEN}`,
-          'Content-Type': 'application/json',
-        },
-      });
-
-      const data = response.data;
-      const records = data?.data?.table_records?.edges || [];
-
-      records.forEach(({ node }) => {
-        const done = node.done;
-        const razaoSocial = node.record_fields.find((f) => f.name === 'Razão Social')?.value;
-        const codigoSGG = node.record_fields.find((f) => f.name === 'Código SGG')?.value;
-
-        if (razaoSocial && codigoSGG && !done) {
-          fornecedores.push({ razaoSocial, codigoSGG });
-        }
-      });
-
-      endCursor = data?.data?.table_records?.pageInfo?.endCursor;
-    } catch (error) {
-      console.error('Erro ao buscar fornecedores no Pipefy:', error);
-    }
-  } while (endCursor); // Continua buscando enquanto houver mais páginas
-
-  return fornecedores;
-};
 
 // Rota para buscar fornecedores
 router.post('/fornecedores', async (req, res) => {
