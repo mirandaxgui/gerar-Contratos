@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 const PIPEFY_TOKEN = process.env.PIPEFY_TOKEN;
 
 // Função para buscar fornecedores no Pipefy
@@ -29,37 +27,32 @@ export async function fetchFornecedores() {
             }
           }
         }
-      `,
+      `
     };
 
-    try {
-      // Fazendo a requisição para o Pipefy
-      const response = await axios.post('https://api.pipefy.com/graphql', query, {
-        headers: {
-          Authorization: PIPEFY_TOKEN,
-          'Content-Type': 'application/json',
-        },
-      });
+    const response = await fetch("https://api.pipefy.com/graphql", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${PIPEFY_TOKEN}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(query)
+    });
 
-      const data = response.data;
-      const records = data?.data?.table_records?.edges || [];
+    const data = await response.json();
+    const records = data?.data?.table_records?.edges || [];
 
-      // Extraindo os dados dos fornecedores
-      records.forEach(({ node }) => {
-        const done = node.done;
-        const razaoSocial = node.record_fields.find((f) => f.name === 'Razão Social')?.value;
-        const codigoSGG = node.record_fields.find((f) => f.name === 'Código SGG')?.value;
+    records.forEach(({ node }) => {
+      const done = node.done;
+      const razaoSocial = node.record_fields.find(f => f.name === "Razão Social")?.value;
+      const codigoSGG = node.record_fields.find(f => f.name === "Código SGG")?.value;
 
-        if (razaoSocial && codigoSGG && !done) {
-          fornecedores.push({ razaoSocial, codigoSGG });
-        }
-      });
+      if (razaoSocial && codigoSGG && !done) {
+        fornecedores.push({ razaoSocial, codigoSGG });
+      }
+    });
 
-      // Atualiza o endCursor para continuar a busca, caso haja mais registros
-      endCursor = data?.data?.table_records?.pageInfo?.endCursor;
-    } catch (error) {
-      console.error('Erro ao buscar fornecedores no Pipefy:', error);
-    }
+    endCursor = data?.data?.table_records?.pageInfo?.endCursor;
   } while (endCursor); // Continua buscando enquanto houver mais páginas
 
   return fornecedores;
