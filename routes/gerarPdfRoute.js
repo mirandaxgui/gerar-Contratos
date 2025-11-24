@@ -76,6 +76,14 @@ router.post('/gerar-pdf', async (req, res) => {
         }
       }
     }
+    //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
+    const listaComplementares = (dados.campos?.complementaresAdc || '')
+      .split(',')
+      .map(item => item.trim())
+      .filter(Boolean)
+      .map(item => `<li>${item};</li>`)
+      .join('\n');
+
 
     const variaveisParaTemplate = {
       ...(dados.campos || {}),
@@ -86,7 +94,10 @@ router.post('/gerar-pdf', async (req, res) => {
       qtdColaboradores,
       precoBasico: precos.basico ? `R$ ${precos.basico},00` : '',
       precoEssencial: precos.essencial ? `R$ ${precos.essencial},00` : '',
-      precoPremium: precos.premium ? `R$ ${precos.premium},00` : ''
+      precoPremium: precos.premium ? `R$ ${precos.premium},00` : '',
+      //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
+      complementaresAdcFormatado: listaComplementares,
+
     };
 
     //console.log('📄 Variáveis usadas no template:', JSON.stringify(variaveisParaTemplate, null, 2));
@@ -135,7 +146,7 @@ router.post('/gerar-pdf', async (req, res) => {
     };
 
 
-console.log(dados.enviarParaClicksign)
+    console.log(dados.enviarParaClicksign)
 
     // ✅ Se o payload tiver idCard, envia o PDF também para o Pipefy
     if (dados.idCard && !dados.enviarParaClicksign) {
