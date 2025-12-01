@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proposta Comercial</title>
+
+    <style>
+        @page {
+            size: 558mm 314mm;
+            margin: 0;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: white;
+        }
+
+        /* --- Estrutura das páginas --- */
+        .page {
+            width: 558mm;
+            height: 314mm;
+            margin: auto;
+            position: relative;
+            page-break-after: always;
+            background-color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+
+        .page img {
+            width: 100%;
+            height: 100%;
+            object-fit: fill;
+        }
+
+        .header,
+        .footer {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            z-index: 1;
+        }
+
+        .header {
+            top: 0;
+            height: 125px;
+        }
+
+        .footer {
+            bottom: 0;
+            height: 80px;
+        }
+
+        .header img,
+        .footer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 15mm;
+            padding-bottom: 30mm;
+            padding-left: 15mm;
+            padding-right: 15mm;
+            height: calc(100% - 50mm);
+            text-align: justify;
+        }
+
+        .page-content h2,
+        .page-content h3,
+        .page-content h4 {
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+
+        .page-content p {
+            margin-bottom: 15px;
+            font-size: 12px;
+        }
+
+        .page-content ul {
+            margin: 10px 0 10px 30px;
+            padding-left: 15px;
+            list-style-type: disc;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- ======== PÁGINAS 1 A 12 ======== -->
+    <div class="page"><img src="{{pagina1}}" style="width: 558mm; height: 314mm;" alt="Página 1"></div>
+    <div class="page"><img src="{{pagina2}}" style="width: 558mm; height: 314mm;" alt="Página 2"></div>
+    <div class="page"><img src="{{pagina3}}" style="width: 558mm; height: 314mm;" alt="Página 3"></div>
+    <div class="page"><img src="{{pagina4}}" style="width: 558mm; height: 314mm;" alt="Página 4"></div>
+    <div class="page"><img src="{{pagina5}}" style="width: 558mm; height: 314mm;" alt="Página 5"></div>
+    <div class="page"><img src="{{pagina6}}" style="width: 558mm; height: 314mm;" alt="Página 6"></div>
+    <div class="page"><img src="{{pagina7}}" style="width: 558mm; height: 314mm;" alt="Página 7"></div>
+    <div class="page"><img src="{{pagina8}}" style="width: 558mm; height: 314mm;" alt="Página 8"></div>
+    <div class="page"><img src="{{pagina9}}" style="width: 558mm; height: 314mm;" alt="Página 9"></div>
+    <div class="page"><img src="{{pagina10}}" style="width: 558mm; height: 314mm;" alt="Página 10"></div>
+    <div class="page"><img src="{{pagina11}}" style="width: 558mm; height: 314mm;" alt="Página 11"></div>
+
+    <!-- ======== PÁGINA 13 (TABELA DE PLANOS MODIFICADA) ======== -->
+    <div class="page" style="
+  width: 558mm;
+  height: 314mm;
+  background:#071F1F;
+  color:#fff;
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  align-items:center;
+  position:relative;
+  padding-top:20mm; 
+  padding-bottom:20mm;
+  page-break-after:always;
+">
+
+        <div class="page-content" style="
+        width:90%;
+        max-width:500mm;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+        gap:15px;
+    ">
+
+            <!-- Cabeçalho + Logo -->
+            <div style="
+            width:115%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom: 30px;
+        ">
+
+                <div style="text-align:left;">
+                    <h2 style="color:#00e08a; font-size:42px; line-height:1.2; margin:0 0 6px;">Proposta Comercial
+                    </h2>
+                    <br><br>
+                    <p style="color:#00e08a; margin:0; font-size:32px; opacity:.9;"><strong>{{nomeEmpresa}}</strong>
+                    </p>
+                </div>
+                <div>
+                    <!-- LOGO NO CANTO SUPERIOR DIREITO -->
+
+                    <img src="{{logoDemais}}" alt="" style="padding-right: 50px; ">
+                </div>
+
+            </div>
+            <!-- Tabela -->
+            <table style="
+            width:110%;
+            border-collapse:collapse;
+            table-layout:fixed;
+            font-size:20px;
+            line-height:1.7;
+            border-radius:8px;
+            transform:scale(1.05);
+            transform-origin:top center;
+            text-align: center;
+        ">
+                <colgroup>
+                    <col style="width:46%;">
+                    <col style="width:18%;">
+                    <col style="width:18%;">
+                    <col style="width:18%;">
+                </colgroup>
+
+                <thead>
+                    <tr>
+                        <th style="border:1px solid #193b33; padding:10px 12px; text-align:center;">ITEM / PRODUTO</th>
+                        <th style="border:1px solid #193b33; text-align:center;">QTD</th>
+                        <th style="border:1px solid #193b33; text-align:center;">Custo Unitário</th>
+                        <th style="border:1px solid #193b33; text-align:center;">Custo Total</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {{tabelaProdutos}}
+
+                    <tr>
+                        <td colspan="3"
+                            style="border:1px solid #193b33; padding:10px 12px; text-align:right; font-weight:bold; text-align:center;">
+                            Investimento Total
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
+                            {{totalGeral}}
+                        </td>
+                    </tr>
+
+                    {{linhaDesconto}}
+
+                    <tr>
+                        <td colspan="3"
+                            style="border:1px solid #193b33; padding:10px 12px; text-align:right; font-size:22px; text-align:center;">
+                            Valor Final
+                        </td>
+                        <td
+                            style="border:1px solid #193b33; text-align:center; font-size:22px; color:#00e08a; font-weight:bold;">
+                            {{valorFinal}}
+                        </td>
+                    </tr>
+
+                    {{linhaPagamento}}
+
+                </tbody>
+
+
+            </table>
+
+        </div>
+
+        <!-- Linha inferior -->
+        <hr style="
+        position:absolute;
+        bottom:0;
+        left:0;
+        width:100%;
+        height:10px;
+        border:none;
+        background-color:#00e08a;
+        margin:0;
+    ">
+    </div>
+
+    <!-- ======== PÁGINAS 13 E 14 ======== -->
+    <div class="page"><img src="{{pagina13}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>
+    <div class="page"><img src="{{pagina14}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>
+
+</body>
+
+</html>
