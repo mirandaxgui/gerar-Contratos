@@ -92,27 +92,30 @@ router.post('/gerar-pdf', async (req, res) => {
       valorDesconto = dados.campos?.valorDesconto;
       valorFinal = dados.campos?.valorFinal;
 
-      tabelaProdutos = produtos.map(p => {
+      // Filtra itens onde qtd não é 0 e existe
+      const produtosValidos = produtos.filter(p => Number(p.qtd) > 0);
+
+      tabelaProdutos = produtosValidos.map(p => {
         const custoTotal = Number(p.qtd) * Number(p.unit);
         return `
-      <tr>
-          <td style="border:1px solid #193b33; padding:10px 12px;">
-              ${p.item}
-          </td>
+        <tr>
+            <td style="border:1px solid #193b33; padding:10px 12px;">
+                ${p.item}
+            </td>
 
-          <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
-              ${p.qtd}
-          </td>
+            <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
+                ${p.qtd}
+            </td>
 
-          <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
-              R$ ${Number(p.unit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-          </td>
+            <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
+                R$ ${Number(p.unit).toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </td>
 
-          <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
-              R$ ${custoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
-          </td>
-      </tr>
-    `;
+            <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
+                R$ ${custoTotal.toLocaleString('pt-BR', { minimumFractionDigits: 2 })}
+            </td>
+        </tr>
+      `;
       }).join('\n');
 
 
