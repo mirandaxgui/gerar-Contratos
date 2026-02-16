@@ -228,7 +228,7 @@ router.post('/gerar-pdf', async (req, res) => {
     const listaComplementares = `
       <div style="display: flex; gap: 30px;">
         ${colunas.map(coluna => `
-          <ul style="list-style: disc; font-size: 13px;">
+          <ul style="list-style: disc; font-size: 13px;"> 
             ${coluna.map(item => `<li>${item};</li>`).join('')}
           </ul>
         `).join('')}
