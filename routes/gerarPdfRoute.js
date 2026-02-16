@@ -15,6 +15,8 @@ const __dirname = dirname(__filename);
 
 const headerPath = path.resolve(__dirname, '../assets', 'header.png');
 const footerPath = path.resolve(__dirname, '../assets', 'footer.png');
+const greenMark = path.resolve(__dirname, '../assets', 'greenMark.png');
+const redMark = path.resolve(__dirname, '../assets', 'redMark.png');
 const logoDemaisPath = path.resolve(__dirname, '../assets', 'd+white-dark-bg.png');
 const imageMime = 'image/png';
 
@@ -22,7 +24,8 @@ const imageBase64 = fs.readFileSync(headerPath).toString('base64');
 const imageFooterBase64 = fs.readFileSync(footerPath).toString('base64');
 const logoDemaisBase64 = fs.readFileSync(logoDemaisPath).toString('base64');
 
-
+const greenMarkBase64 = fs.readFileSync(greenMark).toString('base64');
+const redMarkBase64 = fs.readFileSync(redMark).toString('base64');
 
 
 /** Endpoint principal: /gerar-pdf */
@@ -52,7 +55,9 @@ router.post('/gerar-pdf', async (req, res) => {
     let totalGeral = "";
     let valorDesconto = "";
     let valorFinal = "";
-
+    let metadeValorTotal = "";
+    let mesRealizacao = "";
+    let idCard = "";
     // Se for propostaHunter, aplica a lógica de preços e injeta imagens
     let qtdColaboradores = Number(dados.campos?.qtd_colaboradores || 0);
     let precos = { basico: '', essencial: '', premium: '' };
@@ -61,9 +66,11 @@ router.post('/gerar-pdf', async (req, res) => {
       if (qtdColaboradores > 0) {
         precos = obterPrecosPorVidas(qtdColaboradores);
       }
+      idCard = dados.idCard || "";
 
       // 🖼️ PROPOSTA HUNTER - Carrega e otimiza imagens pagina1..15 (exceto 13)
       const pastaPropostaHunter = path.resolve(__dirname, '../assets/propostaHunter');
+
       for (let i = 1; i <= 15; i++) {
         if (i === 13) continue;
         const imagemPath = path.join(pastaPropostaHunter, `pagina${i}.png`);
@@ -91,7 +98,8 @@ router.post('/gerar-pdf', async (req, res) => {
       totalGeral = dados.campos?.totalGeral;
       valorDesconto = dados.campos?.valorDesconto;
       valorFinal = dados.campos?.valorFinal;
-
+      mesRealizacao = `${dados.campos?.mesRealizacao}/${new Date().getFullYear()}`;
+      idCard = dados.idCard || "";
       // Filtra itens onde qtd não é 0 e existe
       const produtosValidos = produtos.filter(p => Number(p.qtd) > 0);
 
@@ -164,7 +172,11 @@ router.post('/gerar-pdf', async (req, res) => {
           Data do Primeiro Pagamento
       </td>
       <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
-          ${dados.campos.dataPrimeiroPagamento ? ` ${dados.campos.dataPrimeiroPagamento}` : ""}
+          ${dados.campos.dataPrimeiroPagamento
+          ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
+          : ""
+        }
+
       </td>
     </tr>
   `;
@@ -205,10 +217,23 @@ router.post('/gerar-pdf', async (req, res) => {
     const listaComplementares = (dados.campos?.complementaresAdc || '')
       .split(',')
       .map(item => item.trim())
-      .filter(Boolean)
+      .filter(item => /^\d+/.test(item)) // ✅ só entra se começar com número
       .map(item => `<li>${item};</li>`)
       .join('\n');
 
+
+    if (modelo === 'propostaPeriodico') {
+      //PROPOSTA PERIÓDICO
+      // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
+      let valorRaw = dados.campos?.valorTotal || "0";
+
+      // remove separadores de milhar e ajusta decimal
+      valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
+
+      let valorTotal = Number(valorRaw);
+      metadeValorTotal = (valorTotal / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+
+    }
 
     const variaveisParaTemplate = {
       ...(dados.campos || {}),
@@ -218,6 +243,8 @@ router.post('/gerar-pdf', async (req, res) => {
       dataAtualExtenso,
       dataAtual: dataAtualCurta,
       //PROPOSTA HUNTER
+      greenMark: `data:${imageMime};base64,${greenMarkBase64}`,
+      redMark: `data:${imageMime};base64,${redMarkBase64}`,
       qtdColaboradores,
       precoBasico: precos.basico ? `R$ ${precos.basico},00` : '',
       precoEssencial: precos.essencial ? `R$ ${precos.essencial},00` : '',
@@ -228,7 +255,15 @@ router.post('/gerar-pdf', async (req, res) => {
       tabelaProdutos,
       totalGeral,
       valorDesconto,
-      valorFinal
+      valorFinal,
+      mesRealizacao,
+      idCard,
+
+      //PROPOSTA PERIÓDICO
+      metadeValorTotal,
+      dataPrimeiroPagamento: dados.campos?.dataPrimeiroPagamento || "",
+
+
 
     };
 
@@ -244,12 +279,12 @@ router.post('/gerar-pdf', async (req, res) => {
     await page.setContent(htmlFinal, { waitUntil: 'domcontentloaded', timeout: 0 });
     let pdfBuffer;
     if (dados.modelo === 'propostaHunter') {
-
       pdfBuffer = await page.pdf({
         width: '558mm',
         height: '314mm',
         printBackground: true,
-        margin: { top: 0, bottom: 0, left: 0, right: 0 }
+        margin: { top: 0, bottom: 0, left: 0, right: 0 },
+        timeout: 120000
       });
       await browser.close();
     }
@@ -334,9 +369,19 @@ router.post('/gerar-pdf', async (req, res) => {
     res.set({
       'Content-Type': 'application/pdf',
       'Content-Disposition': `attachment; filename=${modelo}.pdf`,
-      'Content-Length': pdfBuffer.length
+      //'Content-Length': pdfBuffer.length
     });
-    res.send(pdfBuffer);
+
+    if (dados.retornaPdf === true) {
+      return res.send(pdfBuffer);
+    }
+    return res.status(200).json({
+      sucesso: true,
+      mensagem: "PDF gerado com sucesso",
+      modelo,
+      idCard: dados.idCard || null
+    });
+
 
   } catch (error) {
     console.error('❌ Erro ao gerar PDF:', error);

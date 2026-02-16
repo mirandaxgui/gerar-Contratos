@@ -128,7 +128,7 @@
   align-items:center;
   position:relative;
   padding-top:20mm; 
-  padding-bottom:20mm;
+  padding-bottom:10mm;
   page-break-after:always;
 ">
 
@@ -228,7 +228,18 @@
             </table>
 
         </div>
-
+        <div style="margin-top: 80px; display: flex; justify-content: space-between; width: 99%; padding-top: 30px;">
+            <div>
+                <span style="color:#00e08a; font-size:22px; line-height:1.2; margin:0 0 6px;">Mês vigente para
+                    realização do(s) serviço(s):</span>
+                <span style="font-size:22px; line-height:1.2; margin:0 0 6px;">{{mesRealizacao}}</span>
+            </div>
+            <div>
+                <span style="color:#00e08a; font-size:22px; line-height:1.2; margin:0 0 6px;">ID:</span>
+                <span style="font-size:22px; line-height:1.2; margin:0 0 6px;">
+                    {{idCard}}</span>
+            </div>
+        </div>
         <!-- Linha inferior -->
         <hr style="
         position:absolute;

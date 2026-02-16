@@ -25,7 +25,7 @@ async function processarSolicitacoes() {
     const targetDate = new Date();
     if (hour >= 19) targetDate.setDate(now.getDate() + 1);
 
-    const dataFormatada = targetDate.toISOString().split('T')[0];
+    const dataFormatada = targetDate.toISOString().split('T')[0]; 
     console.log(`📅 Data alvo: ${dataFormatada}`);
 
     const pageSize = 50;
@@ -96,20 +96,13 @@ async function processarSolicitacoes() {
                             timeout: 30000
                         }
                     );
+                    let result = await putResp.data;
+                    const match = result.match(/"returnInfo"\s*:\s*"({.*?})"/);
 
-                    let result = putResp.data;
+                    const returnInfoJson = match[1];
+                    const returnInfo = JSON.parse(returnInfoJson);
 
-                    // 🔍 Garante que returnInfo seja objeto
-                    try {
-                        if (typeof result.returnInfo === 'string') {
-                            result.returnInfo = JSON.parse(result.returnInfo);
-                        }
-                    } catch (e) {
-                        console.error(`❌ Erro ao fazer parse do returnInfo para ID ${s.id_solicitacao}:`, result.returnInfo);
-                    }
-
-                    const info = result.returnInfo;
-                    if (result.statusCode === 'D000' || info?.type === 'SUCESSO') {
+                    if (returnInfo.type === 'SUCESSO') {
                         console.log(`✅ PUT feito com sucesso para ID ${s.id_solicitacao}`);
                         totalSolicitacoes++;
                     } else {
@@ -117,7 +110,7 @@ async function processarSolicitacoes() {
                         erros.push({
                             id: String(s.id_solicitacao),
                             erro: 'Status inesperado',
-                            result: result
+                            returnInfo: returnInfo
                         });
 
                     }

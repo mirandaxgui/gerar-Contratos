@@ -59,7 +59,7 @@
 
         .footer {
             bottom: 0;
-            height: 80px;
+            height: 10px;
         }
 
         .header img,
@@ -72,10 +72,10 @@
         .page-content {
             position: relative;
             z-index: 2;
-            padding-top: 15mm;
+            padding-top: 10mm;
             padding-bottom: 30mm;
-            padding-left: 15mm;
-            padding-right: 15mm;
+            padding-left: 10mm;
+            padding-right: 10mm;
             height: calc(100% - 50mm);
             text-align: justify;
         }
@@ -88,13 +88,13 @@
         }
 
         .page-content p {
-            margin-bottom: 15px;
+            margin-bottom: 10px;
             font-size: 12px;
         }
 
         .page-content ul {
             margin: 10px 0 10px 30px;
-            padding-left: 15px;
+            padding-left: 10px;
             list-style-type: disc;
             font-size: 12px;
         }
@@ -119,38 +119,42 @@
 
     <!-- ======== PÁGINA 13 (TABELA DE PLANOS) ======== -->
     <div class="page" style="
-  width: 558mm;
-  height: 314mm;
-  background:#071F1F;
-  color:#fff;
-  display:flex;
-  flex-direction:column;
-  justify-content:flex-start;
-  align-items:center;
-  position:relative;
-  padding-top:0mm; 
-  padding-bottom:20mm;
-  page-break-after:always;
-">
+        width: 558mm;
+        height: 314mm;
+        background:#071F1F;
+        color:#fff;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+        position:relative;
+        padding-top:0mm; 
+        padding-bottom:20mm;
+        page-break-after:always;
+        ">
 
         <div class="page-content" style="
-    width:90%;
-    max-width:500mm;
-    display:flex;
-    flex-direction:column;
-    justify-content:flex-start;
-    align-items:center;
-    gap:25px;
-  ">
-
+            width:90%;
+            max-width:500mm;
+            display:flex;
+            flex-direction:column;
+            justify-content:flex-start;
+            align-items:center;
+            gap:25px;
+        ">
+            <div style="margin-left: 100%; display: flex;"> 
+                <span style="color:#00e08a; font-size:22px; line-height:1.2; margin:0 0 6px;">ID:</span>
+                <span style="font-size:22px; line-height:1.2; margin:0 0 6px;">
+                    {{idCard}}</span>
+            </div>
             <!-- Cabeçalho -->
             <div style="
-      display:grid;
-      grid-template-columns:44% 16% 16% 16%;
-      align-items:end; 
-      width:115%;
-      gap:50px;
-    ">
+                display:grid;
+                grid-template-columns:44% 16% 16% 16%;
+                align-items:end; 
+                width:110%;
+                gap:50px;
+                ">
                 <div style="text-align:left;">
                     <h2 style="color:#00e08a; font-size:42px; line-height:1.2; margin:0 0 6px;">Saúde Ocupacional</h2>
                     <p style="margin:0; font-size:32px; opacity:.9;">Plano para {{qtdColaboradores}} colaboradores</p>
@@ -196,16 +200,22 @@
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Portal cliente
                             (Atendimentos, Agendamentos e Documentos)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Gestão ativa
                             vencimentos (Controle proativo de exames, laudos e obrigatoriedades)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Exames clínicos
@@ -219,16 +229,24 @@
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Laudos Regulatórios
                             (PCMSO, PGR e LTCATs)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Tabela única de preços
                             exames complementares Brasil</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">SLA exame clínico</td>
@@ -253,52 +271,84 @@
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">AI – Agendamento
                             Inteligente via WhatsApp (Automatização do contato com colaboradores para agendamento de
                             exames)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">AI - Gestão Atestados
                             e Prontuário digital (Monitoramento de afastamentos e atestados médicos com relatórios
                             inteligentes)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Painel BI saúde
                             (Indicadores de saúde ocupacional com visão estratégica)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Integração com o
                             eSocial (Envio automatizado de eventos de SST)</td>
                         <td style="border:1px solid #193b33; text-align:center;">S-2240</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Emissão de PPP (Perfil
                             Profissiográfico Previdenciário)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Emissão de CAT</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                     <tr>
                         <td style="border:1px solid #193b33; padding:10px 12px; text-align:left;">Adequação à Nova NR-01
                             – Avaliação de Riscos Psicossociais (Diagnóstico completo e plano de ação com foco na saúde
                             mental)</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">❌</td>
-                        <td style="border:1px solid #193b33; text-align:center;">✔️</td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{redMark}}" alt="Red Mark"
+                                style="max-width: 8%; height: auto;" />
+                        </td>
+                        <td style="border:1px solid #193b33; text-align:center;"><img src="{{greenMark}}"
+                                alt="Green Mark" style="max-width: 8%; height: auto;" /></td>
                     </tr>
                 </tbody>
             </table>
@@ -319,9 +369,9 @@
     </div>
 
 
-    <!-- ======== PÁGINAS 14 E 15 ======== -->
+    <!-- ======== PÁGINAS 14 E 10 ======== -->
     <div class="page"><img src="{{pagina14}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>
-    <div class="page"><img src="{{pagina15}}" style="width: 558mm; height: 314mm;" alt="Página 15"></div>
+    <div class="page"><img src="{{pagina10}}" style="width: 558mm; height: 314mm;" alt="Página 10"></div>
 
 </body>
 
