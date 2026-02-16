@@ -214,12 +214,26 @@ router.post('/gerar-pdf', async (req, res) => {
     }
 
     //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
-    const listaComplementares = (dados.campos?.complementaresAdc || '')
+    const itens = (dados.campos?.complementaresAdc || '')
       .split(',')
       .map(item => item.trim())
-      .filter(item => /^\d+/.test(item)) // ✅ só entra se começar com número
-      .map(item => `<li>${item};</li>`)
-      .join('\n');
+      .filter(item => /^\d+/.test(item));
+
+    const colunas = [[], [], []];
+
+    itens.forEach((item, index) => {
+      colunas[index % 3].push(item);
+    });
+
+    const listaComplementares = `
+      <div style="display: flex; gap: 30px;">
+        ${colunas.map(coluna => `
+          <ul style="list-style: disc;">
+            ${coluna.map(item => `<li>${item};</li>`).join('')}
+          </ul>
+        `).join('')}
+      </div>
+    `;
 
 
     if (modelo === 'propostaPeriodico') {
