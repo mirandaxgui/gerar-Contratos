@@ -2,6 +2,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 import gerarPdfRoute from './routes/gerarPdfRoute.js';
 import enviarKitsRoute from './routes/enviarKitsRoute.js';
+import subirAsoRouter from './routes/subirAsoRouter.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import formSolicRoute from './routes/formSolicRoute.js'; // Importando a rota
@@ -17,6 +18,7 @@ app.use(bodyParser.json({ limit: '5mb' }));
 
 app.use('/', gerarPdfRoute);
 app.use('/', enviarKitsRoute);
+app.use('/', subirAsoRouter);
 
 // Serve os arquivos estáticos da pasta 'build' do React
 app.use(express.static(path.join(__dirname, 'build')));
