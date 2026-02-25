@@ -367,7 +367,7 @@ router.post('/subirAso', async (req, res) => {
       await updateCardPipefy(cardId, attSolicitacaoResult.message);
       throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
     }
-
+/*
     const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
     if (psicossocial === null) {
       console.log("Sem Av. Psico");
@@ -388,6 +388,7 @@ router.post('/subirAso', async (req, res) => {
         console.log("Sem Av. Psico");
       }
     }
+*/
 
     return res.status(200).json({
       message: "ASO cadastrado com sucesso",
