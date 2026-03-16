@@ -290,11 +290,11 @@ router.post('/gerar-pdf', async (req, res) => {
             <br><br>
             • <strong>50% do valor total</strong>, equivalente a
             <strong>R$ ${metadeValorTotal}</strong>, deverá ser pago em
-            <strong>{{dataPrimeiroPagamento}}</strong>;
+            <strong>${dataPrimeiroPagamento}</strong>;
             <br>
             • Os <strong>50% restantes</strong>, equivalentes a
             <strong>R$ ${metadeValorTotal}</strong>, serão parcelados em
-            <strong>{{qtdParcelas}}x</strong> na modalidade
+            <strong>${qtdParcelas}x</strong> na modalidade
             <strong>${formaPagamento}</strong>.
             <br><br>
             O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
