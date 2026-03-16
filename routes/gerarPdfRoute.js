@@ -58,6 +58,7 @@ router.post('/gerar-pdf', async (req, res) => {
     let metadeValorTotal = "";
     let mesRealizacao = "";
     let idCard = "";
+    let paragrafoPagamento = "";
     // Se for propostaHunter, aplica a lógica de preços e injeta imagens
     let qtdColaboradores = Number(dados.campos?.qtd_colaboradores || 0);
     let precos = { basico: '', essencial: '', premium: '' };
@@ -240,13 +241,67 @@ router.post('/gerar-pdf', async (req, res) => {
       //PROPOSTA PERIÓDICO
       // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
       let valorRaw = dados.campos?.valorTotal || "0";
+      let formaPagamento = dados.campos?.formaPagamento || "";
 
+      // Corrige formato vindo com vírgula
       if (valorRaw.includes(",")) {
         valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
       }
 
-      let valorTotal = Number(valorRaw);
-      metadeValorTotal = (valorTotal / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      // Converte para número
+      let valorNumero = Number(valorRaw);
+
+      // Formata sempre com duas casas
+      let valorTotal = valorNumero.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      let metadeValorTotal = (valorNumero / 2).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      // Verifica se é pagamento à vista
+      if (
+        formaPagamento === "Boleto à vista" ||
+        formaPagamento === "Cartão de crédito à vista" ||
+        formaPagamento === "Pix à vista"
+      ) {
+
+        paragrafoPagamento = `
+        <p>
+            O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
+            Sendo assim, fica acordado que:
+            <br><br>
+            • O <strong>valor total</strong> será pago de maneira integral na modalidade
+            <strong>${formaPagamento}</strong>.
+            <br><br>
+            O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
+            previamente estabelecidas.
+        </p>`;
+
+      } else {
+
+        paragrafoPagamento = `
+        <p>
+            O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
+            Sendo assim, fica acordado que:
+            <br><br>
+            • <strong>50% do valor total</strong>, equivalente a
+            <strong>R$ ${metadeValorTotal}</strong>, deverá ser pago em
+            <strong>{{dataPrimeiroPagamento}}</strong>;
+            <br>
+            • Os <strong>50% restantes</strong>, equivalentes a
+            <strong>R$ ${metadeValorTotal}</strong>, serão parcelados em
+            <strong>{{qtdParcelas}}x</strong> na modalidade
+            <strong>${formaPagamento}</strong>.
+            <br><br>
+            O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
+            previamente estabelecidas.
+        </p>`;
+
+      }
 
     }
 
@@ -271,6 +326,7 @@ router.post('/gerar-pdf', async (req, res) => {
       totalGeral,
       valorDesconto,
       valorFinal,
+      paragrafoPagamento,
       mesRealizacao,
       idCard,
 
