@@ -242,6 +242,10 @@ router.post('/gerar-pdf', async (req, res) => {
       // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
       let valorRaw = dados.campos?.valorTotal || "0";
       let formaPagamento = dados.campos?.formaPagamento || "";
+      let dataPrimeiroPagamento = dados.campos?.dataPrimeiroPagamento
+        ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
+        : "";
+      let qtdParcelas = dados.campos?.qtdParcelas || ""; 
 
       // Corrige formato vindo com vírgula
       if (valorRaw.includes(",")) {
