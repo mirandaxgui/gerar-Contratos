@@ -241,8 +241,9 @@ router.post('/gerar-pdf', async (req, res) => {
       // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
       let valorRaw = dados.campos?.valorTotal || "0";
 
-      // remove separadores de milhar e ajusta decimal
-      valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
+      if (valorRaw.includes(",")) {
+        valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
+      }
 
       let valorTotal = Number(valorRaw);
       metadeValorTotal = (valorTotal / 2).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
