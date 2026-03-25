@@ -1,12 +1,12 @@
 import express from 'express';
 import axios from 'axios';
-import { fetchFornecedores } from '../utils/pipefyFetchFornecedores.js';
+import { fetchFornecedores } from '../utils/sggFetchFornecedores.js';
 
 // Criar o roteador
 const router = express.Router();
 
 // Variáveis de token, usei variáveis de ambiente como exemplo
-const SGG_TOKEN = process.env.USER_SGG;
+const SGG_TOKEN = "aWE2b2E3eFRUaWQ3dXg4S3RjV1E2Sm9QejNLRGlsMkg6";
 
 
 // Rota para buscar fornecedores
@@ -84,6 +84,80 @@ router.get('/cargo/', async (req, res) => {
   }
 });
 
+// Rota para buscar agenda de um fornecedor no SGG
+router.get('/agenda/', async (req, res) => {
+  const { id_fornecedor } = req.query;
+
+  if (!id_fornecedor) {
+    return res.status(400).json({ error: 'id_fornecedor é obrigatório' });
+  }
+
+  try {
+    const response = await fetch(
+      `https://app.sgg.net.br/api/v3/agenda/?id_fornecedor=${id_fornecedor}`,
+      {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${SGG_TOKEN}`,
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    const agendas = (data?.resultado || []).filter(
+      (agenda) => agenda.situacao !== "Inativa"
+    );
+
+    res.status(200).json(agendas);
+
+  } catch (error) {
+    console.error('Erro ao buscar agenda no SGG:', error);
+    res.status(500).json({ error: 'Erro ao buscar agenda' });
+  }
+});
+
+// Rota para buscar horários disponíveis no SGG
+router.post('/agendamento/', async (req, res) => {
+  const {
+    agenda,
+    data_inicio,
+    data_fim
+  } = req.body;
+
+  if (!agenda || !data_inicio || !data_fim) {
+    return res.status(400).json({
+      error: 'agenda, data_inicio e data_fim são obrigatórios'
+    });
+  }
+
+  try {
+    const response = await fetch(
+      `https://app.sgg.net.br/api/v3/agendamento/?agenda=${agenda}&retornar_horarios_livres=true&data_hora_agendamento_aPartirDe=${data_inicio} 00:00:00&data_hora_agendamento_ate=${data_fim} 23:59:59`,
+      {
+        method: "GET",
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Basic ${SGG_TOKEN}`,
+        }
+      }
+    );
+
+    const data = await response.json();
+    // Filtra as linhas onde "observacoes" é "Horário Livre"
+    const horariosLivres = data.resultado.filter(item => item.observacoes === "Horário Livre");
+
+    console.log("Horários livres:", horariosLivres);
+
+    res.status(200).json(data?.resultado || []);
+
+  } catch (error) {
+    console.error('Erro ao buscar horários no SGG:', error);
+    res.status(500).json({ error: 'Erro ao buscar horários' });
+  }
+});
+
 router.post('/submit-form/', (req, res) => {
   const formData = req.body;
   try {
@@ -93,7 +167,7 @@ router.post('/submit-form/', (req, res) => {
       headers: {
         'Content-Type': 'application/json',
       },
-    }); 
+    });
     console.log('Resposta do n8n:', n9nResponse.data);
 
     res.status(200).json({ message: 'Formulário enviado com sucesso' });

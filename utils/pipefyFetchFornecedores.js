@@ -1,7 +1,7 @@
 const PIPEFY_TOKEN = process.env.PIPEFY_TOKEN;
 
 // Função para buscar fornecedores no Pipefy
-export async function fetchFornecedores() {
+export async function pipefyFetchFornecedores() {
   let fornecedores = [];
   let endCursor = null;
 

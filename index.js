@@ -28,6 +28,11 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
+// Rota para servir o formulário React na raiz
+app.get('/colaboradores', (req, res) => {
+  res.sendFile(path.join(__dirname, 'build', 'index.html'));
+});
+
 app.use('/api/v3/', formSolicRoute); // Usando a rota para formSolicitações
 
 app.listen(PORT, () => {
