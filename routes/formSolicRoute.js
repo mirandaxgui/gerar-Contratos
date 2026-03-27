@@ -6,7 +6,7 @@ import { fetchFornecedores } from '../utils/sggFetchFornecedores.js';
 const router = express.Router();
 
 // Variáveis de token, usei variáveis de ambiente como exemplo
-const SGG_TOKEN = "aWE2b2E3eFRUaWQ3dXg4S3RjV1E2Sm9QejNLRGlsMkg6";
+const SGG_TOKEN = process.env.USER_SGG;
 
 
 // Rota para buscar fornecedores

@@ -1,8 +1,8 @@
 import express from "express";
 import pdfDocument from "pdf-lib";
 const SGG_BASE_URL = "https://app.sgg.net.br/api/v3";
-const SGG_TOKEN = 'aWE2b2E3eFRUaWQ3dXg4S3RjV1E2Sm9QejNLRGlsMkg6';
-const PIPEFY_TOKEN = 'eyJhbGciOiJIUzUxMiJ9.eyJpc3MiOiJQaXBlZnkiLCJpYXQiOjE3NDI0ODI1MjEsImp0aSI6ImUxZjU0Y2ZkLTEzYzItNDQ2Yy05OGU0LWU0NDljY2MxY2IzYSIsInN1YiI6MzA2MDUxNzg3LCJ1c2VyIjp7ImlkIjozMDYwNTE3ODcsImVtYWlsIjoiZ3VpbGhlcm1lLm1pcmFuZGFAZGVtYWlzYXVkZS5jb20ifX0.LVlemZuqRl98fHsWxCpIBU5M0VeM2rM3hE24d9tIR9jX0O4nvQeX5zqRHywYBtlumTqK42bN-E6HDIQ0YLpmkg';
+const SGG_TOKEN = process.env.USER_SGG;
+const PIPEFY_TOKEN = process.env.PIPEFY_TOKEN;
 
 const router = express.Router();
 const { PDFDocument } = pdfDocument;

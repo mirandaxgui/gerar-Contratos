@@ -1,4 +1,4 @@
-const SGG_TOKEN = "aWE2b2E3eFRUaWQ3dXg4S3RjV1E2Sm9QejNLRGlsMkg6";
+const SGG_TOKEN = process.env.USER_SGG;
 
 // Função para buscar fornecedores no SGG
 export async function fetchFornecedores() {
