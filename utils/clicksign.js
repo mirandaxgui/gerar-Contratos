@@ -78,14 +78,20 @@ export async function enviarDocumentoPDF(envelopeId, base64PDF, nomeEmpresa) {
     }
 }
 
-export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner) {
+export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner, witnessSigner) {
     try {
         const fabricioSigner = {
             name: 'Fabricio Devechi',
             email: 'fabricio.devechi@demaisaude.com'
         };
 
-        const payloads = [vendedorSigner, clienteSigner, fabricioSigner].map(signer => ({
+        // Checando se witnessSigner existe antes de adicioná-lo ao array
+        const signers = [vendedorSigner, clienteSigner, fabricioSigner];
+        if (witnessSigner !== '' && witnessSigner !== null && witnessSigner !== undefined) {
+            signers.push(witnessSigner);
+        }
+
+        const payloads = signers.map(signer => ({
             data: {
                 type: 'signers',
                 attributes: {
@@ -97,8 +103,8 @@ export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner
                         signature_reminder: 'email',
                         document_signed: 'email'
                     },
-                    name: signer.name || signer.nomeVendedor || signer.nomeClienteSigner,
-                    email: signer.email || signer.emailVendedor || signer.emailClienteSigner,
+                    name: signer.name || signer.nomeVendedor || signer.nomeClienteSigner || signer.nomeWitnessSigner,
+                    email: signer.email || signer.emailVendedor || signer.emailClienteSigner || signer.emailWitnessSigner,
                     refusable: true
                 }
             }
@@ -135,21 +141,45 @@ export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner
 }
 
 async function criarRequisitos(envelopeId, documentoId, signersIds, roleVendedorSigner) {
+    console.log("🔍 Criando requisitos para signatários:", { envelopeId, documentoId, signersIds, roleVendedorSigner });
     try {
-        const [vendedorId, clienteId, fabricioId] = signersIds;
+        let vendedorId, clienteId, witnessId, fabricioId;
+        
+        // Verifique o número de signatários antes de desestruturar os IDs
+        if (signersIds.length === 3) {
+           [vendedorId, clienteId, fabricioId] = signersIds; 
+        }
+        if (signersIds.length > 3) {
+           [vendedorId, clienteId, fabricioId, witnessId] = signersIds; 
+        }
+
         let requisitos = [];
+
         if (roleVendedorSigner === "witness") {
-        requisitos = [
-            { role: "witness", id: vendedorId },
-            { role: "contractee", id: clienteId },
-            { role: "contractor", id: fabricioId }
-        ]};
+            requisitos = [
+                { role: "witness", id: vendedorId },
+                { role: "contractee", id: clienteId },
+                { role: "contractor", id: fabricioId }
+            ];
+        }
+
+        if (roleVendedorSigner === "witness" && signersIds.length > 3) {
+            requisitos = [
+                { role: "witness", id: vendedorId },
+                { role: "witness", id: witnessId },
+                { role: "contractee", id: clienteId },
+                { role: "contractor", id: fabricioId }
+            ];
+        }
+
         if (roleVendedorSigner === "seller") {
-        requisitos = [
-            { role: "seller", id: vendedorId },
-            { role: "legal_representative", id: clienteId },
-            { role: "legal_representative", id: fabricioId }
-        ]};
+            requisitos = [
+                { role: "seller", id: vendedorId },
+                { role: "legal_representative", id: clienteId },
+                { role: "legal_representative", id: fabricioId }
+            ];
+        }
+
         for (const { role, id } of requisitos) {
             const baseReq = {
                 document: { data: { type: "documents", id: documentoId } },
@@ -271,8 +301,7 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
 
         const documentoId = await enviarDocumentoPDF(envelopeId, base64PDF, nomeEmpresa);
 
-        const signersIds = await criarSignatarios(envelopeId, dados.vendedorSigner, dados.clienteSigner);
-
+        const signersIds = await criarSignatarios(envelopeId, dados.vendedorSigner, dados.clienteSigner, dados.witnessSigner);
         await criarRequisitos(envelopeId, documentoId, signersIds, dados.roleVendedorSigner);
         await atualizarEnvelope(envelopeId, deadlineFormatado);
         await enviarNotificacao(envelopeId);
