@@ -111,7 +111,9 @@ async function cadastrarExame(solicitacao, exameNome) {
     data_exames_lancados: solicitacao.data_solicitacao_de_exame,
     exame: nome,
     id_empresa: solicitacao.id_empresa,
-    medico: solicitacao.medico || '54369-SP',
+    medico: solicitacao.medico === '54369-SP'
+      ? '93975-SP'
+      : (solicitacao.medico || '93975-SP'),
     id_funcionario: solicitacao.id_funcionario,
     tipo_exame: tipoExameCorrigido,
     fornecedor: solicitacao.fornecedor,
@@ -186,7 +188,9 @@ async function cadastrarAso(solicitacao, id_exame) {
     id_empresa: solicitacao.id_empresa,
     id_funcionario: solicitacao.id_funcionario,
     data_emissao_aso: solicitacao.data_solicitacao_de_exame,
-    medico: solicitacao.medico || '54369-SP',
+    medico: solicitacao.medico === '54369-SP'
+      ? '93975-SP'
+      : (solicitacao.medico || '93975-SP'),
     medico_coordenador: solicitacao.medico_coord,
     codigos_exames_realizados: id_exame
   };
@@ -367,28 +371,28 @@ router.post('/subirAso', async (req, res) => {
       await updateCardPipefy(cardId, attSolicitacaoResult.message);
       throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
     }
-/*
-    const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
-    if (psicossocial === null) {
-      console.log("Sem Av. Psico");
-      console.log("🎉 Processo finalizado com sucesso!");
-      return res.status(200).json({
-        message: "🎉 Processo finalizado com sucesso!",
-        idExameClinico
-      });
-    }
-    if (psicossocial.situacao === 'Cancelado') {
-      //attSolicitacao(solicitacao, 'Pendente');
-      console.error("PSICO CANCELADA");
-    } else {
-      const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
-      if (idPsico) {
-        await attSolicitacao(psicossocial, 'Finalizada');
-      } else {
-        console.log("Sem Av. Psico");
-      }
-    }
-*/
+    /*
+        const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
+        if (psicossocial === null) {
+          console.log("Sem Av. Psico");
+          console.log("🎉 Processo finalizado com sucesso!");
+          return res.status(200).json({
+            message: "🎉 Processo finalizado com sucesso!",
+            idExameClinico
+          });
+        }
+        if (psicossocial.situacao === 'Cancelado') {
+          //attSolicitacao(solicitacao, 'Pendente');
+          console.error("PSICO CANCELADA");
+        } else {
+          const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
+          if (idPsico) {
+            await attSolicitacao(psicossocial, 'Finalizada');
+          } else {
+            console.log("Sem Av. Psico");
+          }
+        }
+    */
 
     return res.status(200).json({
       message: "ASO cadastrado com sucesso",
