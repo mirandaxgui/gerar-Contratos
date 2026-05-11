@@ -25,7 +25,7 @@ router.get('/empresa', async (req, res) => {
   const { cnpj_cpf } = req.query; // Pegando o cnpj_cpf dos parâmetros da URL
 
   try {
-    const response = await axios.get(`https://app.sgg.net.br/api/v3/empresa/?cnpj_cpf=${cnpj_cpf}`, {
+    const response = await axios.get(`https://app.sgg.net.br/api/v3/empresa/?situacao=ativa&cnpj_cpf=${cnpj_cpf}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Basic ${SGG_TOKEN}`,
