@@ -24,9 +24,10 @@ export async function fetchFornecedores() {
       const razaoSocial = fornecedor.nome;
       const codigoSGG = fornecedor.id_fornecedor;
       const situacao = fornecedor.situacao;
+      const tipo = fornecedor.tipo;
 
       // Mantendo mesma lógica do Pipefy (ignorar inativos, se quiser manter consistência)
-      if (razaoSocial && codigoSGG && situacao !== "Inativo") {
+      if (razaoSocial && codigoSGG && situacao !== "Inativo" && tipo === "Clinica") {
         fornecedores.push({
           razaoSocial,
           codigoSGG
