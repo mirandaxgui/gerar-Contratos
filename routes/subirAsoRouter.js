@@ -363,56 +363,57 @@ router.post('/subirAso', async (req, res) => {
         await updateCardPipefy(cardId, error.message);
         throw error;
       }
-      const asoCadastrar = await cadastrarAso(solicitacao, idExames);
-      if (asoCadastrar instanceof Error) {
-        await updateCardPipefy(cardId, asoCadastrar.message);
-        throw asoCadastrar; // Lança o erro para ser capturado no catch externo
-      }
-      const enviarDoc = await enviarDocumento(link_arquivo, solicitacao.id_empresa, solicitacao.id_funcionario, idExameClinico);
-      if (enviarDoc instanceof Error) {
-        await updateCardPipefy(cardId, enviarDoc.message);
-        throw enviarDoc; // Lança o erro para ser capturado no catch externo
-      }
-
-      const attSolicitacaoResult = await attSolicitacao(solicitacao, "Finalizada");
-      if (attSolicitacaoResult instanceof Error) {
-        await updateCardPipefy(cardId, attSolicitacaoResult.message);
-        throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
-      }
-      /*
-          const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
-          if (psicossocial === null) {
-            console.log("Sem Av. Psico");
-            console.log("🎉 Processo finalizado com sucesso!");
-            return res.status(200).json({
-              message: "🎉 Processo finalizado com sucesso!",
-              idExameClinico
-            });
-          }
-          if (psicossocial.situacao === 'Cancelado') {
-            //attSolicitacao(solicitacao, 'Pendente');
-            console.error("PSICO CANCELADA");
-          } else {
-            const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
-            if (idPsico) {
-              await attSolicitacao(psicossocial, 'Finalizada');
-            } else {
-              console.log("Sem Av. Psico");
-            }
-          }
-      */
-
-      return res.status(200).json({
-        message: "ASO cadastrado com sucesso",
-        idExameClinico
-      });
-    } catch (error) {
-      console.error("❌ Erro:", error);
-      return res.status(500).json({
-        error: error.message
-      });
     }
-  });
+    const asoCadastrar = await cadastrarAso(solicitacao, idExames);
+    if (asoCadastrar instanceof Error) {
+      await updateCardPipefy(cardId, asoCadastrar.message);
+      throw asoCadastrar; // Lança o erro para ser capturado no catch externo
+    }
+    const enviarDoc = await enviarDocumento(link_arquivo, solicitacao.id_empresa, solicitacao.id_funcionario, idExameClinico);
+    if (enviarDoc instanceof Error) {
+      await updateCardPipefy(cardId, enviarDoc.message);
+      throw enviarDoc; // Lança o erro para ser capturado no catch externo
+    }
+
+    const attSolicitacaoResult = await attSolicitacao(solicitacao, "Finalizada");
+    if (attSolicitacaoResult instanceof Error) {
+      await updateCardPipefy(cardId, attSolicitacaoResult.message);
+      throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
+    }
+    /*
+        const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
+        if (psicossocial === null) {
+          console.log("Sem Av. Psico");
+          console.log("🎉 Processo finalizado com sucesso!");
+          return res.status(200).json({
+            message: "🎉 Processo finalizado com sucesso!",
+            idExameClinico
+          });
+        }
+        if (psicossocial.situacao === 'Cancelado') {
+          //attSolicitacao(solicitacao, 'Pendente');
+          console.error("PSICO CANCELADA");
+        } else {
+          const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
+          if (idPsico) {
+            await attSolicitacao(psicossocial, 'Finalizada');
+          } else {
+            console.log("Sem Av. Psico");
+          }
+        }
+    */
+
+    return res.status(200).json({
+      message: "ASO cadastrado com sucesso",
+      idExameClinico
+    });
+  } catch (error) {
+    console.error("❌ Erro:", error);
+    return res.status(500).json({
+      error: error.message
+    });
+  }
+});
 
 
 export default router;
