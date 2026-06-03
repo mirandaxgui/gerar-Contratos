@@ -345,66 +345,74 @@ router.post('/subirAso', async (req, res) => {
     }
     const exames = solicitacao.exames.split(",").map((e) => e.trim());
     for (const exame of exames) {
-      const id_exame = await cadastrarExame(solicitacao, exame);
-      if (idExames) {
-        idExames += ", " + id_exame;
-      } else {
-        idExames = id_exame; // Para o primeiro id_exame, só atribui diretamente
-      }
-      if (exame === 'EXAME CLÍNICO') {
-        idExameClinico = id_exame;
-      }
-    }
-    const asoCadastrar = await cadastrarAso(solicitacao, idExames);
-    if (asoCadastrar instanceof Error) {
-      await updateCardPipefy(cardId, asoCadastrar.message);
-      throw asoCadastrar; // Lança o erro para ser capturado no catch externo
-    }
-    const enviarDoc = await enviarDocumento(link_arquivo, solicitacao.id_empresa, solicitacao.id_funcionario, idExameClinico);
-    if (enviarDoc instanceof Error) {
-      await updateCardPipefy(cardId, enviarDoc.message);
-      throw enviarDoc; // Lança o erro para ser capturado no catch externo
-    }
-
-    const attSolicitacaoResult = await attSolicitacao(solicitacao, "Finalizada");
-    if (attSolicitacaoResult instanceof Error) {
-      await updateCardPipefy(cardId, attSolicitacaoResult.message);
-      throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
-    }
-    /*
-        const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
-        if (psicossocial === null) {
-          console.log("Sem Av. Psico");
-          console.log("🎉 Processo finalizado com sucesso!");
-          return res.status(200).json({
-            message: "🎉 Processo finalizado com sucesso!",
-            idExameClinico
-          });
+      try {
+        const id_exame = await cadastrarExame(solicitacao, exame);
+        if (id_exame instanceof Error) {
+          await updateCardPipefy(cardId, id_exame.message);
+          throw id_exame; // Lança o erro para ser capturado no catch externo
         }
-        if (psicossocial.situacao === 'Cancelado') {
-          //attSolicitacao(solicitacao, 'Pendente');
-          console.error("PSICO CANCELADA");
+        if (idExames) {
+          idExames += ", " + id_exame;
         } else {
-          const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
-          if (idPsico) {
-            await attSolicitacao(psicossocial, 'Finalizada');
-          } else {
-            console.log("Sem Av. Psico");
-          }
+          idExames = id_exame; // Para o primeiro id_exame, só atribui diretamente
         }
-    */
+        if (exame === 'EXAME CLÍNICO') {
+          idExameClinico = id_exame;
+        }
+      } catch (error) {
+        await updateCardPipefy(cardId, error.message);
+        throw error;
+      }
+      const asoCadastrar = await cadastrarAso(solicitacao, idExames);
+      if (asoCadastrar instanceof Error) {
+        await updateCardPipefy(cardId, asoCadastrar.message);
+        throw asoCadastrar; // Lança o erro para ser capturado no catch externo
+      }
+      const enviarDoc = await enviarDocumento(link_arquivo, solicitacao.id_empresa, solicitacao.id_funcionario, idExameClinico);
+      if (enviarDoc instanceof Error) {
+        await updateCardPipefy(cardId, enviarDoc.message);
+        throw enviarDoc; // Lança o erro para ser capturado no catch externo
+      }
 
-    return res.status(200).json({
-      message: "ASO cadastrado com sucesso",
-      idExameClinico
-    });
-  } catch (error) {
-    console.error("❌ Erro:", error);
-    return res.status(500).json({
-      error: error.message
-    });
-  }
-});
+      const attSolicitacaoResult = await attSolicitacao(solicitacao, "Finalizada");
+      if (attSolicitacaoResult instanceof Error) {
+        await updateCardPipefy(cardId, attSolicitacaoResult.message);
+        throw attSolicitacaoResult; // Lança o erro para ser capturado no catch externo
+      }
+      /*
+          const psicossocial = await fetchPsico(solicitacao.data_solicitacao_de_exame, solicitacao.id_funcionario);
+          if (psicossocial === null) {
+            console.log("Sem Av. Psico");
+            console.log("🎉 Processo finalizado com sucesso!");
+            return res.status(200).json({
+              message: "🎉 Processo finalizado com sucesso!",
+              idExameClinico
+            });
+          }
+          if (psicossocial.situacao === 'Cancelado') {
+            //attSolicitacao(solicitacao, 'Pendente');
+            console.error("PSICO CANCELADA");
+          } else {
+            const idPsico = await cadastrarExame(psicossocial, 'AVALIAÇÃO PSICOSSOCIAL');
+            if (idPsico) {
+              await attSolicitacao(psicossocial, 'Finalizada');
+            } else {
+              console.log("Sem Av. Psico");
+            }
+          }
+      */
+
+      return res.status(200).json({
+        message: "ASO cadastrado com sucesso",
+        idExameClinico
+      });
+    } catch (error) {
+      console.error("❌ Erro:", error);
+      return res.status(500).json({
+        error: error.message
+      });
+    }
+  });
 
 
 export default router;
