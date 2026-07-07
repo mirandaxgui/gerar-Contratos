@@ -245,7 +245,7 @@ router.post('/gerar-pdf', async (req, res) => {
       let dataPrimeiroPagamento = dados.campos?.dataPrimeiroPagamento
         ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
         : "";
-      let qtdParcelas = dados.campos?.qtdParcelas || ""; 
+      let qtdParcelas = dados.campos?.qtdParcelas || "";
 
       // Corrige formato vindo com vírgula
       if (valorRaw.includes(",")) {
@@ -285,7 +285,7 @@ router.post('/gerar-pdf', async (req, res) => {
             previamente estabelecidas.
         </p>`;
 
-      } else {
+      } else if (formaPagamento) {
 
         paragrafoPagamento = `
         <p>
@@ -305,6 +305,15 @@ router.post('/gerar-pdf', async (req, res) => {
             previamente estabelecidas.
         </p>`;
 
+      } else {
+        paragrafoPagamento = `
+        <p>
+            O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
+            Sendo assim, fica acordado que:
+            <br><br>
+            O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
+            previamente estabelecidas, selecionando a forma de pagamento desejada.
+        </p>`;
       }
 
     }
