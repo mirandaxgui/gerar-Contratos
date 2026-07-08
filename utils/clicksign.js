@@ -294,7 +294,7 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
         deadline_at.setDate(0);
         const deadlineFormatado = deadline_at.toISOString().slice(0, 19) + ".000-03:00";
 
-        const nomeEmpresa = dados.campos.nomeCredenciada || nomeEmpresa;
+        const nomeEmpresa = dados.campos.nomeCredenciada || dados.campos.nomeEmpresa || nomeEmpresa;
         const envelopeId = await criarEnvelope(nomeEmpresa, deadlineFormatado);
 
         const base64PDF = `data:application/pdf;base64,${Buffer.from(pdfBuffer).toString('base64')}`;
