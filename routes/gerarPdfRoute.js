@@ -261,6 +261,8 @@ router.post('/gerar-pdf', async (req, res) => {
         maximumFractionDigits: 2
       });
 
+      dados.campos.valorTotal = valorTotal;
+
       let metadeValorTotal = (valorNumero / 2).toLocaleString("pt-BR", {
         minimumFractionDigits: 2,
         maximumFractionDigits: 2
