@@ -431,7 +431,7 @@ router.post('/gerar-pdf', async (req, res) => {
 
         // 3️⃣ Atualiza o campo "anexar_proposta_para_envio" com o path interno
         let fieldId = "anexar_proposta_para_envio"; // substitua se necessário
-        if (dados.modelo === 'propostaPeriodico' && dados.formaPagamento === null){
+        if (dados.modelo === 'propostaPeriodico' && dados.campos.formaPagamento === null){
           fieldId = "proposta_gerada"; 
         }
         console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
