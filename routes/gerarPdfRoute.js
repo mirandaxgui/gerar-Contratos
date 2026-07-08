@@ -430,7 +430,10 @@ router.post('/gerar-pdf', async (req, res) => {
         console.log("✅ Upload concluído com sucesso!");
 
         // 3️⃣ Atualiza o campo "anexar_proposta_para_envio" com o path interno
-        const fieldId = "anexar_proposta_para_envio"; // substitua se necessário
+        let fieldId = "anexar_proposta_para_envio"; // substitua se necessário
+        if (dados.modelo === 'propostaPeriodico' && dados.formaPagamento === null){
+          fieldId = "proposta_gerada"; 
+        }
         console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
 
         const sucesso = await atualizarCampoCardPipefy(dados.idCard, fieldId, path);
