@@ -63,6 +63,10 @@ async function processarSolicitacoes() {
                         tipoExameCorrigido = 'Retorno ao trabalho';
                     }
 
+                    if (tipoExameCorrigido === 'Outro' && String(s.exames) === 'CONSULTA COM MÉDICO DO TRABALHO') {
+                        continue; // Pula essa solicitação
+                    }
+
                     const bodyPut = {
                         id_solicitacao_de_exame: String(s.id_solicitacao),
                         id_empresa: String(s.id_empresa),
