@@ -31,13 +31,34 @@ async function fetchComRetry429(url) {
 
 // Função para buscar fornecedores no SGG
 export async function fetchFornecedores() {
+  const activeFornecedorIds = new Set();
+  let paginaAgenda = 0;
+  let temProximaPaginaAgenda = true;
+
+  // 1. Buscar todas as agendas ativas de forma paginada
+  while (temProximaPaginaAgenda) {
+    const url = `https://app.sgg.net.br/api/v3/agenda/?paginador[pagina]=${paginaAgenda}&paginador[tamanho]=50`;
+    const data = await fetchComRetry429(url);
+    const registros = data?.resultado || [];
+
+    registros.forEach((agenda) => {
+      const situacao = agenda.situacao?.toLowerCase();
+      if (situacao === "ativa" && agenda.id_fornecedor) {
+        activeFornecedorIds.add(agenda.id_fornecedor.toString());
+      }
+    });
+
+    temProximaPaginaAgenda = data?.temProximaPagina;
+    paginaAgenda++;
+  }
+
   let fornecedores = [];
-  let pagina = 0;
-  let temProximaPagina = true;
+  let paginaFornecedor = 0;
+  let temProximaPaginaFornecedor = true;
 
-  while (temProximaPagina) {
-    const url = `https://app.sgg.net.br/api/v3/fornecedores/?paginador[pagina]=${pagina}&paginador[limite]=100`;
-
+  // 2. Buscar e paginar os fornecedores, filtrando pelos que possuem agenda ativa
+  while (temProximaPaginaFornecedor) {
+    const url = `https://app.sgg.net.br/api/v3/fornecedores/?paginador[pagina]=${paginaFornecedor}&paginador[limite]=100`;
     const data = await fetchComRetry429(url);
     const registros = data?.resultado || [];
 
@@ -49,7 +70,13 @@ export async function fetchFornecedores() {
       const estado = fornecedor.estado;
       const cidade = fornecedor.cidade;
 
-      if (razaoSocial && codigoSGG && situacao !== "Inativo" && tipo === "Clinica") {
+      if (
+        razaoSocial &&
+        codigoSGG &&
+        situacao !== "Inativo" &&
+        tipo === "Clinica" &&
+        activeFornecedorIds.has(codigoSGG.toString())
+      ) {
         fornecedores.push({
           razaoSocial,
           codigoSGG,
@@ -59,8 +86,8 @@ export async function fetchFornecedores() {
       }
     });
 
-    temProximaPagina = data?.temProximaPagina;
-    pagina++;
+    temProximaPaginaFornecedor = data?.temProximaPagina;
+    paginaFornecedor++;
   }
 
   return fornecedores;
