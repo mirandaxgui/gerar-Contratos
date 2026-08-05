@@ -25,7 +25,7 @@ async function processarSolicitacoes() {
     const targetDate = new Date();
     if (hour >= 19) targetDate.setDate(now.getDate() + 1);
 
-    const dataFormatada = targetDate.toISOString().split('T')[0]; 
+    const dataFormatada = targetDate.toISOString().split('T')[0];
     console.log(`📅 Data alvo: ${dataFormatada}`);
 
     const pageSize = 50;
@@ -66,6 +66,13 @@ async function processarSolicitacoes() {
                     if (tipoExameCorrigido === 'Outro' && String(s.exames) === 'CONSULTA COM MÉDICO DO TRABALHO') {
                         continue; // Pula essa solicitação
                     }
+
+                    const examesSolicitados = String(s.exames || '').trim();
+
+                    if (!/EXAME CLÍNICO/i.test(examesSolicitados)) {
+                        continue; // Pula solicitações que não possuem EXAME CLÍNICO
+                    }
+
 
                     const bodyPut = {
                         id_solicitacao_de_exame: String(s.id_solicitacao),
