@@ -434,6 +434,9 @@ router.post('/gerar-pdf', async (req, res) => {
         if (dados.modelo === 'propostaPeriodico' && dados.campos.formaPagamento === null){
           fieldId = "proposta_gerada"; 
         }
+        if (dados.modelo === 'propostaFarmer'){
+          fieldId = "proposta"; 
+        }
         console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
 
         const sucesso = await atualizarCampoCardPipefy(dados.idCard, fieldId, path);
