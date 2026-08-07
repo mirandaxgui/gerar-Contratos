@@ -158,6 +158,42 @@ router.post('/agendamento/', async (req, res) => {
   }
 });
 
+// Rota para verificar disponibilidade de agenda via GET (ordem de chegada)
+router.get('/agendamento/', async (req, res) => {
+  const {
+    agenda,
+    retornar_horarios_livres,
+    data_hora_agendamento_aPartirDe,
+    data_hora_agendamento_ate
+  } = req.query;
+
+  if (!agenda || !data_hora_agendamento_aPartirDe || !data_hora_agendamento_ate) {
+    return res.status(400).json({
+      error: 'agenda, data_hora_agendamento_aPartirDe e data_hora_agendamento_ate são obrigatórios'
+    });
+  }
+
+  try {
+    const url = `https://app.sgg.net.br/api/v3/agendamento/?agenda=${encodeURIComponent(agenda)}&retornar_horarios_livres=${retornar_horarios_livres || 'true'}&data_hora_agendamento_aPartirDe=${encodeURIComponent(data_hora_agendamento_aPartirDe)}&data_hora_agendamento_ate=${encodeURIComponent(data_hora_agendamento_ate)}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Basic ${SGG_TOKEN}`,
+      }
+    });
+
+    const data = await response.json();
+    console.log(`[GET /agendamento/] Resposta do SGG:`, data);
+    res.status(200).json(data);
+  } catch (error) {
+    console.error('Erro ao buscar disponibilidade de agendamento no SGG:', error);
+    res.status(500).json({ error: 'Erro ao buscar disponibilidade de agendamento' });
+  }
+});
+
+
 router.post('/submit-form/', (req, res) => {
   const formData = req.body;
   try {
