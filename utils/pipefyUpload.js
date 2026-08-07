@@ -1,13 +1,12 @@
 // utils/pipefyUpload.js
 import axios from "axios";
-import { getPipefyToken } from "../utils/pipefyUpload.js";
-
-const PIPEFY_TOKEN = await getPipefyToken();
+import { getPipefyToken } from "./pipefyToken.js";
 const PIPEFY_API = "https://api.pipefy.com/graphql";
 const ORGANIZATION_ID = "301641025";
 
 /** Cria uma URL presigned no Pipefy para upload */
 export async function criarPresignedUrl(nomeArquivo) {
+  const PIPEFY_TOKEN = getPipefyToken();
   const mutation = `
     mutation {
       createPresignedUrl(input: {
@@ -76,6 +75,7 @@ export async function enviarArquivoParaPipefy(url, pdfBuffer) {
 
 /** Atualiza o campo do card no Pipefy com o path (downloadUrl) */
 export async function atualizarCampoCardPipefy(cardId, fieldId, pathArquivo) {
+  const PIPEFY_TOKEN = getPipefyToken();
   const mutation = `
     mutation {
       updateFieldsValues(input: {
@@ -129,42 +129,3 @@ export async function atualizarCampoCardPipefy(cardId, fieldId, pathArquivo) {
   }
 }
 
-export async function getPipefyToken() {
-  const clientId = "gehnN-M-GnTXOAreq9hrssHxEwA5cwwVcXUozvB_2us";
-  const clientSecret = "D0mW8f97exX9fBUueFidXcBcHP7wcpovRekTy9f-UU4";
-
-  if (!clientId || !clientSecret) {
-    throw new Error(
-      "PIPEFY_CLIENT_ID ou PIPEFY_CLIENT_SECRET não configurados."
-    );
-  }
-
-  const response = await fetch("https://app.pipefy.com/oauth/token", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Accept": "application/json",
-    },
-    body: JSON.stringify({
-      grant_type: "client_credentials",
-      client_id: clientId,
-      client_secret: clientSecret,
-    }),
-  });
-
-  if (!response.ok) {
-    const error = await response.text();
-
-    throw new Error(
-      `Erro ao gerar token Pipefy: HTTP ${response.status} - ${error}`
-    );
-  }
-
-  const data = await response.json();
-
-  if (!data.access_token) {
-    throw new Error("Pipefy não retornou access_token.");
-  }
-
-  return data.access_token;
-}

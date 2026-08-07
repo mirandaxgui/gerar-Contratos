@@ -1,14 +1,15 @@
 import express from "express";
 import pdfDocument from "pdf-lib";
-import { getPipefyToken } from "../utils/pipefyUpload.js";
+import { getPipefyToken } from "../utils/pipefyToken.js";
 const SGG_BASE_URL = "https://app.sgg.net.br/api/v3";
 const SGG_TOKEN = process.env.USER_SGG;
 const router = express.Router();
 const { PDFDocument } = pdfDocument;
-const PIPEFY_TOKEN = await getPipefyToken();
+
 
 // ⬇️ Funções auxiliares (convertidas do seu código original)
 async function updateCardPipefy(cardId, value) {
+    const PIPEFY_TOKEN = getPipefyToken();
   const mutation = {
     query: `
                 mutation {

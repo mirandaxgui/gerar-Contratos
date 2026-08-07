@@ -1,9 +1,9 @@
-import { getPipefyToken } from "../utils/pipefyUpload.js";
-
-const PIPEFY_TOKEN = await getPipefyToken();
+import { getPipefyToken } from "./pipefyToken.js";
 
 // Função para buscar fornecedores no Pipefy
 export async function pipefyFetchFornecedores() {
+  const PIPEFY_TOKEN = getPipefyToken();
+
   let fornecedores = [];
   let endCursor = null;
 
