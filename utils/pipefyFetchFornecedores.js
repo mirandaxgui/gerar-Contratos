@@ -1,4 +1,6 @@
-const PIPEFY_TOKEN = process.env.PIPEFY_TOKEN;
+import { getPipefyToken } from "../utils/pipefyUpload.js";
+
+const PIPEFY_TOKEN = await getPipefyToken();
 
 // Função para buscar fornecedores no Pipefy
 export async function pipefyFetchFornecedores() {
