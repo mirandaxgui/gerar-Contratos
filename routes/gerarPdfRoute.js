@@ -173,7 +173,7 @@ router.post('/gerar-pdf', async (req, res) => {
     // --------------------------------------------
     const linhaPagamento = `
     <tr>
-      <td colspan="3"
+      <td colspan="2"
           style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
           Forma de Pagamento
       </td>
@@ -182,7 +182,7 @@ router.post('/gerar-pdf', async (req, res) => {
       </td>
     </tr>
     <tr>
-      <td colspan="3"
+      <td colspan="2"
           style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
           Quantidade de Parcelas
       </td>
@@ -191,7 +191,7 @@ router.post('/gerar-pdf', async (req, res) => {
       </td>
     </tr>
      <tr>
-      <td colspan="3"
+      <td colspan="2"
           style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
           Data do Primeiro Pagamento
       </td>
