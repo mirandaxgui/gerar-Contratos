@@ -158,7 +158,7 @@ router.post('/gerar-pdf', async (req, res) => {
       valorDesconto
         ? `
       <tr>
-        <td colspan="3"
+        <td colspan="2"
             style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
             Desconto para pagamento à vista
         </td>
