@@ -52,6 +52,14 @@ router.post('/gerar-pdf', async (req, res) => {
     const dataAtualExtenso = dataHojePtBrExtenso();
     const dataAtualCurta = dataHojePtBrCurta();
     let tabelaProdutos = "";
+    let tabelaProdutosPagina1 = "";
+    let tabelaProdutosPagina2 = "";
+
+    let resumoFinanceiroPagina1 = "";
+    let resumoFinanceiroPagina2 = "";
+
+    let classeSegundaPagina = "pagina-oculta";
+
     let totalGeral = "";
     let valorDesconto = "";
     let valorFinal = "";
@@ -104,8 +112,10 @@ router.post('/gerar-pdf', async (req, res) => {
 
       const produtosEspeciais = ['Deslocamento', 'Custos Extras'];
 
-      // Para produtos normais, valida qtd.
-      // Para Deslocamento e Custos Extras, valida unit.
+      // ============================================================
+      // FILTRA SOMENTE PRODUTOS VÁLIDOS
+      // ============================================================
+
       const produtosValidos = produtos.filter(p => {
 
         const isEspecial = produtosEspeciais.includes(p.item);
@@ -121,135 +131,335 @@ router.post('/gerar-pdf', async (req, res) => {
         return Number(p.qtd) > 0;
       });
 
-      tabelaProdutos = produtosValidos.map(p => {
 
-        const isEspecial = produtosEspeciais.includes(p.item);
+      // ============================================================
+      // FUNÇÃO PARA GERAR AS LINHAS DOS PRODUTOS
+      // ============================================================
 
-        // Produto especial usa diretamente o valor de unit
-        // Produto normal faz qtd × unit
-        const custoTotal = isEspecial
-          ? Number(p.unit)
-          : Number(p.qtd) * Number(p.unit);
+      const montarLinhasProdutos = (listaProdutos) => {
 
-        return `
-      <tr>
-        <td style="border:1px solid #193b33; padding:10px 12px;">
-          ${p.item}
-        </td>
+        return listaProdutos.map(p => {
 
-        <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
-          ${isEspecial ? '-' : p.qtd}
-        </td>
+          const isEspecial = produtosEspeciais.includes(p.item);
 
-        <td style="border:1px solid #193b33; text-align:center; color:#00e08a;">
-          R$ ${custoTotal.toLocaleString('pt-BR', {
-          minimumFractionDigits: 2,
-          maximumFractionDigits: 2
-        })}
-        </td>
-      </tr>
-    `;
-      }).join('\n');
-    
-    // --------------------------------------------
-    // 🔹 LINHA DESCONTO (CONDICIONAL)
-    // --------------------------------------------
-    const linhaDesconto =
-      valorDesconto
-        ? `
-      <tr>
-        <td colspan="2"
-            style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
-            Desconto para pagamento à vista
-        </td>
-        <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
-            ${valorDesconto}
-        </td>
-      </tr>`
-        : "";
+          const custoTotal = Number(p.unit);
 
-    // --------------------------------------------
-    // 🔹 LINHA PAGAMENTO (SEMPRE APARECE)
-    // --------------------------------------------
-    const linhaPagamento = `
+          return `
+        <tr>
+          <td style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+          ">
+            ${p.item}
+          </td>
+
+          <td style="
+            border:1px solid #193b33;
+            text-align:center;
+            color:#00e08a;
+          ">
+            ${isEspecial ? '-' : p.qtd}
+          </td>
+
+          <td style="
+            border:1px solid #193b33;
+            text-align:center;
+            color:#00e08a;
+          ">
+            R$ ${custoTotal.toLocaleString('pt-BR', {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2
+          })}
+          </td>
+        </tr>
+      `;
+
+        }).join('\n');
+      };
+
+
+      // ============================================================
+      // FORMATA VALORES
+      // ============================================================
+
+      totalGeral = Number(totalGeral).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+      valorFinal = Number(valorFinal).toLocaleString('pt-BR', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+
+
+      // ============================================================
+      // DESCONTO
+      // ============================================================
+
+      const linhaDesconto =
+        valorDesconto
+          ? `
+        <tr>
+          <td colspan="2"
+              style="
+                border:1px solid #193b33;
+                padding:10px 12px;
+                text-align:center;
+                font-weight:bold;
+              ">
+              Desconto para pagamento à vista
+          </td>
+
+          <td style="
+              border:1px solid #193b33;
+              text-align:center;
+              font-weight:bold;
+              color:#00e08a;
+          ">
+              ${valorDesconto}
+          </td>
+        </tr>
+      `
+          : "";
+
+
+      // ============================================================
+      // PAGAMENTO
+      // ============================================================
+
+      const linhaPagamento = `
     <tr>
       <td colspan="2"
-          style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
           Forma de Pagamento
       </td>
-      <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
-          ${dados.campos.formaPagamento || ""}
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        ${dados.campos.formaPagamento || ""}
       </td>
     </tr>
+
     <tr>
       <td colspan="2"
-          style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
           Quantidade de Parcelas
       </td>
-      <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
-          ${dados.campos.parcelas ? ` ${dados.campos.parcelas}x` : ""}
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        ${dados.campos.parcelas ? `${dados.campos.parcelas}x` : ""}
       </td>
     </tr>
-     <tr>
+
+    <tr>
       <td colspan="2"
-          style="border:1px solid #193b33; padding:10px 12px; text-align:center; font-weight:bold;">
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
           Data do Primeiro Pagamento
       </td>
-      <td style="border:1px solid #193b33; text-align:center; font-weight:bold; color:#00e08a;">
-          ${dados.campos.dataPrimeiroPagamento
-        ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
-        : ""
-      }
 
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        ${dados.campos.dataPrimeiroPagamento
+          ? dados.campos.dataPrimeiroPagamento
+            .split('-')
+            .reverse()
+            .join('/')
+          : ""
+        }
       </td>
     </tr>
   `;
 
-    // 🔹 adiciona no objeto para o template
-    dados.campos.linhaDesconto = linhaDesconto;
-    dados.campos.linhaPagamento = linhaPagamento;
+
+      // ============================================================
+      // RESUMO FINANCEIRO
+      // ============================================================
+
+      const resumoFinanceiro = `
+    <tr>
+      <td colspan="2"
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
+        Investimento Total
+      </td>
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        R$ ${totalGeral}
+      </td>
+    </tr>
+
+    ${linhaDesconto}
+
+    <tr>
+      <td colspan="2"
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-size:22px;
+          ">
+        Valor Final
+      </td>
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-size:22px;
+        color:#00e08a;
+        font-weight:bold;
+      ">
+        R$ ${valorFinal}
+      </td>
+    </tr>
+
+    ${linhaPagamento}
+  `;
 
 
-    // Formatar valores finais
-    totalGeral = Number(totalGeral).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
-    valorFinal = Number(valorFinal).toLocaleString('pt-BR', { minimumFractionDigits: 2 });
+      // ============================================================
+      // DIVISÃO DAS PÁGINAS
+      // ============================================================
 
-    // CARREGAR IMAGENS
-    const pastaPropostaFarmer = path.resolve(__dirname, '../assets/propostaFarmer');
-    for (let i = 1; i <= 14; i++) {
-      if (i === 12) continue;
-      const imagemPath = path.join(pastaPropostaFarmer, `pagina${i}.png`);
-      if (fs.existsSync(imagemPath)) {
-        try {
-          const buffer = await sharp(imagemPath)
-            .jpeg({ quality: 80 })
-            .toBuffer();
+      if (produtosValidos.length > 6) {
 
-          const base64 = buffer.toString('base64');
-          dados.campos[`pagina${i}`] = `data:image/jpeg;base64,${base64}`;
-        } catch (err) {
-          console.warn(`⚠️ Erro ao processar ${imagemPath}:`, err.message);
-        }
+        const metade = Math.ceil(produtosValidos.length / 2);
+
+        const produtosPrimeiraPagina =
+          produtosValidos.slice(0, metade);
+
+        const produtosSegundaPagina =
+          produtosValidos.slice(metade);
+
+        tabelaProdutosPagina1 =
+          montarLinhasProdutos(produtosPrimeiraPagina);
+
+        tabelaProdutosPagina2 =
+          montarLinhasProdutos(produtosSegundaPagina);
+
+        resumoFinanceiroPagina1 = "";
+        resumoFinanceiroPagina2 = resumoFinanceiro;
+
+        // MOSTRA A SEGUNDA PÁGINA
+        classeSegundaPagina = "";
+
       } else {
-        console.warn(`⚠️ Imagem não encontrada: pagina${i}.png`);
+
+        tabelaProdutosPagina1 =
+          montarLinhasProdutos(produtosValidos);
+
+        tabelaProdutosPagina2 = "";
+
+        resumoFinanceiroPagina1 = resumoFinanceiro;
+        resumoFinanceiroPagina2 = "";
+
+        // ESCONDE A SEGUNDA PÁGINA
+        classeSegundaPagina = "pagina-oculta";
+      }
+
+      // Mantém caso você utilize tabelaProdutos em outro lugar
+      tabelaProdutos = tabelaProdutosPagina1;
+
+      // Caso ainda utilize essas variáveis no template
+      dados.campos.linhaDesconto = linhaDesconto;
+      dados.campos.linhaPagamento = linhaPagamento;
+
+
+      // ============================================================
+      // CARREGAR IMAGENS
+      // ============================================================
+
+      const pastaPropostaFarmer =
+        path.resolve(__dirname, '../assets/propostaFarmer');
+
+      for (let i = 1; i <= 14; i++) {
+
+        if (i === 12) continue;
+
+        const imagemPath =
+          path.join(pastaPropostaFarmer, `pagina${i}.png`);
+
+        if (fs.existsSync(imagemPath)) {
+
+          try {
+
+            const buffer = await sharp(imagemPath)
+              .jpeg({ quality: 80 })
+              .toBuffer();
+
+            const base64 = buffer.toString('base64');
+
+            dados.campos[`pagina${i}`] =
+              `data:image/jpeg;base64,${base64}`;
+
+          } catch (err) {
+
+            console.warn(
+              `⚠️ Erro ao processar ${imagemPath}:`,
+              err.message
+            );
+
+          }
+
+        } else {
+
+          console.warn(
+            `⚠️ Imagem não encontrada: pagina${i}.png`
+          );
+        }
       }
     }
 
-  }
-
     //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
     const itens = (dados.campos?.complementaresAdc || '')
-    .split(',')
-    .map(item => item.trim())
-    .filter(item => /^\d+/.test(item));
+      .split(',')
+      .map(item => item.trim())
+      .filter(item => /^\d+/.test(item));
 
-  const colunas = [[], [], []];
+    const colunas = [[], [], []];
 
-  itens.forEach((item, index) => {
-    colunas[index % 3].push(item);
-  });
+    itens.forEach((item, index) => {
+      colunas[index % 3].push(item);
+    });
 
-  const listaComplementares = `
+    const listaComplementares = `
       <div style="display: flex; gap: 30px;">
         ${colunas.map(coluna => `
           <ul style="list-style: disc; font-size: 13px;"> 
@@ -260,45 +470,45 @@ router.post('/gerar-pdf', async (req, res) => {
     `;
 
 
-  if (modelo === 'propostaPeriodico') {
-    //PROPOSTA PERIÓDICO
-    // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
-    let valorRaw = dados.campos?.valorTotal || "0";
-    let formaPagamento = dados.campos?.formaPagamento || "";
-    let dataPrimeiroPagamento = dados.campos?.dataPrimeiroPagamento
-      ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
-      : "";
-    let qtdParcelas = dados.campos?.qtdParcelas || "";
+    if (modelo === 'propostaPeriodico') {
+      //PROPOSTA PERIÓDICO
+      // CÁLCULO DO 50% (PROPOSTA PERIÓDICO)
+      let valorRaw = dados.campos?.valorTotal || "0";
+      let formaPagamento = dados.campos?.formaPagamento || "";
+      let dataPrimeiroPagamento = dados.campos?.dataPrimeiroPagamento
+        ? dados.campos.dataPrimeiroPagamento.split('-').reverse().join('/')
+        : "";
+      let qtdParcelas = dados.campos?.qtdParcelas || "";
 
-    // Corrige formato vindo com vírgula
-    if (valorRaw.includes(",")) {
-      valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
-    }
+      // Corrige formato vindo com vírgula
+      if (valorRaw.includes(",")) {
+        valorRaw = valorRaw.replace(/\./g, "").replace(",", ".");
+      }
 
-    // Converte para número
-    let valorNumero = Number(valorRaw);
+      // Converte para número
+      let valorNumero = Number(valorRaw);
 
-    // Formata sempre com duas casas
-    let valorTotal = valorNumero.toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+      // Formata sempre com duas casas
+      let valorTotal = valorNumero.toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
 
-    dados.campos.valorTotal = valorTotal;
+      dados.campos.valorTotal = valorTotal;
 
-    let metadeValorTotal = (valorNumero / 2).toLocaleString("pt-BR", {
-      minimumFractionDigits: 2,
-      maximumFractionDigits: 2
-    });
+      let metadeValorTotal = (valorNumero / 2).toLocaleString("pt-BR", {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
 
-    // Verifica se é pagamento à vista
-    if (
-      formaPagamento === "Boleto à vista" ||
-      formaPagamento === "Cartão de crédito à vista" ||
-      formaPagamento === "Pix à vista"
-    ) {
+      // Verifica se é pagamento à vista
+      if (
+        formaPagamento === "Boleto à vista" ||
+        formaPagamento === "Cartão de crédito à vista" ||
+        formaPagamento === "Pix à vista"
+      ) {
 
-      paragrafoPagamento = `
+        paragrafoPagamento = `
         <p>
             O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
             Sendo assim, fica acordado que:
@@ -310,9 +520,9 @@ router.post('/gerar-pdf', async (req, res) => {
             previamente estabelecidas.
         </p>`;
 
-    } else if (formaPagamento) {
+      } else if (formaPagamento) {
 
-      paragrafoPagamento = `
+        paragrafoPagamento = `
         <p>
             O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
             Sendo assim, fica acordado que:
@@ -330,8 +540,8 @@ router.post('/gerar-pdf', async (req, res) => {
             previamente estabelecidas.
         </p>`;
 
-    } else {
-      paragrafoPagamento = `
+      } else {
+        paragrafoPagamento = `
         <p>
             O valor final do atendimento in loco será de <strong>R$ ${valorTotal}</strong>.
             Sendo assim, fica acordado que:
@@ -339,169 +549,178 @@ router.post('/gerar-pdf', async (req, res) => {
             O pagamento deverá ser efetuado pela CONTRATANTE conforme condições
             previamente estabelecidas, selecionando a forma de pagamento desejada.
         </p>`;
+      }
+
     }
 
-  }
+    const variaveisParaTemplate = {
+      ...(dados.campos || {}),
+      headerImage: `data:${imageMime};base64,${imageBase64}`,
+      footerImage: `data:${imageMime};base64,${imageFooterBase64}`,
+      logoDemais: `data:${imageMime};base64,${logoDemaisBase64}`,
+      dataAtualExtenso,
+      dataAtual: dataAtualCurta,
+      //PROPOSTA HUNTER
+      greenMark: `data:${imageMime};base64,${greenMarkBase64}`,
+      redMark: `data:${imageMime};base64,${redMarkBase64}`,
+      qtdColaboradores,
+      precoBasico: precos.basico ? `R$ ${precos.basico},00` : '',
+      precoEssencial: precos.essencial ? `R$ ${precos.essencial},00` : '',
+      precoPremium: precos.premium ? `R$ ${precos.premium},00` : '',
+      //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
+      complementaresAdcFormatado: listaComplementares,
+      // PROPOSTA FARMER
+      tabelaProdutos,
 
-  const variaveisParaTemplate = {
-    ...(dados.campos || {}),
-    headerImage: `data:${imageMime};base64,${imageBase64}`,
-    footerImage: `data:${imageMime};base64,${imageFooterBase64}`,
-    logoDemais: `data:${imageMime};base64,${logoDemaisBase64}`,
-    dataAtualExtenso,
-    dataAtual: dataAtualCurta,
-    //PROPOSTA HUNTER
-    greenMark: `data:${imageMime};base64,${greenMarkBase64}`,
-    redMark: `data:${imageMime};base64,${redMarkBase64}`,
-    qtdColaboradores,
-    precoBasico: precos.basico ? `R$ ${precos.basico},00` : '',
-    precoEssencial: precos.essencial ? `R$ ${precos.essencial},00` : '',
-    precoPremium: precos.premium ? `R$ ${precos.premium},00` : '',
-    //LISTA DIRECIONADA AO TEMPLATE DE PROPOSTA DO PERIÓDICO
-    complementaresAdcFormatado: listaComplementares,
-    //PROPOSTA FARMER
-    tabelaProdutos,
-    totalGeral,
-    valorDesconto,
-    valorFinal,
-    paragrafoPagamento,
-    mesRealizacao,
-    idCard,
+      tabelaProdutosPagina1,
+      tabelaProdutosPagina2,
 
-    //PROPOSTA PERIÓDICO
-    metadeValorTotal,
-    dataPrimeiroPagamento: dados.campos?.dataPrimeiroPagamento || "",
+      resumoFinanceiroPagina1,
+      resumoFinanceiroPagina2,
+
+      classeSegundaPagina,
+
+      totalGeral,
+      valorDesconto,
+      valorFinal,
+      paragrafoPagamento,
+      mesRealizacao,
+      idCard,
+
+      //PROPOSTA PERIÓDICO
+      metadeValorTotal,
+      dataPrimeiroPagamento: dados.campos?.dataPrimeiroPagamento || "",
 
 
 
-  };
+    };
 
-  //console.log('📄 Variáveis usadas no template:', JSON.stringify(variaveisParaTemplate, null, 2));
+    //console.log('📄 Variáveis usadas no template:', JSON.stringify(variaveisParaTemplate, null, 2));
 
-  const htmlFinal = preencherTemplate(htmlBase, variaveisParaTemplate);
+    const htmlFinal = preencherTemplate(htmlBase, variaveisParaTemplate);
 
-  const browser = await puppeteer.launch({
-    args: ['--no-sandbox', '--disable-setuid-sandbox']
-  });
-
-  const page = await browser.newPage();
-  await page.setContent(htmlFinal, { waitUntil: 'domcontentloaded', timeout: 0 });
-  let pdfBuffer;
-  if (dados.modelo === 'propostaHunter') {
-    pdfBuffer = await page.pdf({
-      width: '558mm',
-      height: '314mm',
-      printBackground: true,
-      margin: { top: 0, bottom: 0, left: 0, right: 0 },
-      timeout: 120000
+    const browser = await puppeteer.launch({
+      args: ['--no-sandbox', '--disable-setuid-sandbox']
     });
-    await browser.close();
-  }
 
-  if (dados.modelo === 'propostaFarmer') {
-
-    pdfBuffer = await page.pdf({
-      width: '558mm',
-      height: '314mm',
-      printBackground: true,
-      margin: { top: 0, bottom: 0, left: 0, right: 0 }
-    });
-    await browser.close();
-  }
-
-  if (dados.modelo === 'contratoCredenciada') {
-    await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
-
-    pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true
-    });
-    await browser.close();
-  };
-  if (dados.modelo === 'propostaPeriodico') {
+    const page = await browser.newPage();
     await page.setContent(htmlFinal, { waitUntil: 'domcontentloaded', timeout: 0 });
-    await page.emulateMediaType('print'); // ✅ o correto para respeitar page-breaks
-
-
-
-    pdfBuffer = await page.pdf({
-      format: 'A4',
-      printBackground: true,
-      margin: { top: 0, bottom: 0, left: 0, right: 0 }
-    });
-    await browser.close();
-  };
-
-
-
-  console.log(dados.enviarParaClicksign)
-
-  // ✅ Se o payload tiver idCard, envia o PDF também para o Pipefy
-  if (dados.idCard && !dados.enviarParaClicksign) {
-    try {
-      const nomeArquivo = `proposta_${dados.idCard}.pdf`;
-      console.log(`📄 Gerando presigned URL para ${nomeArquivo}...`);
-
-      // 1️⃣ Cria URL presigned no Pipefy
-      const { url, path } = await criarPresignedUrl(nomeArquivo);
-      console.log("✅ Presigned URL criada!");
-      console.log("📦 Path interno:", path);
-
-      // 2️⃣ Faz upload do PDF
-      console.log("⬆️ Enviando PDF para o S3 via presigned URL...");
-      await enviarArquivoParaPipefy(url, pdfBuffer);
-      console.log("✅ Upload concluído com sucesso!");
-
-      // 3️⃣ Atualiza o campo "anexar_proposta_para_envio" com o path interno
-      let fieldId = "anexar_proposta_para_envio"; // substitua se necessário
-      if (dados.modelo === 'propostaPeriodico' && dados.campos.formaPagamento === null) {
-        fieldId = "proposta_gerada";
-      }
-      if (dados.modelo === 'propostaFarmer') {
-        fieldId = "proposta";
-      }
-      console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
-
-      const sucesso = await atualizarCampoCardPipefy(dados.idCard, fieldId, path);
-
-      if (!sucesso) {
-        console.warn("⚠️ Falha ao atualizar campo no Pipefy.");
-      } else {
-        console.log("✅ PDF anexado com sucesso ao card Pipefy:", path);
-      }
-
-    } catch (err) {
-      console.error("❌ Erro ao enviar PDF para Pipefy:", err.message);
+    let pdfBuffer;
+    if (dados.modelo === 'propostaHunter') {
+      pdfBuffer = await page.pdf({
+        width: '558mm',
+        height: '314mm',
+        printBackground: true,
+        margin: { top: 0, bottom: 0, left: 0, right: 0 },
+        timeout: 120000
+      });
+      await browser.close();
     }
+
+    if (dados.modelo === 'propostaFarmer') {
+
+      pdfBuffer = await page.pdf({
+        width: '558mm',
+        height: '314mm',
+        printBackground: true,
+        margin: { top: 0, bottom: 0, left: 0, right: 0 }
+      });
+      await browser.close();
+    }
+
+    if (dados.modelo === 'contratoCredenciada') {
+      await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
+
+      pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true
+      });
+      await browser.close();
+    };
+    if (dados.modelo === 'propostaPeriodico') {
+      await page.setContent(htmlFinal, { waitUntil: 'domcontentloaded', timeout: 0 });
+      await page.emulateMediaType('print'); // ✅ o correto para respeitar page-breaks
+
+
+
+      pdfBuffer = await page.pdf({
+        format: 'A4',
+        printBackground: true,
+        margin: { top: 0, bottom: 0, left: 0, right: 0 }
+      });
+      await browser.close();
+    };
+
+
+
+    console.log(dados.enviarParaClicksign)
+
+    // ✅ Se o payload tiver idCard, envia o PDF também para o Pipefy
+    if (dados.idCard && !dados.enviarParaClicksign) {
+      try {
+        const nomeArquivo = `proposta_${dados.idCard}.pdf`;
+        console.log(`📄 Gerando presigned URL para ${nomeArquivo}...`);
+
+        // 1️⃣ Cria URL presigned no Pipefy
+        const { url, path } = await criarPresignedUrl(nomeArquivo);
+        console.log("✅ Presigned URL criada!");
+        console.log("📦 Path interno:", path);
+
+        // 2️⃣ Faz upload do PDF
+        console.log("⬆️ Enviando PDF para o S3 via presigned URL...");
+        await enviarArquivoParaPipefy(url, pdfBuffer);
+        console.log("✅ Upload concluído com sucesso!");
+
+        // 3️⃣ Atualiza o campo "anexar_proposta_para_envio" com o path interno
+        let fieldId = "anexar_proposta_para_envio"; // substitua se necessário
+        if (dados.modelo === 'propostaPeriodico' && dados.campos.formaPagamento === null) {
+          fieldId = "proposta_gerada";
+        }
+        if (dados.modelo === 'propostaFarmer') {
+          fieldId = "proposta";
+        }
+        console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
+
+        const sucesso = await atualizarCampoCardPipefy(dados.idCard, fieldId, path);
+
+        if (!sucesso) {
+          console.warn("⚠️ Falha ao atualizar campo no Pipefy.");
+        } else {
+          console.log("✅ PDF anexado com sucesso ao card Pipefy:", path);
+        }
+
+      } catch (err) {
+        console.error("❌ Erro ao enviar PDF para Pipefy:", err.message);
+      }
+    }
+    console.log(dados.enviarParaClicksign)
+    // ✅ Mantém o envio ao Clicksign se solicitado
+    if (dados.enviarParaClicksign === true) {
+      const result = await enviarParaClicksign(dados, pdfBuffer);
+      return res.json(result);
+    }
+
+    res.set({
+      'Content-Type': 'application/pdf',
+      'Content-Disposition': `attachment; filename=${modelo}.pdf`,
+      //'Content-Length': pdfBuffer.length
+    });
+
+    if (dados.retornaPdf === true) {
+      return res.send(pdfBuffer);
+    }
+    return res.status(200).json({
+      sucesso: true,
+      mensagem: "PDF gerado com sucesso",
+      modelo,
+      idCard: dados.idCard || null
+    });
+
+
+  } catch (error) {
+    console.error('❌ Erro ao gerar PDF:', error);
+    res.status(500).send('Erro ao gerar PDF');
   }
-  console.log(dados.enviarParaClicksign)
-  // ✅ Mantém o envio ao Clicksign se solicitado
-  if (dados.enviarParaClicksign === true) {
-    const result = await enviarParaClicksign(dados, pdfBuffer);
-    return res.json(result);
-  }
-
-  res.set({
-    'Content-Type': 'application/pdf',
-    'Content-Disposition': `attachment; filename=${modelo}.pdf`,
-    //'Content-Length': pdfBuffer.length
-  });
-
-  if (dados.retornaPdf === true) {
-    return res.send(pdfBuffer);
-  }
-  return res.status(200).json({
-    sucesso: true,
-    mensagem: "PDF gerado com sucesso",
-    modelo,
-    idCard: dados.idCard || null
-  });
-
-
-} catch (error) {
-  console.error('❌ Erro ao gerar PDF:', error);
-  res.status(500).send('Erro ao gerar PDF');
-}
 });
 
 export default router;
