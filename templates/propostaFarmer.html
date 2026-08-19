@@ -430,6 +430,184 @@
 
     </div>
 
+    <!-- ======== PÁGINA EXTRA - PAGAMENTO ======== -->
+
+    <div class="page {{classeTerceiraPagina}}" style="
+    width:558mm;
+    height:314mm;
+    background:#071F1F;
+    color:#fff;
+    display:flex;
+    flex-direction:column;
+    justify-content:flex-start;
+    align-items:center;
+    position:relative;
+    padding-top:20mm;
+    padding-bottom:10mm;
+    page-break-after:always;
+">
+
+        <div class="page-content" style="
+        width:90%;
+        max-width:500mm;
+        display:flex;
+        flex-direction:column;
+        justify-content:flex-start;
+        align-items:center;
+        gap:15px;
+    ">
+
+            <!-- CABEÇALHO -->
+            <div style="
+            width:115%;
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            margin-bottom:30px;
+        ">
+
+                <div style="text-align:left;">
+
+                    <h2 style="
+                    color:#00e08a;
+                    font-size:42px;
+                    line-height:1.2;
+                    margin:0 0 6px;
+                ">
+                        Proposta Comercial
+                    </h2>
+
+                    <br><br>
+
+                    <p style="
+                    color:#00e08a;
+                    margin:0;
+                    font-size:32px;
+                    opacity:.9;
+                ">
+                        <strong>{{nomeEmpresa}}</strong>
+                    </p>
+
+                </div>
+
+                <div>
+                    <img src="{{logoDemais}}" alt="" style="padding-right:50px;">
+                </div>
+
+            </div>
+
+
+            <!-- TÍTULO -->
+            <div style="
+            width:110%;
+            margin-bottom:15px;
+        ">
+                <h3 style="
+                font-size:30px;
+                color:#fff;
+                margin:0;
+                text-align:left;
+            ">
+                    Condições Comerciais
+                </h3>
+            </div>
+
+
+            <!-- TABELA DE PAGAMENTO -->
+            <table style="
+            width:110%;
+            border-collapse:collapse;
+            table-layout:fixed;
+            font-size:20px;
+            line-height:1.7;
+            border-radius:8px;
+            transform:scale(1.05);
+            transform-origin:top center;
+            text-align:center;
+        ">
+
+                <colgroup>
+                    <col style="width:46%;">
+                    <col style="width:20%;">
+                    <col style="width:34%;">
+                </colgroup>
+
+                <tbody>
+
+                    {{resumoFinanceiroPagina3}}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+
+        <!-- RODAPÉ -->
+        <div style="
+        margin-top:80px;
+        display:flex;
+        justify-content:space-between;
+        width:99%;
+        padding-top:30px;
+    ">
+
+            <div>
+
+                <span style="
+                color:#00e08a;
+                font-size:22px;
+                line-height:1.2;
+            ">
+                    Mês vigente para realização do(s) serviço(s):
+                </span>
+
+                <span style="
+                font-size:22px;
+                line-height:1.2;
+            ">
+                    {{mesRealizacao}}
+                </span>
+
+            </div>
+
+
+            <div>
+
+                <span style="
+                color:#00e08a;
+                font-size:22px;
+                line-height:1.2;
+            ">
+                    ID:
+                </span>
+
+                <span style="
+                font-size:22px;
+                line-height:1.2;
+            ">
+                    {{idCard}}
+                </span>
+
+            </div>
+
+        </div>
+
+
+        <!-- LINHA INFERIOR -->
+        <hr style="
+        position:absolute;
+        bottom:0;
+        left:0;
+        width:100%;
+        height:10px;
+        border:none;
+        background-color:#00e08a;
+        margin:0;
+    ">
+
+    </div>
+
     <!-- ======== PÁGINAS 13 (ou 14) E 14 (ou 15)======== -->
     <div class="page"><img src="{{pagina13}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>
     <div class="page"><img src="{{pagina14}}" style="width: 558mm; height: 314mm;" alt="Página 14"></div>

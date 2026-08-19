@@ -57,8 +57,10 @@ router.post('/gerar-pdf', async (req, res) => {
 
     let resumoFinanceiroPagina1 = "";
     let resumoFinanceiroPagina2 = "";
+    let resumoFinanceiroPagina3 = "";
 
     let classeSegundaPagina = "pagina-oculta";
+    let classeTerceiraPagina = "pagina-oculta";
 
     let totalGeral = "";
     let valorDesconto = "";
@@ -358,7 +360,52 @@ router.post('/gerar-pdf', async (req, res) => {
       // DIVISÃO DAS PÁGINAS
       // ============================================================
 
-      if (produtosValidos.length > 6) {
+      // ============================================================
+      // DIVISÃO DAS PÁGINAS
+      // ============================================================
+
+      if (produtosValidos.length > 10) {
+
+        // ==========================================================
+        // MAIS DE 10 PRODUTOS
+        // 3 PÁGINAS:
+        // 1 = produtos
+        // 2 = produtos
+        // 3 = resumo financeiro / pagamento
+        // ==========================================================
+
+        const metade = Math.ceil(produtosValidos.length / 2);
+
+        const produtosPrimeiraPagina =
+          produtosValidos.slice(0, metade);
+
+        const produtosSegundaPagina =
+          produtosValidos.slice(metade);
+
+        tabelaProdutosPagina1 =
+          montarLinhasProdutos(produtosPrimeiraPagina);
+
+        tabelaProdutosPagina2 =
+          montarLinhasProdutos(produtosSegundaPagina);
+
+        // Não mostra pagamento nas páginas dos produtos
+        resumoFinanceiroPagina1 = "";
+        resumoFinanceiroPagina2 = "";
+
+        // Pagamento fica sozinho na terceira página
+        resumoFinanceiroPagina3 = resumoFinanceiro;
+
+        // Mostra página 2 e página 3
+        classeSegundaPagina = "";
+        classeTerceiraPagina = "";
+
+      } else if (produtosValidos.length > 6) {
+
+        // ==========================================================
+        // ENTRE 7 E 10 PRODUTOS
+        // 2 PÁGINAS
+        // pagamento fica na segunda
+        // ==========================================================
 
         const metade = Math.ceil(produtosValidos.length / 2);
 
@@ -376,11 +423,20 @@ router.post('/gerar-pdf', async (req, res) => {
 
         resumoFinanceiroPagina1 = "";
         resumoFinanceiroPagina2 = resumoFinanceiro;
+        resumoFinanceiroPagina3 = "";
 
-        // MOSTRA A SEGUNDA PÁGINA
+        // Mostra página 2
         classeSegundaPagina = "";
 
+        // Esconde página 3
+        classeTerceiraPagina = "pagina-oculta";
+
       } else {
+
+        // ==========================================================
+        // ATÉ 6 PRODUTOS
+        // 1 PÁGINA
+        // ==========================================================
 
         tabelaProdutosPagina1 =
           montarLinhasProdutos(produtosValidos);
@@ -389,10 +445,15 @@ router.post('/gerar-pdf', async (req, res) => {
 
         resumoFinanceiroPagina1 = resumoFinanceiro;
         resumoFinanceiroPagina2 = "";
+        resumoFinanceiroPagina3 = "";
 
-        // ESCONDE A SEGUNDA PÁGINA
+        // Esconde páginas extras
         classeSegundaPagina = "pagina-oculta";
+        classeTerceiraPagina = "pagina-oculta";
       }
+
+      // Compatibilidade
+      tabelaProdutos = tabelaProdutosPagina1;
 
       // Mantém caso você utilize tabelaProdutos em outro lugar
       tabelaProdutos = tabelaProdutosPagina1;
@@ -577,8 +638,10 @@ router.post('/gerar-pdf', async (req, res) => {
 
       resumoFinanceiroPagina1,
       resumoFinanceiroPagina2,
+      resumoFinanceiroPagina3,
 
       classeSegundaPagina,
+      classeTerceiraPagina,
 
       totalGeral,
       valorDesconto,
