@@ -65,6 +65,8 @@ router.post('/gerar-pdf', async (req, res) => {
     let totalGeral = "";
     let valorDesconto = "";
     let valorFinal = "";
+    let valorPrimeiraParcela = "";
+    let valorRestante = "";
     let metadeValorTotal = "";
     let mesRealizacao = "";
     let idCard = "";
@@ -106,10 +108,13 @@ router.post('/gerar-pdf', async (req, res) => {
 
       const produtos = dados.campos?.produtos || [];
 
-      totalGeral = dados.campos?.totalGeral;
-      valorDesconto = dados.campos?.valorDesconto;
-      valorFinal = dados.campos?.valorFinal;
-      mesRealizacao = `${dados.campos?.mesRealizacao}/${new Date().getFullYear()}`;
+      const rawTotalGeral = dados.campos?.totalGeral ?? dados.totalGeral;
+      const rawValorDesconto = dados.campos?.valorDesconto ?? dados.valorDesconto;
+      const rawValorFinal = dados.campos?.valorFinal ?? dados.valorFinal;
+      const rawValorPrimeira = dados.campos?.valorPrimeiraParcela ?? dados.valorPrimeiraParcela;
+      const rawValorRestante = dados.campos?.valorRestante ?? dados.valorRestante;
+
+      mesRealizacao = `${dados.campos?.mesRealizacao || ''}/${new Date().getFullYear()}`;
       idCard = dados.idCard || "";
 
       const produtosEspeciais = ['Deslocamento', 'Custos Extras'];
@@ -181,18 +186,38 @@ router.post('/gerar-pdf', async (req, res) => {
 
 
       // ============================================================
-      // FORMATA VALORES
+      // PARSE E FORMATAÇÃO DE NÚMEROS E MOEDA
       // ============================================================
 
-      totalGeral = Number(totalGeral).toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      const parseNumero = (valor) => {
+        if (valor === undefined || valor === null || valor === '') return null;
+        if (typeof valor === 'number') return isNaN(valor) ? null : valor;
+        let str = String(valor).trim().replace(/R\$/g, '').trim();
+        if (str.includes(',') && str.includes('.')) {
+          str = str.replace(/\./g, '').replace(',', '.');
+        } else if (str.includes(',')) {
+          str = str.replace(',', '.');
+        }
+        const num = parseFloat(str);
+        return isNaN(num) ? null : num;
+      };
 
-      valorFinal = Number(valorFinal).toLocaleString('pt-BR', {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      });
+      const formatarMoeda = (num) => {
+        if (num === null || num === undefined || isNaN(num)) return '';
+        return Number(num).toLocaleString('pt-BR', {
+          minimumFractionDigits: 2,
+          maximumFractionDigits: 2
+        });
+      };
+
+      const numTotalGeral = parseNumero(rawTotalGeral);
+      const numValorFinal = parseNumero(rawValorFinal);
+      const numValorPrimeira = parseNumero(rawValorPrimeira);
+      let numValorRestante = parseNumero(rawValorRestante);
+
+      totalGeral = numTotalGeral !== null ? formatarMoeda(numTotalGeral) : (rawTotalGeral || "");
+      valorFinal = numValorFinal !== null ? formatarMoeda(numValorFinal) : (rawValorFinal || "");
+      valorDesconto = rawValorDesconto || "";
 
 
       // ============================================================
@@ -227,8 +252,102 @@ router.post('/gerar-pdf', async (req, res) => {
 
 
       // ============================================================
+      // CÁLCULO E VALIDAÇÃO DE PARCELAMENTO DIFERENCIADO
+      // ============================================================
+
+      const valorTotalReferencia = numValorFinal !== null ? numValorFinal : numTotalGeral;
+
+      let temParcelamentoDiferenciado = false;
+      if (numValorPrimeira !== null && valorTotalReferencia !== null) {
+        const saoDiferentes = Math.abs(numValorPrimeira - valorTotalReferencia) > 0.01;
+        if (saoDiferentes) {
+          temParcelamentoDiferenciado = true;
+          if (numValorRestante === null || numValorRestante <= 0) {
+            numValorRestante = Math.max(0, valorTotalReferencia - numValorPrimeira);
+          }
+        }
+      } else if (numValorPrimeira !== null && numValorRestante !== null && numValorRestante > 0) {
+        temParcelamentoDiferenciado = true;
+      }
+
+      let linhaPrimeiraParcela = "";
+      let linhaValorRestante = "";
+      let textoParcelas = "";
+
+      const rawParcelas = dados.campos?.parcelas ? String(dados.campos.parcelas).trim() : "";
+      const numTotalParcelas = parseInt(rawParcelas.replace(/\D/g, ''), 10) || 0;
+
+      if (rawParcelas) {
+        textoParcelas = rawParcelas.toLowerCase().endsWith('x') ? rawParcelas : `${rawParcelas}x`;
+      }
+
+      if (temParcelamentoDiferenciado) {
+        valorPrimeiraParcela = formatarMoeda(numValorPrimeira);
+        valorRestante = formatarMoeda(numValorRestante);
+
+        let textoValorRestante = `R$ ${valorRestante}`;
+        if (numTotalParcelas > 1 && numValorRestante > 0) {
+          const parcelasRestantes = numTotalParcelas - 1;
+          const valorCadaParcelaRestante = numValorRestante / parcelasRestantes;
+          const valorCadaParcelaRestanteFormatado = formatarMoeda(valorCadaParcelaRestante);
+          textoValorRestante = `R$ ${valorRestante} (${parcelasRestantes}x de R$ ${valorCadaParcelaRestanteFormatado})`;
+        }
+
+        linhaPrimeiraParcela = `
+    <tr>
+      <td colspan="2"
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
+          Valor da Primeira Parcela
+      </td>
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        R$ ${valorPrimeiraParcela}
+      </td>
+    </tr>
+  `;
+
+        linhaValorRestante = `
+    <tr>
+      <td colspan="2"
+          style="
+            border:1px solid #193b33;
+            padding:10px 12px;
+            text-align:center;
+            font-weight:bold;
+          ">
+          Valor Restante
+      </td>
+
+      <td style="
+        border:1px solid #193b33;
+        text-align:center;
+        font-weight:bold;
+        color:#00e08a;
+      ">
+        ${textoValorRestante}
+      </td>
+    </tr>
+  `;
+      }
+
+
+      // ============================================================
       // PAGAMENTO
       // ============================================================
+
+      const labelDataPagamento = (numTotalParcelas > 1 || temParcelamentoDiferenciado)
+        ? "Data do Primeiro Pagamento"
+        : "Data do Pagamento";
 
       const linhaPagamento = `
     <tr>
@@ -248,7 +367,7 @@ router.post('/gerar-pdf', async (req, res) => {
         font-weight:bold;
         color:#00e08a;
       ">
-        ${dados.campos.formaPagamento || ""}
+        ${dados.campos?.formaPagamento || ""}
       </td>
     </tr>
 
@@ -269,9 +388,13 @@ router.post('/gerar-pdf', async (req, res) => {
         font-weight:bold;
         color:#00e08a;
       ">
-        ${dados.campos.parcelas ? `${dados.campos.parcelas}x` : ""}
+        ${textoParcelas}
       </td>
     </tr>
+
+    ${linhaPrimeiraParcela}
+
+    ${linhaValorRestante}
 
     <tr>
       <td colspan="2"
@@ -281,7 +404,7 @@ router.post('/gerar-pdf', async (req, res) => {
             text-align:center;
             font-weight:bold;
           ">
-          Data do Primeiro Pagamento
+          ${labelDataPagamento}
       </td>
 
       <td style="
@@ -290,7 +413,7 @@ router.post('/gerar-pdf', async (req, res) => {
         font-weight:bold;
         color:#00e08a;
       ">
-        ${dados.campos.dataPrimeiroPagamento
+        ${dados.campos?.dataPrimeiroPagamento
           ? dados.campos.dataPrimeiroPagamento
             .split('-')
             .reverse()
@@ -329,28 +452,6 @@ router.post('/gerar-pdf', async (req, res) => {
     </tr>
 
     ${linhaDesconto}
-
-    <tr>
-      <td colspan="2"
-          style="
-            border:1px solid #193b33;
-            padding:10px 12px;
-            text-align:center;
-            font-size:22px;
-          ">
-        Valor Final
-      </td>
-
-      <td style="
-        border:1px solid #193b33;
-        text-align:center;
-        font-size:22px;
-        color:#00e08a;
-        font-weight:bold;
-      ">
-        R$ ${valorFinal}
-      </td>
-    </tr>
 
     ${linhaPagamento}
   `;
@@ -459,8 +560,13 @@ router.post('/gerar-pdf', async (req, res) => {
       tabelaProdutos = tabelaProdutosPagina1;
 
       // Caso ainda utilize essas variáveis no template
+      if (!dados.campos) dados.campos = {};
       dados.campos.linhaDesconto = linhaDesconto;
       dados.campos.linhaPagamento = linhaPagamento;
+      dados.campos.linhaPrimeiraParcela = linhaPrimeiraParcela;
+      dados.campos.linhaValorRestante = linhaValorRestante;
+      dados.campos.valorPrimeiraParcela = valorPrimeiraParcela;
+      dados.campos.valorRestante = valorRestante;
 
 
       // ============================================================
@@ -646,6 +752,10 @@ router.post('/gerar-pdf', async (req, res) => {
       totalGeral,
       valorDesconto,
       valorFinal,
+      valorPrimeiraParcela,
+      valorRestante,
+      linhaPrimeiraParcela: dados.campos?.linhaPrimeiraParcela || "",
+      linhaValorRestante: dados.campos?.linhaValorRestante || "",
       paragrafoPagamento,
       mesRealizacao,
       idCard,
@@ -740,7 +850,7 @@ router.post('/gerar-pdf', async (req, res) => {
           fieldId = "proposta_gerada";
         }
         if (dados.modelo === 'propostaFarmer') {
-          fieldId = "proposta";
+          fieldId = "proposta_1";
         }
         console.log(`🧩 Atualizando campo '${fieldId}' no card ${dados.idCard}...`);
 
