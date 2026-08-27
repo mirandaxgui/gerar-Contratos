@@ -113,7 +113,7 @@ router.post('/gerar-pdf', async (req, res) => {
       const rawValorFinal = dados.campos?.valorFinal ?? dados.valorFinal;
       const rawValorPrimeira = dados.campos?.valorPrimeiraParcela ?? dados.valorPrimeiraParcela;
       const rawValorRestante = dados.campos?.valorRestante ?? dados.valorRestante;
-
+      const formaPagamento = dados.campos?.formaPagamento;
       mesRealizacao = `${dados.campos?.mesRealizacao || ''}/${new Date().getFullYear()}`;
       idCard = dados.idCard || "";
 
