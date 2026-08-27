@@ -258,7 +258,7 @@ router.post('/gerar-pdf', async (req, res) => {
       const valorTotalReferencia = numValorFinal !== null ? numValorFinal : numTotalGeral;
 
       let temParcelamentoDiferenciado = false;
-      if (numValorPrimeira !== null && valorTotalReferencia !== null) {
+      if (numValorPrimeira !== null && valorTotalReferencia !== null && formaPagamento !== "Boleto À Vista" && formaPagamento !== "Cartão de Crédito À Vista" && formaPagamento !== "Pix À Vista") {
         const saoDiferentes = Math.abs(numValorPrimeira - valorTotalReferencia) > 0.01;
         if (saoDiferentes) {
           temParcelamentoDiferenciado = true;
@@ -266,7 +266,7 @@ router.post('/gerar-pdf', async (req, res) => {
             numValorRestante = Math.max(0, valorTotalReferencia - numValorPrimeira);
           }
         }
-      } else if (numValorPrimeira !== null && numValorRestante !== null && numValorRestante > 0) {
+      } else if (numValorPrimeira !== null && numValorRestante !== null && numValorRestante > 0 && formaPagamento !== "Boleto À Vista" && formaPagamento !== "Cartão de Crédito À Vista" && formaPagamento !== "Pix À Vista") {
         temParcelamentoDiferenciado = true;
       }
 
