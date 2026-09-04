@@ -774,10 +774,10 @@ router.post('/gerar-pdf', async (req, res) => {
       dataPrimeiroPagamento: dados.campos?.dataPrimeiroPagamento || "",
 
       //CONTRATO CREDENCIADA
-      nomeVendedor: dados.witnessSigner?.nomeVendedor || "",
-      cpfVendedorSigner: dados.witnessSigner?.cpfVendedorSigner || "",
-      nomeWitnessSigner2: dados.witnessSigner2?.nomeWitnessSigner || "",
-      cpfWitnessSigner2: dados.witnessSigner2?.cpfWitnessSigner || ""
+      nomeVendedor: dados.vendedorSigner?.nomeVendedor || "",
+      cpfVendedorSigner: dados.vendedorSigner?.cpfVendedorSigner || "",
+      nomeWitnessSigner2: dados.witnessSigner?.nomeWitnessSigner || "",
+      cpfWitnessSigner2: dados.witnessSigner?.cpfWitnessSigner || ""
 
     };
 
