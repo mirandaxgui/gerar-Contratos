@@ -776,8 +776,8 @@ router.post('/gerar-pdf', async (req, res) => {
       //CONTRATO CREDENCIADA
       nomeVendedor: dados.vendedorSigner?.nomeVendedor || "",
       cpfVendedorSigner: dados.vendedorSigner?.cpfVendedorSigner || "",
-      nomeWitnessSigner2: dados.witnessSigner?.nomeWitnessSigner || "",
-      cpfWitnessSigner2: dados.witnessSigner?.cpfWitnessSigner || ""
+      nomeWitnessSigner: dados.witnessSigner?.nomeWitnessSigner || "",
+      cpfWitnessSigner: dados.witnessSigner?.cpfWitnessSigner || ""
 
     };
 
