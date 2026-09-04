@@ -1,0 +1,1595 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contrato de Parceria Comercial</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        @font-face {
+            font-family: 'Roboto';
+            src: url('data:font/ttf;base64,{{BASE64_FONT}}') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: white;
+        }
+
+        .page {
+            width: 210mm;
+            height: 297mm;
+            margin: auto;
+            position: relative;
+            page-break-after: always;
+            background-color: white;
+        }
+
+        .header,
+        .footer {
+            position: absolute;
+            width: 100%;
+            left: 0;
+            z-index: 1;
+        }
+
+        .header {
+            top: 0;
+            height: 125px;
+            /* ajuste de acordo com sua imagem */
+        }
+
+        .footer {
+            bottom: 0;
+            height: 80px;
+            /* ajuste de acordo com sua imagem */
+        }
+
+        .header img,
+        .footer img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .page-content {
+            position: relative;
+            z-index: 2;
+            padding-top: 30mm;
+            padding-bottom: 30mm;
+            padding-left: 25mm;
+            padding-right: 25mm;
+            /* Topo/Baixo | Esquerda/Direita */
+            height: calc(100% - 50mm);
+            /* desconta header + footer */
+            font-size: 13px;
+            text-align: justify;
+        }
+
+        .page-content h2,
+        .page-content h3,
+        .page-content h4 {
+            margin: 20px 0 10px;
+            font-weight: bold;
+        }
+
+        .page-content p {
+            margin-bottom: 15px;
+        }
+
+        .page-content ul {
+            margin: 10px 0 10px 30px;
+            padding-left: 15px;
+            list-style-type: disc;
+        }
+
+        .page-break {
+            page-break-before: always;
+        }
+    </style>
+
+
+</head>
+
+<body>
+
+    <!-- Página 1 -->
+    <div class="page">
+        <!-- Cabeçalho fixo no topo da página -->
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+
+        <!-- Conteúdo da página -->
+        <div class="page-content">
+            <br><br>
+            <h2 class="header-title">CONTRATO PRESTAÇÃO DE SERVIÇOS DE EXAMES OCUPACIONAIS, LABORATORIAIS E DE
+                DIAGNÓSTICO </h2>
+
+            <h4>Pelo presente instrumento particular e na melhor forma de direito, de um lado:</h4>
+            <p>
+                D+ SAÚDE MEDICINA E SEGURANÇA DO TRABALHO LTDA., pessoa jurídica de direito privado, inscrita no CNPJ/MF
+                sob o nº 05.456.287/0001-82, com sede na Rua Salete, nº 200, conjuntos 53 e 133, Santana, São Paulo/SP,
+                CEP 02016-001, neste ato representada na forma de seus atos constitutivos, doravante denominada
+                “CONTRATANTE” ou “D+ SAÚDE”; e, de outro lado:
+            </p>
+            <p>
+                {{nomeCredenciada}}, pessoa jurídica de direito privado, inscrita no CNPJ/MF sob o nº
+                {{cnpjCredenciada}}, com sede na
+                {{enderecoSede}}, neste ato
+                representada na forma de seus atos constitutivos, doravante denominada “CONTRATADA” ou
+                “{{nomeFantasia}}”;
+
+            </p>
+
+            <p>
+                CONTRATANTE e CONTRATADA, quando conjuntamente denominadas “Partes” e, isoladamente, “Parte”;
+            </p>
+
+            <p>CONSIDERANDO QUE</p>
+            <ul style="list-style-type: none;">
+                <li>
+                    a) a CONTRATANTE atua nas áreas de medicina e segurança do trabalho, incluindo a gestão,
+                    solicitação, acompanhamento e viabilização de exames ocupacionais, clínicos, laboratoriais e
+                    complementares destinados aos trabalhadores e clientes por ela atendidos;
+                    <br></br>
+                </li>
+
+                <li>
+                    b) a CONTRATADA possui estrutura, profissionais, equipamentos, sistemas, licenças, alvarás e demais
+                    autorizações necessárias à realização dos serviços objeto deste Contrato; c) as Partes desejam
+                    estabelecer condições comerciais e operacionais para a prestação de serviços pela CONTRATADA para a
+                    CONTRATANTE, consistente no atendimento dos clientes recorrentes da CONTRATANTE e de cliente
+                    usuários da plataforma sstexames.com.br, de propriedade da CONTRATANTE;
+                    <br></br>
+                </li>
+
+                <li>
+                    c) as Partes desejam estabelecer condições comerciais e operacionais para a prestação de serviços
+                    pela
+                    CONTRATADA para a CONTRATANTE, consistente no atendimento dos clientes recorrentes da CONTRATANTE e
+                    de cliente usuários da plataforma sstexames.com.br, de propriedade da CONTRATANTE;
+                    <br></br>
+                </li>
+
+            </ul>
+            <p>
+                resolvem celebrar o presente CONTRATO DE PRESTAÇÃO DE SERVIÇOS DE EXAMES OCUPACIONAIS, LABORATORIAIS E
+                DE DIAGNÓSTICO (“Contrato”), mediante as cláusulas e condições seguintes.
+            </p>
+        </div>
+
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+
+    <!-- Página 2 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+
+        <div class="page-content">
+            <br><br>
+
+            <br></br>
+            <h3>1. OBJETO</h3>
+            <ul style="list-style-type: none;">
+                <li> <br>1.1. O presente Contrato tem por objeto a prestação, pela CONTRATADA, de serviços de realização
+                    de
+                    exames clínicos ocupacionais, exames laboratoriais complementares, exames de diagnóstico por imagem,
+                    exames toxicológicos e demais procedimentos expressamente previstos no ANEXO I – TABELA DE
+                    PROCEDIMENTOS E PREÇOS, destinados aos trabalhadores, usuários e beneficiários encaminhados pela
+                    CONTRATANTE.<br></br></li>
+                <li> 1.2. Os serviços serão prestados nas unidades próprias da CONTRATADA relacionadas no ANEXO II –
+                    UNIDADES E HORÁRIOS DE ATENDIMENTO. <br></br></li>
+                <li> 1.3. Não integram o objeto deste Contrato campanhas, atendimentos ou serviços realizados nas
+                    dependências da CONTRATANTE, de seus clientes ou de terceiros, usualmente denominados serviços in
+                    company, os quais, se necessários, deverão ser objeto de negociação e contratação específicas.
+                    <br></br>
+                </li>
+                <li> 1.4. Exames ou serviços não previstos no Anexo I somente poderão ser realizados e cobrados mediante
+                    autorização prévia e expressa da CONTRATANTE, inclusive quanto ao procedimento, preço, prazo e
+                    condições de execução. <br></br></li>
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 1.4.1. Solicitações feitas diretamente por trabalhador, cliente final ou terceiro não
+                            autorizado não gerarão obrigação de pagamento pela CONTRATANTE. <br></br></li>
+                        <li></li>
+                    </ul>
+                </li>
+                <li> 1.5. A CONTRATADA disponibilizará estrutura clínica adequada, profissionais legalmente habilitados,
+                    equipamentos, insumos, sistemas e demais recursos necessários à correta execução dos serviços.
+                    <br></br>
+                </li>
+                <li> 1.6. A utilização de laboratórios de apoio, estruturas terceirizadas ou terceiros para a execução
+                    de parcela relevante dos serviços dependerá de prévia ciência e autorização da CONTRATANTE.
+                    <br></br>
+                </li>
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 1.6.1. A eventual autorização não afastará a responsabilidade integral da CONTRATADA pela
+                            qualidade, segurança, prazos, entrega dos resultados, proteção dos dados e demais obrigações
+                            contratuais. <br></br></li>
+                        <li></li>
+                    </ul>
+                </li>
+                <li> 1.7. O presente Contrato não estabelece volume mínimo, exclusividade, preferência ou garantia de
+                    demanda em favor da CONTRATADA. <br></br></li>
+            </ul>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+
+    <!-- Página 3 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <h3>2. FLUXO OPERACIONAL E AGENDAMENTO</h3>
+            <ul style="list-style-type: none;">
+
+                <li> <br>2.1. Para realização dos exames, a CONTRATANTE disponibilizará à CONTRATADA, conforme
+                    aplicável, as informações e documentos necessários ao atendimento, podendo incluir: <br></br>
+                </li>
+
+                <li> a) guia ou autorização de atendimento; <br></br></li>
+                <li> b) ASO; <br></br></li>
+                <li> c) ficha clínica ou técnica; <br></br></li>
+                <li> d) anamnese; <br></br></li>
+                <li> e) identificação dos exames autorizados; <br></br></li>
+                <li> f) informações cadastrais do trabalhador; e <br></br></li>
+                <li> g) demais documentos necessários. <br></br></li>
+
+                <li> 2.2. As informações serão transmitidas preferencialmente por integração de sistemas, plataforma
+                    eletrônica ou outro canal previamente aprovado pelas Partes. <br></br></li>
+
+                <li> 2.3. Antes da realização do atendimento, a CONTRATADA deverá verificar a existência das informações
+                    indispensáveis à sua execução e comunicar prontamente à CONTRATANTE eventual inconsistência,
+                    ausência de dados, duplicidade ou impossibilidade técnica. <br></br></li>
+
+                <li> 2.4. A CONTRATANTE, seus clientes ou os próprios trabalhadores poderão realizar agendamentos por
+                    meio dos canais disponibilizados pela CONTRATADA, conforme o fluxo operacional aplicável. <br></br>
+
+                </li>
+
+                <li> 2.5. A CONTRATADA deverá manter permanentemente atualizadas as informações referentes a <br></br>
+                </li>
+
+                <li> a) unidades de atendimento; <br></br></li>
+                <li> b) horários; <br></br></li>
+                <li> c) procedimentos disponíveis; <br></br></li>
+                <li> d) necessidade ou não de agendamento; <br></br></li>
+                <li> e) preparo necessário para cada exame; e <br></br></li>
+                <li> f) prazos estimados de liberação dos resultados. <br></br></li>
+                <li> 2.6. Alterações relevantes de unidade, horário, capacidade de atendimento ou disponibilidade
+                    deverão ser comunicadas à CONTRATANTE com antecedência mínima de 5 (cinco) dias úteis, salvo
+                    situações emergenciais devidamente justificadas. <br></br></li>
+                <li> 2.7. O contato direto da CONTRATADA com trabalhadores será admitido exclusivamente quando
+                    necessário ao agendamento, preparo, atendimento, entrega de informações assistenciais ou outra
+                    finalidade diretamente relacionada à execução dos serviços. <br></br></li>
+            </ul>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 4 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <h3>3. IDENTIFICAÇÃO, RASTREABILIDADE, DOCUMENTAÇÃO E SEGURANÇA</h3>
+            <ul style="list-style-type: none;">
+
+                <li> <br>3.1. A CONTRATADA deverá adotar procedimentos que assegurem a correta identificação do
+                    trabalhador
+                    e a vinculação inequívoca entre: <br></br></li>
+
+                <li> a) trabalhador; <br></br></li>
+                <li> b) solicitação da CONTRATANTE; <br></br></li>
+                <li> c) procedimento autorizado; <br></br></li>
+                <li> d) procedimento realizado; <br></br></li>
+                <li> e) material coletado, quando aplicável; <br></br></li>
+                <li> f) resultado ou laudo; <br></br></li>
+                <li> g) profissional responsável; e <br></br></li>
+                <li> h) data, horário e unidade de atendimento. <br></br></li>
+
+                <li> 3.2. Quando utilizada identificação biométrica, esta deverá observar as disposições deste Contrato
+                    e a legislação de proteção de dados aplicável. <br></br></li>
+
+                <li> 3.3. A CONTRATADA deverá manter registros auditáveis dos atendimentos realizados, incluindo, quando
+                    aplicável: <br></br></li>
+
+                <li> a) identificação do trabalhador e do cliente da CONTRATANTE; <br></br></li>
+                <li> b) número da guia ou autorização; <br></br></li>
+                <li> c) exame solicitado; <br></br></li>
+                <li> d) exame realizado; <br></br></li>
+                <li> e) data e unidade do atendimento; <br></br></li>
+                <li> f) registro de comparecimento; <br></br></li>
+                <li> g) profissional responsável; <br></br></li>
+                <li> h) situação do exame; e <br></br></li>
+                <li> i) data de disponibilização do resultado. <br></br></li>
+
+                <li>3.4. Não poderão ser faturados: <br></br></li>
+
+                <li> a) exames agendados e não realizados; <br></br></li>
+                <li> b) exames realizados sem autorização válida; <br></br></li>
+                <li> c) procedimentos duplicados; <br></br></li>
+                <li> d) exames cancelados; <br></br></li>
+
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 5 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+
+                <li> e) exames não concluídos; <br></br></li>
+                <li> f) exames cujos resultados não tenham sido disponibilizados à CONTRATANTE; <br></br></li>
+
+                <li>3.5. Os ASOs, laudos, relatórios, resultados e demais documentos deverão ser emitidos exclusivamente
+                    por profissionais legalmente habilitados e em estrita conformidade com a legislação e normas
+                    técnicas aplicáveis. <br></br></li>
+
+                <li>3.6. É expressamente vedado à CONTRATADA: <br></br></li>
+
+                <li> a) emitir ASO ou documento sem a realização do atendimento correspondente; <br></br></li>
+                <li> b) assinar documento em branco ou permitir seu posterior preenchimento por pessoa não autorizada;
+                    <br></br>
+                </li>
+                <li> c) compartilhar carimbos, certificados, assinaturas, senhas ou credenciais; <br></br></li>
+                <li> d) utilizar o nome, marca, CNPJ ou identidade visual da CONTRATANTE fora das finalidades
+                    autorizadas; <br></br></li>
+                <li> e) emitir documento falso, ideologicamente falso ou sem o correspondente lastro documental;
+                    <br></br>
+                </li>
+                <li> f) alterar informações clínicas ou ocupacionais sem justificativa técnica e registro da alteração;
+                    ou <br></br></li>
+                <li> g) permitir o uso de credenciais de profissionais por terceiros. <br></br></li>
+
+                <li> 3.7. A CONTRATADA deverá utilizar mecanismos que permitam verificar a autoria e integridade dos
+                    documentos emitidos, preferencialmente mediante assinatura eletrônica, certificado digital, QR Code,
+                    código de validação ou tecnologia equivalente. <br></br>
+                </li>
+
+                <li> 3.8. Identificada ou suspeitada fraude, falsificação, emissão irregular, adulteração, uso
+                    indevido de credenciais, formulários ou do nome da D+ Saúde, a CONTRATADA deverá: <br></br>
+                </li>
+
+                <li> a) comunicar a CONTRATANTE imediatamente e, em qualquer hipótese, em até 24
+                    (vinte e quatro) horas;
+                    <br></br>
+                </li>
+                <li> b) preservar documentos, registros e logs;
+                    <br></br>
+                </li>
+                <li> c) bloquear credenciais comprometidas; <br></br></li>
+                <li> d) adotar medidas de contenção; <br></br></li>
+                <li> e) identificar os documentos, trabalhadores e clientes potencialmente afetados; e <br></br>
+                </li>
+                <li> f) colaborar integralmente com investigações internas, autoridades públicas e eventual registro de
+                    boletim de ocorrência. <br></br></li>
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 6 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <h3> 4. PRAZOS DE ENTREGA E NÍVEIS DE SERVIÇO </h3>
+            <ul style="list-style-type: none;">
+
+
+
+                <li><br> 4.1. Os ASOs deverão ser disponibilizados à CONTRATANTE em formato digital no prazo máximo de
+                    24
+                    (vinte e quatro) horas após a conclusão do atendimento. <br></br></li>
+
+                <li>4.2. Os resultados dos exames laboratoriais complementares deverão ser disponibilizados em até 3
+                    (três) a 5 (cinco) dias úteis, salvo procedimento que, por sua natureza técnica, demande prazo
+                    superior previamente informado. <br></br>
+                </li>
+                <li> 4.3. Os exames de diagnóstico por imagem deverão ser disponibilizados em até 3 (três) dias úteis,
+                    salvo prazo específico previsto no Anexo I ou previamente acordado.
+                    <br></br>
+                </li>
+                <li> 4.4. Resultados críticos deverão ser comunicados conforme os protocolos técnicos e profissionais
+                    aplicáveis.
+                    <br></br>
+                </li>
+                <li> 4.5. Erros materiais, cadastrais ou documentais deverão ser corrigidos em até 1 (um) dia útil após
+                    sua comunicação.
+                    <br></br>
+                </li>
+                <li> 4.6. Erros técnicos ou clínicos deverão ser corrigidos ou os exames refeitos com prioridade e sem
+                    custo adicional para a CONTRATANTE.
+                    <br></br>
+                </li>
+
+                <li> 4.7. A CONTRATADA deverá manter plano de contingência que permita a continuidade dos atendimentos e
+                    a entrega dos resultados em caso de falha de integração ou indisponibilidade de sistemas. <br></br>
+                </li>
+
+                <li> 4.8. Sempre que, por exigência legal, regulatória, profissional ou operacional, for necessária a
+                    entrega de documentos físicos relacionados aos serviços, caberá à CONTRATADA providenciar seu envio
+                    à CONTRATANTE por meio seguro e rastreável. <br></br></li>
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 4.8.1. Os custos ordinários de postagem e envio dos documentos físicos serão de
+                            responsabilidade da CONTRATADA, salvo ajuste diverso previamente aprovado por escrito pela
+                            CONTRATANTE. <br></br></li>
+                        <li>4.8.2. Os documentos físicos deverão ser postados até, no máximo, o dia 5 (cinco) do mês
+                            subsequente ao mês de competência dos respectivos exames, devendo a CONTRATADA encaminhar à
+                            CONTRATANTE o respectivo código de rastreamento no momento da postagem. <br></br></li>
+                        <li>4.8.3. Eventual atraso no envio da documentação necessária à conferência, auditoria ou
+                            arquivamento autorizará a CONTRATANTE a postergar o pagamento correspondente até a
+                            regularização da pendência, sem incidência de multa, juros ou qualquer penalidade. <br></br>
+                        </li>
+                    </ul><br></br>
+                </li>
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 7 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <h3> 5. PREÇO, FATURAMENTO, AUDITORIA E GLOSA </h3>
+            <ul style="list-style-type: none;">
+
+
+                <li><br> 5.1. Pelos serviços efetivamente realizados, concluídos, documentados e entregues, a
+                    CONTRATANTE pagará os valores previstos no Anexo I. <br></br></li>
+
+                <li>5.2. Os preços são finais e incluem os custos necessários à execução dos serviços, inclusive
+                    materiais, insumos, emissão de documentos, laudos, integrações e repetições decorrentes de falha da
+                    CONTRATADA. <br></br>
+                </li>
+
+                <li> 5.3. Qualquer alteração de preço ou inclusão de procedimento dependerá de prévia aprovação escrita
+                    da CONTRATANTE.
+                    <br></br>
+                </li>
+
+                <li> 5.4. Relatório mensal: Até o 5º (quinto) dia útil de cada mês, a CONTRATADA encaminhará relatório
+                    analítico dos serviços realizados no mês imediatamente anterior.
+                    <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 5.4.1. O relatório deverá conter, no mínimo:<br></br>
+                        </li>
+
+                        <li> a) identificação do trabalhador; <br></br></li>
+                        <li> b) identificação do cliente da CONTRATANTE; <br></br></li>
+                        <li> c) guia ou autorização; <br></br></li>
+                        <li> d) procedimento solicitado; <br></br></li>
+                        <li> e) procedimento realizado; <br></br></li>
+                        <li> f) data e unidade; <br></br></li>
+                        <li> g) valor unitário; <br></br></li>
+                        <li> h) data de disponibilização do resultado; <br></br></li>
+                        <li> i) status do atendimento; e <br></br></li>
+                        <li> j) eventuais cancelamentos, recoletas ou pendências. <br></br></li>
+
+
+                    </ul>
+                    <br></br>
+                </li>
+
+                <li> 5.5. Auditoria: Os relatórios estarão sujeitos à auditoria tecnológica e manual pela CONTRATANTE.
+                    <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 5.5.1. A ausência de manifestação imediata da CONTRATANTE não será considerada aceite
+                            tácito ou renúncia ao direito de auditoria.
+                            <br></br>
+                        </li>
+
+                        <li>
+                            5.5.2. A CONTRATANTE poderá solicitar documentos e evidências necessários à comprovação dos
+                            atendimentos.
+                            <br></br>
+                        </li>
+                        <li>
+                            5.5.3. A CONTRATADA deverá responder às solicitações de esclarecimento em até 3 (três) dias
+                            úteis.
+                            <br></br>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 8 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+
+                <li> 5.6. Glosas, retenções e compensações: Poderão ser objeto de glosa, entre outras hipóteses:
+                    <br></br>
+
+                <li> a) inexistência de autorização; <br></br></li>
+                <li> b) divergência de trabalhador ou cliente; <br></br></li>
+                <li> c) divergência de procedimento; <br></br></li>
+                <li> d) duplicidade; <br></br></li>
+                <li> e) exame não realizado; <br></br></li>
+                <li> f) exame não concluído; <br></br></li>
+                <li> g) resultado não entregue; <br></br></li>
+                <li> h) valor divergente da tabela; <br></br></li>
+                <li> i) ausência de comprovação da realização; <br></br></li>
+                <li> j) recoleta ou repetição decorrente de falha da CONTRATADA; ou <br></br></li>
+                <li> k) descumprimento de condição operacional relevante. <br></br></li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 5.6.1. As inconsistências identificadas poderão ser deduzidas da segunda parcela do
+                            respectivo
+                            faturamento. <br></br></li>
+
+                        <li> 5.6.2. Se o valor das glosas superar a segunda parcela, a diferença será compensada no
+                            ciclo
+                            subsequente ou restituída pela CONTRATADA, a critério da CONTRATANTE. <br></br></li>
+
+                        <li> 5.6.3. A CONTRATADA poderá contestar a glosa em até 5 (cinco) dias úteis, mediante
+                            justificativa
+                            acompanhada dos documentos comprobatórios. <br></br></li>
+
+                        <li> 5.6.4. Valores submetidos regularmente a auditoria ou glosa não serão considerados vencidos
+                            enquanto perdurar a discussão e não poderão fundamentar multa, protesto ou suspensão de
+                            atendimento. <br></br></li>
+
+                        <li> 5.6.5. O pagamento não implicará quitação ou aceitação definitiva de lançamentos que
+                            posteriormente se revelem duplicados, fraudulentos ou comprovadamente indevidos. <br></br>
+                        </li>
+
+                        <li> 5.6.6. Sem prejuízo das glosas previstas nesta Cláusula, a CONTRATANTE poderá reter ou
+                            compensar, de quaisquer valores devidos à CONTRATADA, quantias relacionadas a prejuízos,
+                            cobranças indevidas, multas contratuais, indenizações, despesas ou demais obrigações de
+                            responsabilidade da CONTRATADA, desde que devidamente identificadas e comunicadas. <br></br>
+                        </li>
+
+                        <li> 5.6.7. Caso o valor sujeito à retenção ou compensação seja objeto de contestação
+                            fundamentada pela CONTRATADA, as Partes buscarão solucionar a divergência de boa-fé,
+                            permanecendo suspensa a exigibilidade do montante controvertido até sua definição, sem
+                            prejuízo das demais medidas previstas neste Contrato. <br></br></li>
+                    </ul>
+                </li>
+
+
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 9 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+                <li>5.7. Pagamento e documentos fiscais: O faturamento dos serviços prestados ao longo de cada mês será
+                    pago em parcela única, com vencimento no dia 01 do segundo mês subsequente ao mês de competência dos
+                    serviços, já consideradas as glosas e ajustes apurados.<br></br>
+                </li>
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 5.7.1. Observada a legislação fiscal aplicável, a CONTRATADA emitirá o documento fiscal
+                            correspondente ao pagamento único. <br></br></li>
+
+                        <li> 5.7.2. O documento fiscal deverá considerar as glosas e ajustes comunicados pela
+                            CONTRATANTE e ser encaminhado com antecedência suficiente para processamento do pagamento no
+                            vencimento previsto. <br></br></li>
+
+                        <li> 5.7.3. A emissão tardia de relatório, documento fiscal, boleto ou documento obrigatório
+                            prorrogará automaticamente o vencimento, sem caracterização de mora da CONTRATANTE.
+                            <br></br>
+                        </li>
+
+                        <li> 5.7.4. Caso o vencimento recaia em dia não útil, o pagamento será realizado no primeiro dia
+                            útil subsequente. <br></br></li>
+
+                    </ul>
+                </li>
+
+                <li>5.8. Protesto e suspensão: O protesto somente poderá ocorrer relativamente a valor líquido, vencido,
+                    incontroverso e não pago por mais de 20 (vinte) dias, mediante prévia notificação escrita e
+                    concessão de prazo mínimo de 5 (cinco) dias úteis para regularização. <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li> 5.8.1. A suspensão de novos atendimentos somente poderá ocorrer caso subsista débito
+                            incontroverso por período superior a 30 (trinta) dias, após notificação escrita com
+                            antecedência mínima de 5 (cinco) dias úteis. <br></br></li>
+
+                        <li> 5.8.2. Ainda que haja suspensão de novos atendimentos, a CONTRATADA deverá concluir os
+                            procedimentos já iniciados e liberar todos os resultados de exames já realizados. <br></br>
+                        </li>
+
+                    </ul>
+                    <br></br>
+                </li>
+            </ul>
+            <h3> 6. REAJUSTE </h3>
+            <ul style="list-style-type: none;">
+
+
+                <li><br>6.1. Os valores poderão ser revistos após cada período de 12 (doze) meses de vigência,
+                    coincidindo a data-base do reajuste com o aniversário da assinatura deste Contrato. <br></br>
+                </li>
+
+                <li><br>6.2. Eventual reajuste dependerá de negociação e aprovação prévia e escrita da CONTRATANTE e
+                    ficará limitado, como referência máxima, ao menor percentual acumulado entre o IPCA e o IGP-M no
+                    período correspondente. <br></br></li>
+
+                <li><br>6.3. Alterações extraordinárias de preços dependerão de demonstração objetiva de seus
+                    fundamentos e formalização por escrito. <br></br></li>
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 10 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+
+            <h3> 7. OBRIGAÇÕES DA CONTRATADA </h3>
+            <ul style="list-style-type: none;">
+                <li><br>7.1. Sem prejuízo das demais obrigações previstas neste Contrato, caberá à CONTRATADA:
+                    <br></br>
+                </li>
+
+                <li> a) executar os serviços com zelo, qualidade técnica, segurança e pontualidade; <br></br></li>
+                <li> b) cumprir a legislação, normas sanitárias, profissionais, éticas e técnicas aplicáveis; <br></br>
+                </li>
+                <li> c) manter válidas suas licenças, alvarás, registros e autorizações; <br></br></li>
+                <li> d) manter profissionais devidamente habilitados e inscritos nos respectivos conselhos; <br></br>
+                </li>
+                <li> e) fornecer comprovantes de sua regularidade quando solicitados; <br></br></li>
+                <li> f) garantir a rastreabilidade dos atendimentos; <br></br></li>
+                <li> g) corrigir ou refazer, sem custo adicional, exames e documentos com falhas de sua
+                    responsabilidade; <br></br></li>
+                <li> h) responder por seus empregados, profissionais, prepostos e terceiros; <br></br></li>
+                <li> i) manter canais adequados de suporte; <br></br></li>
+                <li> j) informar à CONTRATANTE qualquer irregularidade relevante; <br></br></li>
+                <li> k) preservar registros e evidências pelo prazo legal; <br></br></li>
+                <li> l) colaborar com auditorias e investigações relacionadas aos serviços; <br></br></li>
+                <li> m) observar as políticas operacionais e de segurança da CONTRATANTE que tenham sido previamente
+                    informadas; e <br></br></li>
+                <li> n) não utilizar o nome ou marcas da CONTRATANTE sem autorização. <br></br></li>
+
+            </ul>
+
+            <h3> 8. OBRIGAÇÕES DA CONTRATANTE </h3>
+            <ul style="list-style-type: none;">
+                <li><br>8.1. Caberá à CONTRATANTE:
+                    <br></br>
+                </li>
+
+                <li> a) disponibilizar as informações necessárias à execução dos serviços; <br></br></li>
+                <li> b) realizar a conferência e auditoria dos faturamentos; <br></br>
+                </li>
+                <li> c) comunicar divergências identificadas; <br></br></li>
+                <li> d) pagar os valores corretamente faturados e incontroversos; <br></br>
+                </li>
+                <li> e) manter a interlocução comercial com seus clientes finais; e <br></br></li>
+                <li> f) cumprir a legislação aplicável às atividades sob sua responsabilidade. <br></br></li>
+
+
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 11 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <h3>9. NÃO EXCLUSIVIDADE E SSTEXAMES.COM.BR </h3>
+            <ul style="list-style-type: none;">
+
+                <li><br>9.1. A relação contratual não possui caráter de exclusividade. <br></br></li>
+
+                <li><br>9.2. A CONTRATANTE poderá contratar outros prestadores e encaminhar trabalhadores conforme
+                    critérios de localização, preço, disponibilidade, qualidade, capacidade, preferência do cliente ou
+                    qualquer outro critério operacional. <br></br></li>
+                <li><br>9.3. A CONTRATADA poderá ser habilitada no cadastro de fornecedores da plataforma
+                    sstexames.com.br. <br></br></li>
+
+                <li><br>9.4. A permanência da CONTRATADA na plataforma dependerá do cumprimento das condições de
+                    qualidade, atendimento, documentação, faturamento, proteção de dados e prazos previstos neste
+                    Contrato.
+                    <br></br>
+                </li>
+
+                <li><br>9.5. A CONTRATANTE poderá suspender ou excluir a CONTRATADA do cadastro de fornecedores em caso
+                    de descumprimento contratual, falhas reiteradas, fraude, risco ao paciente ou necessidade
+                    operacional.
+                    <br></br>
+                </li>
+
+                <li><br>9.6. A inclusão no cadastro não assegura volume mínimo, permanência mínima, exclusividade ou
+                    indenização pela retirada da plataforma.
+                    <br></br>
+                </li>
+
+            </ul>
+
+            <h3>10. CONFIDENCIALIDADE </h3>
+
+            <ul style="list-style-type: none;">
+
+                <li><br>10.1. As Partes deverão manter absoluto sigilo sobre as informações confidenciais acessadas em
+                    razão deste Contrato. <br></br></li>
+
+                <li><br>10.2. Consideram-se confidenciais, entre outras: <br></br></li>
+
+                <li> a) informações comerciais, financeiras e estratégicas; <br></br></li>
+                <li> b) preços e condições negociais; <br></br>
+                </li>
+                <li> c) dados de clientes e parceiros; <br></br></li>
+                <li> d) informações clínicas, laboratoriais e ocupacionais; <br></br>
+                </li>
+                <li> e) sistemas, integrações, credenciais e fluxos; <br></br></li>
+                <li> f) métodos, procedimentos e know-how; <br></br></li>
+                <li> g) marcas, materiais e documentos internos; e <br></br></li>
+                <li> h) informações protegidas por sigilo profissional ou legal. <br></br></li>
+
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 12 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+                <li><br>10.3. As informações somente poderão ser utilizadas para a execução deste Contrato. <br></br>
+                </li>
+
+                <li><br>10.4. Qualquer divulgação não autorizada, inclusive a mera suspeita de comprometimento relevante
+                    de
+                    informação confidencial, deverá ser imediatamente comunicada à outra Parte. <br></br>
+                </li>
+
+                <li><br>10.5. As obrigações desta Cláusula deverão ser estendidas a empregados, profissionais,
+                    colaboradores, prepostos e terceiros. <br></br></li>
+                <li><br>10.6. As obrigações de confidencialidade permanecerão após o encerramento do Contrato enquanto
+                    as informações conservarem caráter confidencial ou pelo prazo exigido pela legislação.
+                    <br></br>
+                </li>
+
+                <li><br>10.7. As obrigações de confidencialidade previstas nesta Cláusula não se aplicarão às
+                    informações que a Parte receptora comprove:
+                    <br></br>
+                </li>
+
+                <li> a) serem ou terem se tornado de domínio público sem violação deste Contrato; <br></br></li>
+                <li> b) já serem legitimamente de seu conhecimento antes de seu recebimento em decorrência deste
+                    Contrato; <br></br>
+                </li>
+                <li> c) terem sido legitimamente recebidas de terceiro que não esteja sujeito a obrigação de
+                    confidencialidade; <br></br></li>
+                <li> d) terem sido desenvolvidas de forma independente, sem utilização das informações confidenciais da
+                    outra Parte; ou <br></br>
+                </li>
+                <li> e) devam ser divulgadas por determinação legal, regulatória, administrativa ou judicial. <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li>10.7.1. Na hipótese prevista na alínea “e”, a Parte obrigada à divulgação deverá, sempre que
+                            juridicamente permitido, comunicar previamente a outra Parte, limitando a divulgação ao
+                            estritamente necessário para cumprimento da respectiva obrigação </li>
+                    </ul>
+                </li>
+            </ul>
+
+            <h3> 11. NÃO DESINTERMEDIAÇÃO E PROTEÇÃO DA CARTEIRA DE CLIENTES </h3>
+            <ul style="list-style-type: none;">
+
+                <li><br>11.1. Durante a vigência deste Contrato e pelo prazo de 24 (vinte e quatro) meses após seu
+                    encerramento, a CONTRATADA não poderá, direta ou indiretamente:
+                    <br></br>
+                </li>
+
+                <li> a) abordar comercialmente clientes apresentados ou encaminhados pela
+                    CONTRATANTE;
+                    <br></br>
+                </li>
+                <li> b) oferecer diretamente a esses clientes serviços que resultem na exclusão ou redução da
+                    participação da CONTRATANTE; <br></br>
+                </li>
+                <li> c) realizar cross-sell utilizando informações obtidas por meio da relação contratual; <br></br>
+                </li>
+                <li> d) aceitar solicitação destinada à desintermediação da CONTRATANTE; <br></br>
+                </li>
+                <li> e) utilizar informações ou contatos obtidos em razão do Contrato para prospecção comercial; ou
+                    <br></br>
+                </li>
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 13 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <ul style="list-style-type: none;">
+
+                <li> f) induzir cliente da CONTRATANTE a encerrar ou reduzir sua relação comercial com esta.
+                    <br></br>
+                </li>
+
+                <li><br>11.2. Caso receba abordagem comercial direta de cliente apresentado pela CONTRATANTE, a
+                    CONTRATADA deverá comunicar o fato prontamente à CONTRATANTE.
+                    <br></br>
+                </li>
+
+                <li><br>11.3. O disposto nesta Cláusula não se aplicará a cliente que a CONTRATADA comprove integrar
+                    regularmente sua carteira antes de ter sido apresentado pela CONTRATANTE.
+                    <br></br>
+                </li>
+
+                <li><br>11.4. O descumprimento sujeitará a CONTRATADA ao pagamento de multa correspondente ao maior dos
+                    seguintes valores:
+                    <br></br>
+                </li>
+                <li> a) soma das 12 (doze) últimas mensalidades cobradas pela CONTRATANTE do cliente objeto da infração;
+                    ou
+                    <br></br>
+                </li>
+                <li> b) soma das 12 (doze) últimas faturas emitidas pela CONTRATADA contra a CONTRATANTE. <br></br>
+                </li>
+                <li><br>11.5. Na inexistência de histórico de 12 (doze) meses, será considerada a média mensal do
+                    período disponível, projetada para 12 (doze) meses. <br></br>
+                </li>
+                <li><br>11.6. A multa não afastará o direito da CONTRATANTE de exigir indenização por perdas e danos que
+                    comprovadamente excedam seu valor. <br></br></li>
+            </ul>
+            <h3>12. PROTEÇÃO DE DADOS PESSOAIS E SEGURANÇA DA INFORMAÇÃO </h3>
+            <ul style="list-style-type: none;">
+                <li><br>12.1. As Partes observarão integralmente a Lei nº 13.709/2018 – Lei Geral de Proteção de Dados
+                    Pessoais – e as demais normas aplicáveis.
+                    <br></br>
+                </li>
+
+                <li><br>12.2. Os papéis de controlador, operador ou controlador independente serão determinados
+                    conforme as atividades e decisões efetivamente desempenhadas por cada Parte em cada operação de
+                    tratamento.
+                    <br></br>
+                </li>
+
+                <li><br>12.3. Quando atuar em nome da CONTRATANTE, a CONTRATADA deverá:
+                    <br></br>
+                </li>
+
+                <li> a) tratar os dados exclusivamente para as finalidades contratadas; <br></br></li>
+                <li> b) seguir as instruções documentadas da CONTRATANTE; <br></br>
+                </li>
+                <li> c) limitar o acesso às pessoas que necessitem das informações; <br></br></li>
+                <li> d) manter controles de acesso e registros compatíveis com o risco; <br></br>
+                </li>
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 14 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <ul style="list-style-type: none;">
+
+                <li> e) adotar medidas administrativas, técnicas e físicas adequadas; <br></br></li>
+                <li> f) manter confidencialidade; <br></br></li>
+                <li> g) auxiliar no atendimento aos direitos dos titulares; e <br></br></li>
+                <li> h) não utilizar dados para prospecção, publicidade, enriquecimento de bases ou finalidade própria
+                    incompatível. <br></br></li>
+
+                <li><br>12.4. Nas atividades em que atue como controladora independente, a CONTRATADA responderá pela
+                    definição da base legal, finalidade, retenção e demais obrigações correspondentes. <br></br></li>
+
+                <li><br>12.5. A CONTRATADA deverá promover treinamento periódico de sua equipe em proteção de dados e
+                    segurança da informação e, quando solicitado, apresentar informações ou evidências razoáveis sobre
+                    tais medidas. <br></br> </li>
+
+                <li><br>12.6. A CONTRATADA deverá manter políticas e procedimentos de governança em privacidade
+                    compatíveis com a natureza e sensibilidade dos dados tratados, inclusive plano de resposta a
+                    incidentes.
+                    <br></br>
+                </li>
+
+                <li><br>12.7. O tratamento de dados biométricos deverá:
+                    <br></br>
+                </li>
+
+                <li> a) limitar-se às finalidades legítimas de identificação e rastreabilidade; <br></br></li>
+                <li> b) ser protegido por controles reforçados de segurança; <br></br>
+                </li>
+                <li> c) observar prazo de retenção adequado; <br></br></li>
+                <li> d) ser vedado para fins comerciais não autorizados; e <br></br>
+                </li>
+                <li> e) observar a base legal aplicável. <br></br></li>
+
+                <li><br>12.8. A utilização de suboperador que tenha acesso relevante aos dados dependerá de prévia
+                    ciência da CONTRATANTE, permanecendo a CONTRATADA responsável pelos atos de seus terceiros.
+                    <br></br>
+                </li>
+                <li><br>12.9. A CONTRATADA deverá comunicar à CONTRATANTE em até 24 (vinte e quatro) horas de sua
+                    ciência: <br></br></li>
+
+                <li> a) incidente de segurança; <br></br></li>
+                <li> b) suspeita relevante de incidente; <br></br>
+                </li>
+                <li> c) acesso indevido; <br></br></li>
+                <li> d) perda ou indisponibilidade relevante; <br></br>
+                </li>
+                <li> e) tratamento não autorizado; ou <br></br></li>
+                <li> f) qualquer violação relevante das obrigações previstas nesta Cláusula. <br></br></li>
+
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 15 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+                <li><br>12.10. A comunicação deverá ser progressivamente complementada com informações sobre natureza do
+                    incidente, sistemas, dados, titulares potencialmente afetados, riscos, medidas de contenção e
+                    remediação. <br></br></li>
+
+                <li><br>12.11. A CONTRATADA deverá preservar evidências e colaborar integralmente com a investigação e
+                    com as medidas necessárias. <br></br> </li>
+
+                <li><br>12.12. A CONTRATADA não realizará comunicação em nome da CONTRATANTE a autoridades, titulares ou
+                    terceiros sem prévio alinhamento, salvo obrigação legal própria. <br></br> </li>
+
+                <li><br>12.13. Encerrada a finalidade do tratamento, os dados serão devolvidos, eliminados, anonimizados
+                    ou mantidos de forma segura, conforme a legislação e as instruções legítimas aplicáveis. <br></br>
+                </li>
+
+                <li><br>12.14. A CONTRATADA responderá pelos danos, custos de investigação, remediação, defesa,
+                    notificações e penalidades decorrentes de descumprimento a ela imputável ou imputável a terceiros
+                    sob sua responsabilidade. <br></br>
+                </li>
+            </ul>
+
+
+            <h3>13. RESPONSABILIDADE E INDENIZAÇÃO </h3>
+            <ul style="list-style-type: none;">
+                <li><br>13.1. A CONTRATADA responderá pelos danos comprovadamente decorrentes de:
+                    <br></br>
+                </li>
+
+                <li> a) erros profissionais; <br></br></li>
+                <li> b) troca ou identificação incorreta de pacientes ou amostras; <br></br>
+                </li>
+                <li> c) perda de amostras; <br></br></li>
+                <li> d) resultados ou laudos incorretos; <br></br>
+                </li>
+                <li> e) atrasos imputáveis à sua operação; <br></br></li>
+                <li> f) irregularidades na emissão de ASOs; <br></br></li>
+                <li> g) atuação de profissionais ou terceiros sob sua responsabilidade; <br></br></li>
+                <li> h) descumprimento de normas sanitárias ou profissionais; ou <br></br></li>
+                <li> i) demais violações deste Contrato. <br></br></li>
+
+                <li><br>13.2. Caso a CONTRATANTE seja envolvida em procedimento administrativo, judicial ou
+                    extrajudicial decorrente de ato imputável à CONTRATADA, esta deverá prestar a colaboração necessária
+                    à defesa e ressarcir os valores comprovadamente suportados pela CONTRATANTE. <br></br></li>
+
+                <li><br>13.3. Sempre que compatível com a natureza e volume da operação, a CONTRATADA deverá manter
+                    seguro de responsabilidade civil profissional adequado aos serviços prestados e apresentar
+                    comprovação quando solicitado. <br></br> </li>
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 16 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <h3>14. INEXISTÊNCIA DE VÍNCULO TRABALHISTA </h3>
+            <ul style="list-style-type: none;">
+                <li><br>14.1. Este Contrato possui natureza exclusivamente civil e comercial, inexistindo vínculo
+                    trabalhista, societário, associativo, de representação, agência ou subordinação entre as Partes.
+                    <br></br>
+                </li>
+                <li><br>14.2. A CONTRATADA será exclusivamente responsável pela seleção, direção, remuneração, gestão e
+                    encargos de seus empregados, profissionais, colaboradores, prepostos e terceiros. <br></br>
+                </li>
+                <li><br>14.3. A CONTRATADA responderá pelas obrigações trabalhistas, previdenciárias, fiscais,
+                    securitárias e regulatórias relacionadas ao seu pessoal. <br></br>
+                </li>
+                <li><br>14.4. Caso a CONTRATANTE suporte pagamento decorrente de responsabilidade imputável à
+                    CONTRATADA, esta deverá efetuar o respectivo ressarcimento em até 5 (cinco) dias úteis após a
+                    apresentação da comprovação do desembolso, ressalvada discussão justificada quanto à sua
+                    responsabilidade. <br></br>
+                </li>
+            </ul>
+
+            <h3>15. COMPLIANCE, INTEGRIDADE E PREVENÇÃO A FRAUDES </h3>
+            <ul style="list-style-type: none;">
+                <li><br>15.1. As Partes comprometem-se a observar a legislação anticorrupção e demais normas de
+                    integridade aplicáveis.
+                    <br></br>
+                </li>
+
+                <li><br>15.2. A CONTRATADA deverá manter mecanismos compatíveis com sua atividade para:
+                    <br></br>
+                </li>
+
+                <li> a) prevenção e identificação de fraudes; <br></br></li>
+                <li> b) reporte de irregularidades; <br></br>
+                </li>
+                <li> c) controle de credenciais e documentos; <br></br></li>
+                <li> d) treinamento de colaboradores; <br></br>
+                </li>
+                <li> e) supervisão de seus processos operacionais; e <br></br></li>
+                <li> f) resposta a eventos potencialmente ilícitos. <br></br></li>
+
+                <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 17 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <ul style="list-style-type: none;">
+                <li><br>15.3. A CONTRATADA deverá comunicar imediatamente à CONTRATANTE qualquer: <br></br></li>
+
+                <li> a) fraude ou suspeita de fraude envolvendo os serviços; <br></br></li>
+                <li> b) falsidade documental; <br></br>
+                </li>
+                <li> c) autuação sanitária ou profissional relevante; <br></br></li>
+                <li> d) perda ou suspensão de licença; <br></br>
+                </li>
+                <li> e) investigação que possa afetar os serviços; <br></br></li>
+                <li> f) impedimento relevante de profissional responsável; ou <br></br></li>
+                <li> g) fato capaz de comprometer a regularidade ou reputação da operação. <br></br></li>
+
+                <li><br>15.4. Violações graves de compliance, fraude ou falsidade documental constituirão motivo para
+                    rescisão imediata.
+                    <br></br>
+                </li>
+
+            </ul>
+
+            <h3>16. MARCAS, NOME EMPRESARIAL E SISTEMAS </h3>
+            <ul style="list-style-type: none;">
+                <li><br>16.1. Nenhuma Parte poderá utilizar o nome, marca, logotipo ou materiais da outra para fins
+                    publicitários ou comerciais sem prévia autorização. <br></br>
+                </li>
+                <li><br>16.2. A CONTRATADA não poderá apresentar-se a terceiros como representante, integrante do grupo
+                    econômico ou agente da CONTRATANTE. <br></br>
+                </li>
+                <li><br>16.3. Encerrado o Contrato, a CONTRATADA deverá cessar imediatamente qualquer referência
+                    comercial à condição de credenciada ou parceira da CONTRATANTE. <br></br>
+                </li>
+                <li><br>16.4. Cada Parte permanecerá titular de seus sistemas, plataformas, métodos, integrações, marcas
+                    e demais ativos intelectuais preexistentes. <br></br>
+                </li>
+            </ul>
+
+            <h3>17. VIGÊNCIA, RENOVAÇÃO E RESCISÃO </h3>
+            <ul style="list-style-type: none;">
+                <li><br>17.1. O presente Contrato vigorará pelo prazo inicial mínimo de 12 (doze) meses, contados da
+                    data de sua assinatura.
+                    <br></br>
+                </li>
+
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 18 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+
+                <li><br>17.2. Encerrado o prazo inicial, o Contrato será automaticamente renovado por períodos
+                    sucessivos de 12 (doze) meses, nas mesmas condições então vigentes, ressalvados os reajustes e
+                    alterações formalmente acordados entre as Partes, salvo se qualquer delas manifestar expressamente
+                    seu desinteresse na renovação.
+                    <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li>17.2.1. A manifestação de desinteresse na renovação deverá ser realizada por escrito e
+                            recebida pela outra Parte com antecedência mínima de 90 (noventa) dias da data de término do
+                            período contratual em curso. <br></br></li>
+
+                        <li>17.2.2. Não havendo comunicação no prazo previsto na Cláusula anterior, o Contrato será
+                            automaticamente renovado por novo período de 12 (doze) meses. <br></br></li>
+
+                        <li>17.2.3. A comunicação tempestiva de não renovação não constituirá inadimplemento e não
+                            sujeitará qualquer das Partes a multa ou indenização, permanecendo exigíveis as obrigações
+                            constituídas até a data efetiva de encerramento. <br></br></li>
+                    </ul>
+                </li>
+
+                <li><br>17.3. Durante o prazo inicial de 12 (doze) meses e durante cada período de renovação, o Contrato
+                    não poderá ser rescindido imotivadamente antes de seu respectivo termo final, salvo mediante acordo
+                    escrito entre as Partes. <br></br></li>
+
+                <li><br>17.4. Independentemente dos prazos previstos nesta Cláusula, o Contrato poderá ser rescindido
+                    imediatamente, mediante comunicação escrita da Parte prejudicada, nas seguintes hipóteses: <br></br>
+                </li>
+
+                <li> a) fraude, falsidade documental ou suspeita fundamentada de prática fraudulenta relacionada aos
+                    serviços, quando a gravidade do fato inviabilizar a continuidade da relação; <br></br></li>
+                <li> b) emissão irregular, fraudulenta ou sem lastro de ASO, laudo, resultado ou documento relacionado
+                    aos serviços; <br></br>
+                </li>
+                <li> c) violação grave das obrigações de confidencialidade; <br></br></li>
+                <li> d) violação relevante das obrigações de proteção de dados pessoais e segurança da informação;
+                    <br></br>
+                </li>
+                <li> e) captação, aliciamento ou desintermediação de clientes da CONTRATANTE; <br></br></li>
+                <li> f) perda, suspensão ou não renovação de licença, alvará, registro ou autorização essencial à
+                    execução dos serviços; <br></br></li>
+                <li> g) falha assistencial grave capaz de gerar risco à saúde, segurança ou integridade de pacientes ou
+                    trabalhadores; <br></br></li>
+                <li> h) descumprimento reiterado dos prazos ou níveis de serviço; <br></br></li>
+                <li> i) subcontratação realizada em desacordo com este Contrato; <br></br></li>
+                <li> j) prática de ato ilícito ou violação relevante das obrigações de compliance e integridade;
+                    <br></br>
+                </li>
+
+
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 19 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+            <ul style="list-style-type: none;">
+                <li> k) inadimplemento de obrigação essencial prevista neste Contrato; <br></br></li>
+                <li> l) decretação de falência, dissolução, liquidação ou insolvência de qualquer das
+                    Partes;
+                    <br></br>
+                </li>
+
+                <li>m) pedido ou deferimento de recuperação judicial ou extrajudicial que, justificadamente,
+                    coloque em
+                    risco a continuidade ou o regular cumprimento das obrigações contratuais; <br></br></li>
+                <li> n) paralisação relevante das atividades, protestos reiterados, execuções ou situação
+                    econômico-financeira que, de forma objetiva, comprometa a capacidade de cumprimento das obrigações
+                    assumidas; <br></br></li>
+                <li> o) prática de ato ou ocorrência de situação capaz de causar risco jurídico ou reputacional
+                    relevante à outra Parte; ou <br></br></li>
+
+                <li><br>17.5. Nas hipóteses de descumprimento passível de correção e que não envolva fraude, falsidade
+                    documental, risco à saúde, proteção de dados, confidencialidade, desintermediação ou outra infração
+                    cuja gravidade justifique o rompimento imediato, a Parte prejudicada notificará a Parte infratora
+                    para que sane a irregularidade no prazo de até 5 (cinco) dias úteis. <br></br></li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+                        <li>17.5.1. A ausência de saneamento no prazo concedido autorizará a rescisão imediata do
+                            Contrato, sem necessidade de nova notificação. </li>
+
+                    </ul>
+                </li>
+
+                <li><br>17.6. A rescisão motivada decorrente de inadimplemento da CONTRATADA não sujeitará a CONTRATANTE
+                    a qualquer multa, penalidade ou indenização pela antecipação do término contratual, sem prejuízo do
+                    direito à cobrança das multas contratuais e das perdas e danos aplicáveis. <br></br></li>
+
+                <li><br>17.7. Independentemente do motivo do encerramento, a CONTRATADA deverá: <br></br></li>
+
+                <li> a) concluir, salvo orientação diversa da CONTRATANTE, os exames já iniciados; <br></br>
+                </li>
+                <li> b) disponibilizar todos os ASOs, laudos, resultados e documentos pendentes; <br></br></li>
+                <li> c) corrigir erros e irregularidades identificados em serviços anteriormente prestados; <br></br>
+                </li>
+                <li> d) disponibilizar à CONTRATANTE as informações e registros necessários à continuidade dos
+                    atendimentos; <br></br></li>
+                <li> e) cumprir integralmente as obrigações relacionadas à confidencialidade e proteção de dados;
+                    <br></br>
+                </li>
+                <li> f) cessar imediatamente o uso das marcas, nome empresarial, identidade visual e referência à
+                    condição de parceira ou credenciada da CONTRATANTE; e <br></br></li>
+                <li> g) prestar suporte razoável de transição pelo prazo de até 30 (trinta) dias, quando necessário.
+                    <br></br>
+                </li>
+
+                
+
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 20 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <ul style="list-style-type: none;">
+                <li><br>17.8. O encerramento do Contrato não prejudicará direitos e obrigações constituídos
+                    anteriormente à sua data efetiva, inclusive aqueles relacionados a:
+                    <br></br>
+                </li>
+
+                <li> a) pagamentos; <br></br></li>
+                <li> b) auditorias e glosas; <br></br></li>
+                <li> c) retenções e compensações; <br></br></li>
+                <li> d) indenizações; <br></br></li>
+                <li> e) confidencialidade; <br></br></li>
+                <li> f) proteção de dados; <br></br></li>
+                <li> g) não desintermediação; <br></br></li>
+                <li> h) responsabilidade civil; e <br></br></li>
+                <li> i) demais obrigações que, por sua natureza, devam sobreviver ao término. <br></br></li>
+
+                <li><br>17.9. No encerramento, a CONTRATANTE pagará exclusivamente os serviços efetivamente realizados,
+                    concluídos, devidamente comprovados, entregues e corretamente faturados até a data efetiva de
+                    término, permanecendo integralmente aplicáveis as regras de auditoria, glosa, retenção e compensação
+                    previstas neste Contrato. <br></br></li>
+            </ul>
+            <h3>18. COMUNICAÇÕES </h3>
+
+            <ul style="list-style-type: none;">
+
+                <li> <br>18.1. Comunicações operacionais poderão ocorrer pelos canais e sistemas usualmente utilizados
+                    pelas Partes. <br></br></li>
+                <li> <br>18.2. Notificações de inadimplemento, não renovação, rescisão, fraude, incidente de segurança,
+                    cessão ou outro descumprimento relevante deverão ser realizadas por escrito, inclusive por e-mail,
+                    aos endereços formalmente indicados pelas Partes. <br></br></li>
+                <li> <br>18.3. A alteração dos dados de contato deverá ser comunicada formalmente à outra Parte.
+                    <br></br>
+                </li>
+                <li> <br>18.4. As notificações encaminhadas por e-mail serão consideradas recebidas no primeiro dia útil
+                    subsequente ao envio, desde que não haja mensagem automática de erro ou impossibilidade de entrega.
+                    <br></br>
+                </li>
+            </ul>
+
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 21 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+                        <h3>19. DISPOSIÇÕES GERAIS, CESSÃO E RECEBÍVEIS </h3>
+            <ul style="list-style-type: none;">
+
+                <li> <br>19.1. Este Contrato e seus anexos representam o entendimento integral entre as Partes quanto ao
+                    seu objeto. <br></br></li>
+
+                <li> <br>19.2. Qualquer alteração somente produzirá efeitos se formalizada por escrito por
+                    representantes autorizados. <br></br></li>
+
+                <li> <br>19.3. A tolerância em relação a qualquer descumprimento não constituirá novação ou renúncia.
+                    <br></br>
+                </li>
+
+                <li> <br>19.4. A nulidade ou inexigibilidade de qualquer disposição não afetará a validade e eficácia
+                    das demais disposições.
+                    <br></br>
+                </li>
+
+                <li> <br>19.5. A CONTRATANTE poderá ceder ou transferir, total ou parcialmente, sua posição contratual,
+                    bem como os direitos e obrigações decorrentes deste Contrato, para sociedade que venha a ser
+                    constituída, direta ou indiretamente, por seus atuais sócios, ou que esteja sob controle comum
+                    destes, quando a operação tiver por finalidade implementar reorganização societária, operacional,
+                    administrativa ou patrimonial das atividades atualmente desenvolvidas pela CONTRATANTE. <br></br>
+                </li>
+
+                <li>
+                    <ul style="list-style-type: none;">
+
+                        <li><br>19.5.1. A cessão prevista nesta Cláusula dependerá apenas de comunicação escrita à
+                            CONTRATADA, contendo a identificação da sociedade que passará a assumir a posição contratual
+                            da CONTRATANTE e a respectiva data de eficácia. <br></br></li>
+
+                        <li><br>19.5.2. A CONTRATADA obriga-se a cooperar com os atos necessários à implementação da
+                            reorganização prevista nesta Cláusula, inclusive quanto à atualização de cadastros,
+                            sistemas, dados fiscais e documentos operacionais, desde que não haja alteração material de
+                            suas obrigações originalmente contratadas. <br></br></li>
+
+                        <li> <br>19.6. É expressamente vedado à CONTRATADA, sem a prévia e expressa anuência escrita da
+                            CONTRATANTE, ceder, antecipar, descontar, negociar, endossar, securitizar, dar em garantia,
+                            constituir cessão fiduciária, prometer ceder ou realizar qualquer operação de efeito
+                            equivalente
+                            envolvendo créditos, recebíveis, faturas, notas fiscais, duplicatas ou quaisquer outros
+                            direitos de
+                            pagamento decorrentes deste Contrato, sejam eles presentes ou futuros.
+                            <br></br>
+                        </li>
+
+                        <li> <br>19.7. As Partes reconhecem como válidas as assinaturas eletrônicas, inclusive aquelas
+                            realizadas fora dos padrões ICP-Brasil, desde que o mecanismo adotado permita identificar os
+                            signatários e preservar a integridade do documento.
+                            <br></br>
+                        </li>
+                    </ul>
+                </li>
+
+                <li> <br>19.8. Quando presentes os requisitos legais de certeza, liquidez e exigibilidade, o presente
+                    instrumento poderá constituir título executivo extrajudicial.
+                    <br></br>
+                </li>
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 22 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div class="page-content">
+            <br><br>
+
+            <h3>20. FORO </h3>
+            <ul style="list-style-type: none;">
+                <li> <br>20.1. As Partes elegem o foro da Comarca de São Paulo/SP para dirimir quaisquer controvérsias
+                    decorrentes deste Contrato, com renúncia expressa a qualquer outro, por mais privilegiado que seja.
+                    <br></br>
+                </li>
+                <p>E, por estarem de acordo, as Partes assinam eletronicamente o presente instrumento. </p>
+                <p><br>São Paulo, {{dataAtualExtenso}}.</p>
+
+                <h3><br>D+ SAÚDE MEDICINA E SEGURANÇA DO TRABALHO LTDA. </h3>
+                <h3>CONTRATANTE </h3>
+                <h3>{{nomeCredenciada}} </h3>
+                <h3>CONTRATADA </h3>
+
+                <h3><br>TESTEMUNHA 1 </h3>
+                <p>Nome: {{nomeVendedor}} </p>
+                <p>CPF: {{cpfVendedorSigner}} </p>
+
+                <h3><br>TESTEMUNHA 2 </h3>
+                <p>Nome: {{nomeWitnessSigner}} </p>
+                <p>CPF: {{cpfWitnessSigner}} </p>
+
+            </ul>
+            <br></br>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 23 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div
+            style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+
+            <h3><br></br>ANEXO I – TABELA DE PROCEDIMENTOS E PREÇOS </h3>
+
+            <!-- Tabela de exames -->
+            <table border="1" cellpadding="8" cellspacing="0"
+                style="margin-top: 10px; border-collapse: collapse; width: 80%; text-align: center;">
+                <thead style="background-color: #f2f2f2;">
+                    <tr>
+                        <th>Procedimento</th>
+                        <th>Valor</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{tabelaExames}}
+                </tbody>
+            </table>
+        </div>
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+    <!-- Página 24 -->
+    <div class="page">
+        <div class="header">
+            <img src="{{headerImage}}" alt="Cabeçalho" />
+        </div>
+        <div
+            style="display: flex; justify-content: center; align-items: center; height: 100vh; flex-direction: column;">
+
+            <h3><br></br>ANEXO II – UNIDADES E HORÁRIOS DE ATENDIMENTO </h3>
+
+            <!-- Tabela de Unidades -->
+            <table border="1" cellpadding="8" cellspacing="0"
+                style="margin-top: 10px; border-collapse: collapse; width: 80%; text-align: center;">
+                <thead style="background-color: #f2f2f2;">
+                    <tr>
+                        <th>Unidade </th>
+                        <th>Horário de atendimento </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{tabelaUnidades}}
+                </tbody>
+            </table>
+            <p style="
+            margin-top:10px;
+            border-collapse:collapse;
+            width:80%;
+            text-align:center;
+            ">A CONTRATADA deverá manter a CONTRATANTE informada sobre eventual
+                alteração dos endereços, horários,
+                procedimentos disponíveis ou capacidade operacional de cada unidade. </p>
+        </div>
+
+        <!-- Rodapé fixo no final da página -->
+        <div class="footer">
+            <img src="{{footerImage}}" alt="Rodapé" />
+        </div>
+    </div>
+</body>
+
+</html>

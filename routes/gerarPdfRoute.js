@@ -8,6 +8,8 @@ import { criarPresignedUrl, atualizarCampoCardPipefy, enviarArquivoParaPipefy } 
 import { dataHojePtBrExtenso, dataHojePtBrCurta, preencherTemplate, obterPrecosPorVidas } from '../utils/util.js';
 import sharp from 'sharp';
 
+import { getTemplateById } from '../utils/templateManager.js';
+
 const router = express.Router();
 
 const __filename = fileURLToPath(import.meta.url);
@@ -34,18 +36,25 @@ router.post('/gerar-pdf', async (req, res) => {
     const dados = req.body || {};
     console.log('🟢 Body recebido:', JSON.stringify(dados, null, 2));
 
-    const modelo = dados.modelo || 'contratoCredenciada';
+    const modelo = dados.modelo || 'contratoCredenciada_v2';
     const templatePath = path.join(__dirname, `../templates/${modelo}.html`);
+    let htmlBase = '';
 
-    if (!fs.existsSync(templatePath)) {
-      throw new Error(`Modelo HTML não encontrado: ${modelo}`);
+    if (fs.existsSync(templatePath)) {
+      htmlBase = fs.readFileSync(templatePath, 'utf8');
+    } else {
+      const customTpl = getTemplateById(modelo);
+      if (customTpl && customTpl.html) {
+        htmlBase = customTpl.html;
+      } else {
+        throw new Error(`Modelo HTML não encontrado: ${modelo}`);
+      }
     }
 
     const fontPath = path.resolve(__dirname, '../fonts', 'Roboto-Regular.ttf');
-    const base64Font = fs.readFileSync(fontPath).toString('base64');
+    const base64Font = fs.existsSync(fontPath) ? fs.readFileSync(fontPath).toString('base64') : '';
     const fontDataUrl = `data:font/ttf;base64,${base64Font}`;
 
-    let htmlBase = fs.readFileSync(templatePath, 'utf8');
     htmlBase = htmlBase.replace('{{BASE64_FONT}}', base64Font);
     htmlBase = htmlBase.replace('{{CAMINHO_FONT}}', fontDataUrl);
 
@@ -764,7 +773,11 @@ router.post('/gerar-pdf', async (req, res) => {
       metadeValorTotal,
       dataPrimeiroPagamento: dados.campos?.dataPrimeiroPagamento || "",
 
-
+      //CONTRATO CREDENCIADA
+      nomeVendedor: dados.witnessSigner?.nomeVendedor || "",
+      cpfVendedorSigner: dados.witnessSigner?.cpfVendedorSigner || "",
+      nomeWitnessSigner2: dados.witnessSigner2?.nomeWitnessSigner || "",
+      cpfWitnessSigner2: dados.witnessSigner2?.cpfWitnessSigner || ""
 
     };
 
@@ -801,7 +814,7 @@ router.post('/gerar-pdf', async (req, res) => {
       await browser.close();
     }
 
-    if (dados.modelo === 'contratoCredenciada') {
+    if (dados.modelo === 'contratoCredenciada_v2') {
       await page.setContent(htmlFinal, { waitUntil: 'networkidle0' });
 
       pdfBuffer = await page.pdf({

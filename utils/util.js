@@ -81,18 +81,43 @@ export function gerarTabelaExames(dados) {
   return linhas.join('\n');
 }
 
-/** Substitui placeholders {{chave}} no HTML */
-export function preencherTemplate(html, variaveis) {
-  const htmlComTabela = html.replace('{{tabelaExames}}', gerarTabelaExames(variaveis));
-  const placeholders = html.match(/{{(.*?)}}/g) || [];
-  console.log('🔍 Placeholders encontrados no HTML:', placeholders);
+/** Monta a tabela HTML das unidades */
+export function gerarTabelaUnidades(dados) {
+  const linhas = [];
+  const unidades = dados.unidades || {};
 
-  return htmlComTabela.replace(/{{(.*?)}}/g, (_, chave) => {
-    const k = (chave || '').trim();
-    const valor = variaveis[k]; 1
-    if (valor === undefined) {
-      console.warn(`⚠️ Variável não encontrada no template: {{${k}}}`);
+  Object.keys(unidades).forEach((key) => {
+    if (key.startsWith('unidade') && !key.includes('Horario')) {
+      const sufixo = key.replace('unidade', '');
+
+      const nome = (unidades[key] ?? '').toString().trim();
+      const horario = (unidades[`unidade${sufixo}Horario`] ?? '').toString().trim();
+
+      if (nome) {
+        linhas.push(`
+          <tr>
+            <td>${nome}</td>
+            <td>${horario || '-'}</td>
+          </tr>
+        `);
+      }
     }
-    return valor ?? '';
+  });
+
+  return linhas.join('\n');
+}
+
+export function preencherTemplate(html, variaveis) {
+   const htmlComTabelas = html
+    .replace('{{tabelaExames}}', gerarTabelaExames(variaveis))
+    .replace('{{tabelaUnidades}}', gerarTabelaUnidades(variaveis));
+  
+  return htmlComTabelas.replace(/{{\s*\(?\s*([a-zA-Z0-9_]+)\s*\)?\s*}}/g, (_, chave) => {
+    const k = (chave || '').trim();
+    const valor = variaveis[k];
+    if (valor === undefined || valor === null) {
+      return `{{${k}}}`;
+    }
+    return String(valor);
   });
 }
