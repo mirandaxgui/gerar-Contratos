@@ -8,7 +8,7 @@ import { criarPresignedUrl, atualizarCampoCardPipefy, enviarArquivoParaPipefy } 
 import { dataHojePtBrExtenso, dataHojePtBrCurta, preencherTemplate, obterPrecosPorVidas } from '../utils/util.js';
 import sharp from 'sharp';
 
-import { getTemplateById } from '../utils/templateManager.js';
+//import { getTemplateById } from '../utils/templateManager.js';
 
 const router = express.Router();
 
@@ -43,12 +43,12 @@ router.post('/gerar-pdf', async (req, res) => {
     if (fs.existsSync(templatePath)) {
       htmlBase = fs.readFileSync(templatePath, 'utf8');
     } else {
-      const customTpl = getTemplateById(modelo);
-      if (customTpl && customTpl.html) {
-        htmlBase = customTpl.html;
-      } else {
-        throw new Error(`Modelo HTML não encontrado: ${modelo}`);
-      }
+      // const customTpl = getTemplateById(modelo);
+      // if (customTpl && customTpl.html) {
+      //   htmlBase = customTpl.html;
+      // } else {
+      //   throw new Error(`Modelo HTML não encontrado: ${modelo}`);
+      // }
     }
 
     const fontPath = path.resolve(__dirname, '../fonts', 'Roboto-Regular.ttf');
