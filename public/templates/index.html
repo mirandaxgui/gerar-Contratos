@@ -1,0 +1,685 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gerador & Editor de Templates - D+Saúde</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Roboto:ital,wght@0,300;0,400;0,500;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="/public/templates/editor.css">
+</head>
+<body>
+  <div id="app" class="app-container">
+    <!-- DASHBOARD VIEW -->
+    <div id="templatesDashboardView" class="dashboard-view">
+      <!-- DASHBOARD NAVBAR -->
+      <header class="dashboard-navbar">
+        <div class="nav-brand">
+          <img src="/assets/logo_dsaude_transparent.png" alt="D+Saúde" class="brand-logo-img" style="height: 38px; width: auto; display: block;" />
+          <span class="brand-subtitle" style="border-left: 1px solid rgba(255, 255, 255, 0.2); padding-left: 12px; margin-left: 6px;">Biblioteca de Modelos</span>
+        </div>
+
+        <div class="dashboard-nav-actions">
+          <button id="btnDashboardImport" class="btn btn-secondary">
+            <i class="fa-solid fa-file-import"></i> Importar Arquivo
+          </button>
+          <button id="btnDashboardNew" class="btn btn-primary btn-accent">
+            <i class="fa-solid fa-plus"></i> Novo Template
+          </button>
+        </div>
+      </header>
+
+      <!-- DASHBOARD BODY CONTENT -->
+      <div class="dashboard-content">
+        <!-- HERO & METRICS -->
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <h1>Biblioteca de Templates</h1>
+            <p>Gerencie, visualize e edite seus modelos de documentos institucionais D+Saúde.</p>
+          </div>
+          <div class="hero-stats">
+            <div class="stat-card">
+              <div class="stat-icon"><i class="fa-solid fa-folder-closed"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="statTotalTemplates">0</span>
+                <span class="stat-label">Total de Templates</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-builtin"><i class="fa-solid fa-shield-halved"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="statBuiltinTemplates">0</span>
+                <span class="stat-label">Modelos Padrão</span>
+              </div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-icon icon-custom"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+              <div class="stat-details">
+                <span class="stat-value" id="statCustomTemplates">0</span>
+                <span class="stat-label">Personalizados</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- SEARCH & FILTERS TOOLBAR -->
+        <div class="dashboard-toolbar">
+          <div class="search-box">
+            <i class="fa-solid fa-magnifying-glass search-icon"></i>
+            <input type="text" id="dashboardSearchInput" placeholder="Buscar por nome do documento, descrição ou variáveis..." />
+            <button id="btnClearSearch" class="btn-clear-search" style="display: none;">&times;</button>
+          </div>
+
+          <div class="filter-chips">
+            <button class="filter-chip active" data-filter="all">
+              <i class="fa-solid fa-border-all"></i> Todos
+            </button>
+            <button class="filter-chip" data-filter="builtin">
+              <i class="fa-solid fa-shield-halved"></i> Padrão
+            </button>
+            <button class="filter-chip" data-filter="custom">
+              <i class="fa-solid fa-user-pen"></i> Personalizados
+            </button>
+          </div>
+
+          <button id="btnRefreshGrid" class="btn btn-secondary btn-icon-only" title="Atualizar lista">
+            <i class="fa-solid fa-rotate-right"></i>
+          </button>
+        </div>
+
+        <!-- TEMPLATES GRID CONTAINER -->
+        <div class="templates-grid-wrapper">
+          <div id="templatesGrid" class="templates-grid">
+            <!-- Cards renderizados via JS -->
+          </div>
+          <div id="templatesEmptyState" class="empty-state-card" style="display: none;">
+            <div class="empty-icon"><i class="fa-solid fa-folder-open"></i></div>
+            <h3>Nenhum template encontrado</h3>
+            <p>Tente ajustar o termo de busca ou crie um novo template.</p>
+            <button id="btnEmptyStateNew" class="btn btn-primary" style="margin-top: 15px;">
+              <i class="fa-solid fa-plus"></i> Criar Novo Template
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EDITOR VIEW -->
+    <div id="templateEditorView" class="editor-view" style="display: none;">
+      <!-- TOP NAVBAR -->
+      <header class="navbar">
+        <button id="btnBackToDashboard" class="btn btn-secondary" title="Voltar para Meus Templates" style="margin-right: 12px;">
+          <i class="fa-solid fa-arrow-left"></i> Meus Templates
+        </button>
+
+        <div class="nav-brand">
+          <img src="/assets/logo_dsaude_transparent.png" alt="D+Saúde" class="brand-logo-img" style="height: 38px; width: auto; display: block;" />
+          <span class="brand-subtitle" style="border-left: 1px solid rgba(255, 255, 255, 0.2); padding-left: 12px; margin-left: 6px;">Editor de Templates</span>
+        </div>
+
+        <div class="nav-template-title">
+          <input type="text" id="templateTitleInput" placeholder="Nome do Template..." value="Novo Template de Documento" />
+          <span class="badge-status" id="saveStatus">Rascunho não salvo</span>
+        </div>
+
+        <div class="nav-actions">
+          <button id="btnNewTemplate" class="btn btn-secondary" title="Criar novo template">
+            <i class="fa-solid fa-plus"></i> Novo
+          </button>
+          <button id="btnImportFile" class="btn btn-secondary" title="Importar arquivo DOCX, HTML ou TXT">
+            <i class="fa-solid fa-file-import"></i> Importar
+          </button>
+          <button id="btnOpenTemplates" class="btn btn-secondary" title="Abrir modelos salvos">
+            <i class="fa-solid fa-folder-open"></i> Modelos
+          </button>
+          <button id="btnSaveTemplate" class="btn btn-primary">
+            <i class="fa-solid fa-floppy-disk"></i> Salvar
+          </button>
+          <button id="btnTestGenerate" class="btn btn-accent">
+            <i class="fa-solid fa-bolt"></i> Testar & Gerar
+          </button>
+        </div>
+      </header>
+
+    <!-- MAIN WORKSPACE -->
+    <div class="workspace">
+      <!-- LEFT SIDEBAR: CATEGORIZED VARIABLES & TEMPLATES -->
+      <aside class="sidebar">
+        <!-- TABS -->
+        <div class="sidebar-tabs">
+          <button class="tab-btn active" data-tab="varsTab">
+            <i class="fa-solid fa-code"></i> Variáveis
+          </button>
+          <button class="tab-btn" data-tab="bgTab">
+            <i class="fa-solid fa-image"></i> Papel Timbrado
+          </button>
+          <button class="tab-btn" data-tab="templatesTab">
+            <i class="fa-solid fa-file-lines"></i> Salvos
+          </button>
+        </div>
+
+        <!-- TAB CONTENT: VARIABLES -->
+        <div id="varsTab" class="tab-content active">
+          <div class="sidebar-section">
+            <h3><i class="fa-solid fa-wand-magic-sparkles"></i> Inserir Variável</h3>
+            <p class="section-desc">Clique para inserir no cursor ou digite <code>{{</code> diretamente no documento.</p>
+
+            <div class="custom-var-input">
+              <input type="text" id="customVarName" placeholder="ex: nome_colaborador" />
+              <button id="btnAddCustomVar" class="btn btn-sm btn-primary">
+                <i class="fa-solid fa-plus"></i>
+              </button>
+            </div>
+
+            <!-- CATEGORY ACCORDIONS -->
+            <div class="var-categories">
+              <div class="category-group">
+                <div class="category-title"><i class="fa-solid fa-user"></i> 👤 Colaborador</div>
+                <div class="vars-list" data-category="colaborador"></div>
+              </div>
+
+              <div class="category-group">
+                <div class="category-title"><i class="fa-solid fa-building"></i> 🏢 Empresa</div>
+                <div class="vars-list" data-category="empresa"></div>
+              </div>
+
+              <div class="category-group">
+                <div class="category-title"><i class="fa-solid fa-user-doctor"></i> 🩺 Exames & Médico</div>
+                <div class="vars-list" data-category="medico"></div>
+              </div>
+
+              <div class="category-group">
+                <div class="category-title"><i class="fa-solid fa-wallet"></i> 💰 Financeiro & Datas</div>
+                <div class="vars-list" data-category="financeiro"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sidebar-section">
+            <h3><i class="fa-solid fa-list-check"></i> Variáveis Detectadas (<span id="detectedCount">0</span>)</h3>
+            <div id="detectedVarsList" class="detected-vars-container">
+              <span class="empty-state">Nenhuma variável inserida ainda.</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: BACKGROUND TEMPLATE CONTROLS -->
+        <div id="bgTab" class="tab-content">
+          <div class="sidebar-section">
+            <h3><i class="fa-solid fa-paint-roller"></i> Estilização do Papel Timbrado</h3>
+            <p class="section-desc">Personalize o papel timbrado e a imagem de fundo do seu documento.</p>
+
+            <div class="form-group" style="margin-top: 10px;">
+              <label for="bgSizeSelect">Dimensionamento do Fundo:</label>
+              <select id="bgSizeSelect" class="tool-select" style="width: 100%;">
+                <option value="100% 297mm" selected>Preencher Folha A4 (100% 297mm)</option>
+                <option value="100% auto">Apenas Topo / Cabeçalho (100% auto)</option>
+                <option value="contain">Ajustado Proporcional (Contain)</option>
+                <option value="cover">Preenchimento Sangrado (Cover)</option>
+              </select>
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label for="bgOpacityRange">Opacidade da Imagem: <strong id="bgOpacityVal">100%</strong></label>
+              <input type="range" id="bgOpacityRange" min="0.1" max="1.0" step="0.05" value="1.0" style="width: 100%; cursor: pointer;" />
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label for="bgPaddingTopInput">Recuo do Texto do Topo (px):</label>
+              <input type="number" id="bgPaddingTopInput" min="0" max="300" step="10" value="130" class="tool-select" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 6px;" />
+            </div>
+
+            <div class="form-group" style="margin-top: 12px;">
+              <label for="bgMarginTopInput">Margem Superior da Imagem (px):</label>
+              <input type="number" id="bgMarginTopInput" min="0" max="150" step="5" value="0" class="tool-select" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 6px;" />
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-top: 12px;">
+              <div class="form-group" style="flex: 1;">
+                <label for="bgMarginLeftInput">Margem Lat. Esquerda (px):</label>
+                <input type="number" id="bgMarginLeftInput" min="0" max="150" step="5" value="0" class="tool-select" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 6px;" />
+              </div>
+              <div class="form-group" style="flex: 1;">
+                <label for="bgMarginRightInput">Margem Lat. Direita (px):</label>
+                <input type="number" id="bgMarginRightInput" min="0" max="150" step="5" value="0" class="tool-select" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: white; padding: 6px;" />
+              </div>
+            </div>
+
+            <div class="sidebar-divider" style="margin: 16px 0; border-top: 1px solid #334155;"></div>
+
+            <!-- HEADER IMAGE CONTROLS -->
+            <div class="form-group" style="margin-top: 10px;">
+              <label><i class="fa-solid fa-heading"></i> Imagem do Cabeçalho:</label>
+              <button id="btnUploadHeaderImage" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; margin-top: 4px;">
+                <i class="fa-solid fa-image"></i> Inserir / Alterar Cabeçalho
+              </button>
+              <input type="file" id="headerImageFileInput" accept="image/*" style="display: none;" />
+
+              <div id="headerImageOptions" style="display: none; margin-top: 8px; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #334155;">
+                <div style="display: flex; gap: 8px;">
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Largura:</label>
+                    <select id="headerImageWidthInput" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="100%">100% (Largura Total)</option>
+                      <option value="80%">80%</option>
+                      <option value="60%">60%</option>
+                      <option value="40%">40%</option>
+                      <option value="300px">300px Fixos</option>
+                      <option value="200px">200px Fixos</option>
+                    </select>
+                  </div>
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Altura (px):</label>
+                    <input type="number" id="headerImageHeightInput" min="20" max="400" step="10" value="100" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;" />
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Alinhamento:</label>
+                    <select id="headerImageAlignSelect" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="center">Centralizado</option>
+                      <option value="left">Esquerda</option>
+                      <option value="right">Direita</option>
+                    </select>
+                  </div>
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Ajuste (Fit):</label>
+                    <select id="headerImageFitSelect" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="contain">Manter Proporção (Contain)</option>
+                      <option value="cover">Preencher (Cover)</option>
+                      <option value="fill">Esticar (Fill)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button id="btnRemoveHeaderImage" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; margin-top: 8px; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+                  <i class="fa-solid fa-trash-can"></i> Remover Cabeçalho
+                </button>
+              </div>
+            </div>
+
+            <!-- FOOTER IMAGE CONTROLS -->
+            <div class="form-group" style="margin-top: 12px;">
+              <label><i class="fa-solid fa-shoe-prints"></i> Imagem do Rodapé:</label>
+              <button id="btnUploadFooterImage" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; margin-top: 4px;">
+                <i class="fa-solid fa-image"></i> Inserir / Alterar Rodapé
+              </button>
+              <input type="file" id="footerImageFileInput" accept="image/*" style="display: none;" />
+
+              <div id="footerImageOptions" style="display: none; margin-top: 8px; background: #0f172a; padding: 10px; border-radius: 6px; border: 1px solid #334155;">
+                <div style="display: flex; gap: 8px;">
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Largura:</label>
+                    <select id="footerImageWidthInput" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="100%">100% (Largura Total)</option>
+                      <option value="80%">80%</option>
+                      <option value="60%">60%</option>
+                      <option value="40%">40%</option>
+                      <option value="300px">300px Fixos</option>
+                      <option value="200px">200px Fixos</option>
+                    </select>
+                  </div>
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Altura (px):</label>
+                    <input type="number" id="footerImageHeightInput" min="20" max="300" step="10" value="80" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;" />
+                  </div>
+                </div>
+
+                <div style="display: flex; gap: 8px; margin-top: 6px;">
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Alinhamento:</label>
+                    <select id="footerImageAlignSelect" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="center">Centralizado</option>
+                      <option value="left">Esquerda</option>
+                      <option value="right">Direita</option>
+                    </select>
+                  </div>
+                  <div style="flex: 1;">
+                    <label style="font-size: 11px; color: #94a3b8;">Ajuste (Fit):</label>
+                    <select id="footerImageFitSelect" class="tool-select" style="width: 100%; font-size: 12px; padding: 4px; background: #1e293b; color: white;">
+                      <option value="contain">Manter Proporção (Contain)</option>
+                      <option value="cover">Preencher (Cover)</option>
+                      <option value="fill">Esticar (Fill)</option>
+                    </select>
+                  </div>
+                </div>
+
+                <button id="btnRemoveFooterImage" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; margin-top: 8px; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+                  <i class="fa-solid fa-trash-can"></i> Remover Rodapé
+                </button>
+              </div>
+
+              <label style="display: flex; align-items: center; gap: 8px; font-size: 12px; color: #cbd5e1; margin-top: 10px; cursor: pointer; user-select: none;">
+                <input type="checkbox" id="showPageNumbersInput" checked style="accent-color: #00652c; width: 15px; height: 15px;" />
+                <span><i class="fa-solid fa-list-ol"></i> Exibir numeração de páginas (Página X de Y)</span>
+              </label>
+            </div>
+
+            <div class="sidebar-divider" style="margin: 16px 0; border-top: 1px solid #334155;"></div>
+
+            <!-- BACKGROUND IMAGE UPLOADER -->
+            <div class="form-group" style="margin-top: 8px;">
+              <button id="btnUploadBgImage" class="btn btn-secondary" style="width: 100%; justify-content: center;">
+                <i class="fa-solid fa-cloud-arrow-up"></i> Alterar Imagem de Fundo (Papel Timbrado)
+              </button>
+              <input type="file" id="bgFileInput" accept="image/*" style="display: none;" />
+            </div>
+
+            <div class="form-group" style="margin-top: 8px;">
+              <button id="btnRemoveBgImage" class="btn btn-secondary btn-sm" style="width: 100%; justify-content: center; color: #ef4444; border-color: rgba(239, 68, 68, 0.3);">
+                <i class="fa-solid fa-trash-can"></i> Remover Papel Timbrado
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- TAB CONTENT: SAVED TEMPLATES -->
+        <div id="templatesTab" class="tab-content">
+          <div class="sidebar-section">
+            <h3><i class="fa-solid fa-layer-group"></i> Meus Templates</h3>
+            <div id="savedTemplatesList" class="templates-list-container">
+              <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Carregando templates...</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER: DOCUMENT CANVAS -->
+      <main class="editor-area">
+        <!-- FORMATTING TOOLBAR (SUPERDOC ENHANCED) -->
+        <div class="toolbar" id="formattingToolbar">
+          <!-- Undo/Redo -->
+          <div class="toolbar-group">
+            <button class="tool-btn" data-cmd="undo" title="Desfazer (Ctrl+Z)"><i class="fa-solid fa-rotate-left"></i></button>
+            <button class="tool-btn" data-cmd="redo" title="Refazer (Ctrl+Y)"><i class="fa-solid fa-rotate-right"></i></button>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Headings & Block types -->
+          <div class="toolbar-group">
+            <select id="headingSelect" class="tool-select" title="Formato do Bloco">
+              <option value="p">Parágrafo</option>
+              <option value="h1">Título 1 (H1)</option>
+              <option value="h2">Título 2 (H2)</option>
+              <option value="h3">Título 3 (H3)</option>
+              <option value="h4">Título 4 (H4)</option>
+              <option value="blockquote">Citação</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Typography -->
+          <div class="toolbar-group">
+            <select id="fontFamilySelect" class="tool-select" title="Fonte">
+              <option value="Roboto">Roboto</option>
+              <option value="Inter">Inter</option>
+              <option value="Arial">Arial</option>
+              <option value="Times New Roman">Times New Roman</option>
+              <option value="Courier New">Courier New</option>
+            </select>
+
+            <select id="fontSizeSelect" class="tool-select" title="Tamanho da Fonte">
+              <option value="1">10 pt</option>
+              <option value="2">12 pt</option>
+              <option value="3" selected>14 pt</option>
+              <option value="4">18 pt</option>
+              <option value="5">24 pt</option>
+              <option value="6">32 pt</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Formatting styles -->
+          <div class="toolbar-group">
+            <button class="tool-btn" data-cmd="bold" title="Negrito (Ctrl+B)"><i class="fa-solid fa-bold"></i></button>
+            <button class="tool-btn" data-cmd="italic" title="Itálico (Ctrl+I)"><i class="fa-solid fa-italic"></i></button>
+            <button class="tool-btn" data-cmd="underline" title="Sublinhado (Ctrl+U)"><i class="fa-solid fa-underline"></i></button>
+            <button class="tool-btn" data-cmd="strikeThrough" title="Tachado"><i class="fa-solid fa-strikethrough"></i></button>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Colors -->
+          <div class="toolbar-group">
+            <label class="color-picker-btn" title="Cor do Texto">
+              <i class="fa-solid fa-font"></i>
+              <input type="color" id="foreColorInput" value="#1f2937">
+            </label>
+            <label class="color-picker-btn" title="Cor de Fundo / Destaque">
+              <i class="fa-solid fa-highlighter"></i>
+              <input type="color" id="hiliteColorInput" value="#ffffff">
+            </label>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Alignment -->
+          <div class="toolbar-group">
+            <button class="tool-btn" data-cmd="justifyLeft" title="Alinhar à Esquerda"><i class="fa-solid fa-align-left"></i></button>
+            <button class="tool-btn" data-cmd="justifyCenter" title="Centralizar"><i class="fa-solid fa-align-center"></i></button>
+            <button class="tool-btn" data-cmd="justifyRight" title="Alinhar à Direita"><i class="fa-solid fa-align-right"></i></button>
+            <button class="tool-btn" data-cmd="justifyFull" title="Justificar"><i class="fa-solid fa-align-justify"></i></button>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- TÓPICOS, SUBTÓPICOS & NUMERAÇÃO (LETRAS, ROMANOS, NÚMEROS, LEGAL 1.1) -->
+          <div class="toolbar-group">
+            <button class="tool-btn" data-cmd="insertUnorderedList" title="Lista com Marcadores (Bolinhas)"><i class="fa-solid fa-list-ul"></i></button>
+            <button class="tool-btn" data-cmd="insertOrderedList" title="Lista Numerada (1, 2, 3...)"><i class="fa-solid fa-list-ol"></i></button>
+
+            <select id="listTypeSelect" class="tool-select" title="Estilo de Numeração / Tópico">
+              <option value="" disabled selected>Estilo Tópico...</option>
+              <optgroup label="Contratos & Cláusulas">
+                <option value="legal">⚖️ 1.1, 1.2, 1.2.1... (Numeração Legal)</option>
+                <option value="manual">✍️ Numeração Manual (Texto Livre)</option>
+                <option value="decimal">1, 2, 3... (Números Simples)</option>
+                <option value="lower-alpha">a, b, c... (Letras minúsculas)</option>
+                <option value="upper-alpha">A, B, C... (Letras maiúsculas)</option>
+                <option value="lower-roman">i, ii, iii... (Romanos minúsculos)</option>
+                <option value="upper-roman">I, II, III... (Romanos maiúsculos)</option>
+              </optgroup>
+              <optgroup label="Marcadores">
+                <option value="disc">• Bolinhas Cheias</option>
+                <option value="circle">○ Círculos Vazados</option>
+                <option value="square">■ Quadrados Cheios</option>
+              </optgroup>
+            </select>
+
+            <button class="tool-btn" data-cmd="indent" title="Criar Subtópico / Aumentar Recuo (Tab)"><i class="fa-solid fa-indent"></i></button>
+            <button class="tool-btn" data-cmd="outdent" title="Voltar Tópico / Diminuir Recuo (Shift+Tab)"><i class="fa-solid fa-outdent"></i></button>
+
+            <button class="tool-btn" id="btnRemoveList" title="Remover Tópico / Converter em Parágrafo Normal" style="color: #ef4444;"><i class="fa-solid fa-font"></i></button>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Page Setup Controls -->
+          <div class="toolbar-group">
+            <button class="tool-btn" id="btnToggleOrientation" title="Orientação: Retrato / Paisagem">
+              <i class="fa-solid fa-file-lines" id="orientationIcon"></i> <span id="orientationText" style="font-size: 11px; margin-left: 2px;">Retrato</span>
+            </button>
+            
+            <select id="marginsSelect" class="tool-select" title="Margens da Página">
+              <option value="normal">Margem Normal (20mm)</option>
+              <option value="narrow">Margem Estreita (10mm)</option>
+              <option value="wide">Margem Larga (30mm)</option>
+            </select>
+
+            <select id="lineSpacingSelect" class="tool-select" title="Espaçamento de Linha">
+              <option value="1.0">Linha 1.0</option>
+              <option value="1.15">Linha 1.15</option>
+              <option value="1.5">Linha 1.5</option>
+              <option value="1.6" selected>Linha 1.6</option>
+              <option value="2.0">Linha 2.0</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Callout Alert Boxes -->
+          <div class="toolbar-group">
+            <select id="calloutSelect" class="tool-select" title="Inserir Caixa de Alerta / Callout">
+              <option value="" disabled selected>Caixa de Alerta...</option>
+              <option value="info">ℹ️ Informação (Azul)</option>
+              <option value="success">✅ Sucesso (Verde)</option>
+              <option value="warning">⚠️ Aviso (Amarelo)</option>
+              <option value="danger">🚫 Importante (Vermelho)</option>
+            </select>
+          </div>
+
+          <div class="toolbar-divider"></div>
+
+          <!-- Advanced Table & Elements -->
+          <div class="toolbar-group">
+            <button class="tool-btn" id="btnInsertTable" title="Inserir Tabela"><i class="fa-solid fa-table"></i></button>
+            <button class="tool-btn" id="btnAddRowBelow" title="Tabela: +Linha Abaixo"><i class="fa-solid fa-table-cells-large"></i>+</button>
+            <button class="tool-btn" id="btnDeleteRow" title="Tabela: -Excluir Linha"><i class="fa-solid fa-trash-can"></i></button>
+            <button class="tool-btn" id="btnInsertImage" title="Inserir Imagem"><i class="fa-solid fa-image"></i></button>
+            <button class="tool-btn" id="btnInsertHorizontalRule" title="Inserir Linha Divisória"><i class="fa-solid fa-minus"></i></button>
+            <button class="tool-btn" id="btnInsertPageBreak" title="Quebra de Página"><i class="fa-solid fa-scissors"></i></button>
+            <button class="tool-btn" id="btnToggleHeaderFooter" title="Alternar Cabeçalho/Rodapé"><i class="fa-solid fa-heading"></i></button>
+          </div>
+        </div>
+
+        <!-- CANVAS CONTAINER (PAPER SIMULATION) -->
+        <div class="canvas-container" id="canvasContainer">
+          <div class="paper-page portrait" id="paperPage">
+
+            <!-- HEADER SECTION -->
+            <div class="paper-header-section" id="headerSection">
+              <div class="section-tag"><i class="fa-solid fa-heading"></i> Cabeçalho do Documento</div>
+              <div class="editable-content" id="headerEditor" contenteditable="true" data-placeholder="Digite o cabeçalho do documento...">
+                <div style="text-align: center; color: #00652c; font-weight: bold; font-size: 18px; border-bottom: 2px solid #00652c; padding-bottom: 8px;">
+                  D+SAÚDE - GESTÃO EM SAÚDE E SEGURANÇA DO TRABALHO
+                </div>
+              </div>
+            </div>
+
+            <!-- MAIN BODY SECTION -->
+            <div class="paper-body-section">
+              <div class="editable-content" id="bodyEditor" contenteditable="true" data-placeholder="Digite ou cole o conteúdo do documento aqui ou pressione 'Importar' para carregar um arquivo DOCX/HTML...">
+                <h2>DECLARAÇÃO DE EXAME OCUPACIONAL</h2>
+                <p><br></p>
+                <div class="callout callout-info">
+                  <strong>Aviso do Sistema:</strong> Este é um modelo interativo. Digite <code>{{</code> em qualquer lugar do documento para abrir o menu de autocompletar de variáveis!
+                </div>
+                <p><br></p>
+                <p>Declaro para os devidos fins de direito que o(a) colaborador(a) <strong>{{nome_colaborador}}</strong>, portador(a) do CPF <strong>{{cpf}}</strong>, pertencente à empresa <strong>{{empresa}}</strong>, realizou com sucesso o exame ocupacional em <strong>{{data_exame}}</strong>.</p>
+                <p><br></p>
+                <p>O referido exame atesta as condições necessárias para o desempenho das atividades laborais conforme a legislação vigente de Segurança e Saúde no Trabalho.</p>
+                <p><br></p>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+                  <tbody>
+                    <tr>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; background-color: #f9fafb; font-weight: bold; width: 30%;">Colaborador</td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px;">{{nome_colaborador}}</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; background-color: #f9fafb; font-weight: bold;">CPF</td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px;">{{cpf}}</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; background-color: #f9fafb; font-weight: bold;">Empresa contratante</td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px;">{{empresa}}</td>
+                    </tr>
+                    <tr>
+                      <td style="border: 1px solid #d1d5db; padding: 10px; background-color: #f9fafb; font-weight: bold;">Data da realização</td>
+                      <td style="border: 1px solid #d1d5db; padding: 10px;">{{data_exame}}</td>
+                    </tr>
+                  </tbody>
+                </table>
+                <p><br></p>
+                <p style="text-align: right; margin-top: 40px;">São Paulo, {{data_atual_extenso}}.</p>
+              </div>
+            </div>
+
+            <!-- FOOTER SECTION -->
+            <div class="paper-footer-section" id="footerSection">
+              <div class="section-tag"><i class="fa-solid fa-footing"></i> Rodapé do Documento</div>
+              <div class="editable-content" id="footerEditor" contenteditable="true" data-placeholder="Digite o rodapé do documento...">
+                <div style="text-align: center; color: #6b7280; font-size: 11px; border-top: 1px solid #e5e7eb; padding-top: 8px;">
+                  D+Saúde Medicina e Segurança do Trabalho — Documento gerado automaticamente pelo sistema interno.
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </main>
+    </div>
+    </div> <!-- END TEMPLATE EDITOR VIEW -->
+
+    <!-- FLOATING {{ AUTOCOMPLETE POPUP -->
+    <div id="autocompletePopup" class="autocomplete-popup">
+      <div class="autocomplete-header"><i class="fa-solid fa-bolt"></i> Inserir Variável Dinâmica</div>
+      <div class="autocomplete-list" id="autocompleteList"></div>
+    </div>
+
+    <!-- MODAL: IMPORT FILE -->
+    <div class="modal-backdrop" id="importModal">
+      <div class="modal-container modal-sm">
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-file-import" style="color: #3b82f6;"></i> Importar Modelo de Arquivo</h2>
+          <button class="modal-close" id="btnCloseImportModal">&times;</button>
+        </div>
+
+        <div class="modal-body" style="padding: 24px;">
+          <div class="dropzone" id="dropzone">
+            <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+            <h3>Arraste e solte o arquivo aqui</h3>
+            <p>Suporta arquivos de modelo <strong>.DOCX (Word)</strong>, <strong>.HTML</strong> ou <strong>.TXT</strong></p>
+            <input type="file" id="importFileInput" accept=".docx,.html,.htm,.txt" style="display: none;" />
+            <button class="btn btn-primary" id="btnSelectFile"><i class="fa-solid fa-folder-open"></i> Selecionar Arquivo</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL: TEST GENERATION & PREVIEW -->
+    <div class="modal-backdrop" id="testModal">
+      <div class="modal-container">
+        <div class="modal-header">
+          <h2><i class="fa-solid fa-bolt" style="color: #10b981;"></i> Testar Geração de Documento</h2>
+          <button class="modal-close" id="btnCloseModal">&times;</button>
+        </div>
+
+        <div class="modal-body">
+          <div class="modal-col modal-col-inputs">
+            <h3><i class="fa-solid fa-sliders"></i> Preencher Valores das Variáveis</h3>
+            <p class="section-desc">Insira os dados de teste para substituir as variáveis no documento:</p>
+
+            <form id="testVariablesForm" class="variables-form">
+              <!-- Dynamically generated form inputs -->
+            </form>
+          </div>
+
+          <div class="modal-col modal-col-preview">
+            <h3><i class="fa-solid fa-eye"></i> Pré-visualização do Documento Final</h3>
+            <div class="preview-frame-container" id="previewFrameContainer">
+              <div class="loading-spinner"><i class="fa-solid fa-circle-notch fa-spin"></i> Gerando pré-visualização...</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button class="btn btn-secondary" id="btnRefreshPreview">
+            <i class="fa-solid fa-arrows-rotate"></i> Atualizar Preview
+          </button>
+          <button class="btn btn-primary" id="btnDownloadPdf">
+            <i class="fa-solid fa-file-pdf"></i> Baixar PDF Final
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="/public/templates/editor.js"></script>
+</body>
+</html>

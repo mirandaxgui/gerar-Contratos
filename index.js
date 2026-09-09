@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import express from 'express';
 import bodyParser from 'body-parser';
 import gerarPdfRoute from './routes/gerarPdfRoute.js';
@@ -7,6 +8,7 @@ import { setPipefyToken } from './utils/pipefyToken.js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import formSolicRoute from './routes/formSolicRoute.js'; // Importando a rota
+import templatesRoute from './routes/templatesRoute.js'; // Editor de templates
 
 // Obtém o diretório atual
 const __filename = fileURLToPath(import.meta.url);
@@ -74,8 +76,20 @@ app.use('/', gerarPdfRoute);
 app.use('/', enviarKitsRoute);
 app.use('/', subirAsoRouter);
 
+// API REST de templates
+app.use('/api/templates', templatesRoute);
+
+// Serve arquivos estáticos da pasta 'public' (Editor de Templates) e 'assets'
+app.use('/public', express.static(path.join(__dirname, 'public')));
+app.use('/assets', express.static(path.join(__dirname, 'assets')));
+
 // Serve os arquivos estáticos da pasta 'build' do React
 app.use(express.static(path.join(__dirname, 'build')));
+
+// Rota para o Editor Visual de Templates
+app.get(['/templates', '/templates/{*path}'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'templates', 'index.html'));
+});
 
 // Rota para servir o formulário React na raiz
 app.get('/', (req, res) => {
@@ -89,7 +103,11 @@ app.get('/colaboradores', (req, res) => {
 
 app.use('/api/v3/', formSolicRoute); // Usando a rota para formSolicitações
 
-await atualizarPipefyToken();
+try {
+  await atualizarPipefyToken();
+} catch (err) {
+  console.warn('⚠️ Não foi possível atualizar token do Pipefy na inicialização (verifique PIPEFY_CLIENT_ID/SECRET):', err.message);
+}
 
 app.listen(PORT, () => {
   console.log(`🚀 Servidor rodando na porta ${PORT}`);
