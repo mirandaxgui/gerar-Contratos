@@ -720,6 +720,26 @@ ol.legal-list li::before, ol[data-list-style="legal"] li::before,
   pointer-events: none;
 }
 
+.paper-header-section.has-header-image,
+.paper-footer-section.has-footer-image {
+  border: none !important;
+  background: transparent !important;
+  padding: 0 !important;
+  margin-bottom: 0 !important;
+  margin-top: 0 !important;
+  border-radius: 0 !important;
+}
+
+.paper-header-section.has-header-image .section-tag,
+.paper-footer-section.has-footer-image .section-tag {
+  display: none !important;
+}
+
+.paper-page.multi-page-view #headerSection,
+.paper-page.multi-page-view #footerSection {
+  display: none !important;
+}
+
 .editable-content {
   outline: none;
   min-height: 40px;

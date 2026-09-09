@@ -492,6 +492,74 @@ document.addEventListener('DOMContentLoaded', () => {
     }, delayMs);
   }
 
+  // HEADER & FOOTER SECTION DISPLAY TOGGLER
+  function updateHeaderFooterSectionDisplay() {
+    const headerSection = document.getElementById('headerSection');
+    const footerSection = document.getElementById('footerSection');
+    const headerImageContainer = document.getElementById('headerImageContainer');
+    const footerImageContainer = document.getElementById('footerImageContainer');
+    const headerEditor = document.getElementById('headerEditor');
+    const footerEditor = document.getElementById('footerEditor');
+
+    const headerWidth = headerImageWidthInput ? headerImageWidthInput.value : '100%';
+    const headerHeight = headerImageHeightInput ? `${headerImageHeightInput.value}px` : '100px';
+    const headerAlign = headerImageAlignSelect ? headerImageAlignSelect.value : 'center';
+    const headerFit = headerImageFitSelect ? headerImageFitSelect.value : 'contain';
+    const headerAlignMargin = headerAlign === 'center' ? '0 auto' : (headerAlign === 'right' ? '0 0 0 auto' : '0 auto 0 0');
+    const isHeaderFullBleed = headerWidth === '100%';
+
+    const footerWidth = footerImageWidthInput ? footerImageWidthInput.value : '100%';
+    const footerHeight = footerImageHeightInput ? `${footerImageHeightInput.value}px` : '80px';
+    const footerAlign = footerImageAlignSelect ? footerImageAlignSelect.value : 'center';
+    const footerFit = footerImageFitSelect ? footerImageFitSelect.value : 'contain';
+    const footerAlignMargin = footerAlign === 'center' ? '0 auto' : (footerAlign === 'right' ? '0 0 0 auto' : '0 auto 0 0');
+    const isFooterFullBleed = footerWidth === '100%';
+
+    if (headerSection) {
+      if (currentHeaderImageUrl) {
+        headerSection.classList.add('has-header-image');
+        if (headerEditor) headerEditor.style.display = 'none';
+        if (headerImageContainer) {
+          headerImageContainer.style.display = 'block';
+          headerImageContainer.innerHTML = `
+            <div class="canvas-header-img" style="${isHeaderFullBleed ? 'position: absolute; top: 0; left: 0; width: 100%; z-index: 2; padding: 0; margin: 0;' : 'position: relative; z-index: 1; padding: 15px 15mm 0 15mm; width: 100%;'}">
+              <img src="${currentHeaderImageUrl}" style="width: ${headerWidth}; max-height: ${headerHeight}; height: auto; object-fit: ${headerFit}; display: block; margin: ${isHeaderFullBleed ? '0' : headerAlignMargin};" />
+            </div>
+          `;
+        }
+      } else {
+        headerSection.classList.remove('has-header-image');
+        if (headerEditor) headerEditor.style.display = 'block';
+        if (headerImageContainer) {
+          headerImageContainer.style.display = 'none';
+          headerImageContainer.innerHTML = '';
+        }
+      }
+    }
+
+    if (footerSection) {
+      if (currentFooterImageUrl) {
+        footerSection.classList.add('has-footer-image');
+        if (footerEditor) footerEditor.style.display = 'none';
+        if (footerImageContainer) {
+          footerImageContainer.style.display = 'block';
+          footerImageContainer.innerHTML = `
+            <div class="canvas-footer-img" style="${isFooterFullBleed ? 'position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2; padding: 0; margin: 0;' : 'position: relative; z-index: 1; padding: 0 15mm 15px 15mm; width: 100%; margin-top: 20px;'}">
+              <img src="${currentFooterImageUrl}" style="width: ${footerWidth}; max-height: ${footerHeight}; height: auto; object-fit: ${footerFit}; display: block; margin: ${isFooterFullBleed ? '0' : footerAlignMargin};" />
+            </div>
+          `;
+        }
+      } else {
+        footerSection.classList.remove('has-footer-image');
+        if (footerEditor) footerEditor.style.display = 'block';
+        if (footerImageContainer) {
+          footerImageContainer.style.display = 'none';
+          footerImageContainer.innerHTML = '';
+        }
+      }
+    }
+  }
+
   // BACKGROUND STYLING APPLIER
   function applyBackgroundStyles() {
     console.log(`🖼️ [CLIENT] Aplicando estilos do plano de fundo sangrado. Url presente: ${currentBgUrl ? 'SIM' : 'NÃO'}`);
@@ -507,6 +575,7 @@ document.addEventListener('DOMContentLoaded', () => {
       paperPage.style.removeProperty('--bg-margin-top');
       paperPage.style.removeProperty('--bg-margin-side');
       if (bodySection) bodySection.style.paddingTop = `${paddingTopVal}px`;
+      updateHeaderFooterSectionDisplay();
       return;
     }
 
@@ -523,6 +592,7 @@ document.addEventListener('DOMContentLoaded', () => {
       bodySection.style.paddingTop = `${paddingTopVal}px`;
     }
 
+    updateHeaderFooterSectionDisplay();
     markAsDirty();
   }
 
@@ -554,6 +624,9 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.onload = (e) => {
       currentHeaderImageUrl = e.target.result;
       if (headerImageOptions) headerImageOptions.style.display = 'block';
+      if (headerEditor && (headerEditor.innerText.includes('LOGOTIPO') || headerEditor.innerText.includes('D+SAÚDE'))) {
+        headerEditor.innerHTML = '<p><br></p>';
+      }
       applyBackgroundStyles();
       updateCanvasPagination();
       markAsDirty();
@@ -564,6 +637,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function removeHeaderImage() {
     currentHeaderImageUrl = '';
+    if (headerImageFileInput) headerImageFileInput.value = '';
     if (headerImageOptions) headerImageOptions.style.display = 'none';
     applyBackgroundStyles();
     updateCanvasPagination();
@@ -576,6 +650,7 @@ document.addEventListener('DOMContentLoaded', () => {
     reader.onload = (e) => {
       currentFooterImageUrl = e.target.result;
       if (footerImageOptions) footerImageOptions.style.display = 'block';
+      applyBackgroundStyles();
       updateCanvasPagination();
       markAsDirty();
       alert('Imagem de rodapé inserida com sucesso!');
@@ -585,7 +660,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   function removeFooterImage() {
     currentFooterImageUrl = '';
+    if (footerImageFileInput) footerImageFileInput.value = '';
     if (footerImageOptions) footerImageOptions.style.display = 'none';
+    applyBackgroundStyles();
     updateCanvasPagination();
     markAsDirty();
   }
@@ -1251,76 +1328,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // BACKGROUND IMAGE HANDLERS
-  function handleBgImageUpload(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      currentBgUrl = e.target.result;
-      applyBackgroundStyles();
-      updateCanvasPagination();
-      markAsDirty();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removeBgImage() {
-    currentBgUrl = '';
-    if (bgFileInput) bgFileInput.value = '';
-    applyBackgroundStyles();
-    updateCanvasPagination();
-    markAsDirty();
-  }
-
-  // HEADER IMAGE HANDLERS
-  function handleHeaderImageUpload(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      currentHeaderImageUrl = e.target.result;
-      if (headerImageOptions) headerImageOptions.style.display = 'block';
-      if (headerEditor && (headerEditor.innerText.includes('LOGOTIPO') || headerEditor.innerText.includes('D+SAÚDE'))) {
-        headerEditor.innerHTML = '<p><br></p>';
-      }
-      applyBackgroundStyles();
-      updateCanvasPagination();
-      markAsDirty();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removeHeaderImage() {
-    currentHeaderImageUrl = '';
-    if (headerImageFileInput) headerImageFileInput.value = '';
-    if (headerImageOptions) headerImageOptions.style.display = 'none';
-    applyBackgroundStyles();
-    updateCanvasPagination();
-    markAsDirty();
-  }
-
-  // FOOTER IMAGE HANDLERS
-  function handleFooterImageUpload(file) {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      currentFooterImageUrl = e.target.result;
-      if (footerImageOptions) footerImageOptions.style.display = 'block';
-      applyBackgroundStyles();
-      updateCanvasPagination();
-      markAsDirty();
-    };
-    reader.readAsDataURL(file);
-  }
-
-  function removeFooterImage() {
-    currentFooterImageUrl = '';
-    if (footerImageFileInput) footerImageFileInput.value = '';
-    if (footerImageOptions) footerImageOptions.style.display = 'none';
-    applyBackgroundStyles();
-    updateCanvasPagination();
-    markAsDirty();
-  }
-
   // MARK STATUS AS UN-SAVED
   function markAsDirty() {
     isDirty = true;
@@ -1832,26 +1839,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (pages.length <= 1) {
       paperPage.classList.remove('multi-page-view');
-      
-      let singlePageHeaderHtml = '';
-      if (currentHeaderImageUrl) {
-        singlePageHeaderHtml = `
-          <div class="canvas-header-img" style="${isHeaderFullBleed ? 'position: absolute; top: 0; left: 0; width: 100%; z-index: 2; padding: 0; margin: 0;' : 'position: relative; z-index: 1; padding: 15px 15mm 0 15mm; width: 100%;'}">
-            <img src="${currentHeaderImageUrl}" style="width: ${headerWidth}; max-height: ${headerHeight}; height: auto; object-fit: ${headerFit}; display: block; margin: ${isHeaderFullBleed ? '0' : headerAlignMargin};" />
-          </div>
-        `;
-      }
-
-      let singlePageFooterHtml = '';
-      if (currentFooterImageUrl) {
-        singlePageFooterHtml = `
-          <div class="canvas-footer-img" style="${isFooterFullBleed ? 'position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2; padding: 0; margin: 0;' : 'position: relative; z-index: 1; padding: 0 15mm 15px 15mm; width: 100%; margin-top: 20px;'}">
-            <img src="${currentFooterImageUrl}" style="width: ${footerWidth}; max-height: ${footerHeight}; height: auto; object-fit: ${footerFit}; display: block; margin: ${isFooterFullBleed ? '0' : footerAlignMargin};" />
-          </div>
-        `;
-      }
-
-      bodyEditor.innerHTML = singlePageHeaderHtml + cleanHtml + singlePageFooterHtml;
+      bodyEditor.innerHTML = cleanHtml;
       
       if (bodySection) {
         bodySection.style.paddingTop = `${paddingTop}px`;
@@ -1859,6 +1847,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
       
       applyBackgroundStyles();
+      updateHeaderFooterSectionDisplay();
       return;
     }
 
