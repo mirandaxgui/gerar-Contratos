@@ -1251,6 +1251,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
+  // BACKGROUND IMAGE HANDLERS
+  function handleBgImageUpload(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      currentBgUrl = e.target.result;
+      applyBackgroundStyles();
+      updateCanvasPagination();
+      markAsDirty();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeBgImage() {
+    currentBgUrl = '';
+    if (bgFileInput) bgFileInput.value = '';
+    applyBackgroundStyles();
+    updateCanvasPagination();
+    markAsDirty();
+  }
+
+  // HEADER IMAGE HANDLERS
+  function handleHeaderImageUpload(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      currentHeaderImageUrl = e.target.result;
+      if (headerImageOptions) headerImageOptions.style.display = 'block';
+      if (headerEditor && (headerEditor.innerText.includes('LOGOTIPO') || headerEditor.innerText.includes('D+SAÚDE'))) {
+        headerEditor.innerHTML = '<p><br></p>';
+      }
+      applyBackgroundStyles();
+      updateCanvasPagination();
+      markAsDirty();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeHeaderImage() {
+    currentHeaderImageUrl = '';
+    if (headerImageFileInput) headerImageFileInput.value = '';
+    if (headerImageOptions) headerImageOptions.style.display = 'none';
+    applyBackgroundStyles();
+    updateCanvasPagination();
+    markAsDirty();
+  }
+
+  // FOOTER IMAGE HANDLERS
+  function handleFooterImageUpload(file) {
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      currentFooterImageUrl = e.target.result;
+      if (footerImageOptions) footerImageOptions.style.display = 'block';
+      applyBackgroundStyles();
+      updateCanvasPagination();
+      markAsDirty();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function removeFooterImage() {
+    currentFooterImageUrl = '';
+    if (footerImageFileInput) footerImageFileInput.value = '';
+    if (footerImageOptions) footerImageOptions.style.display = 'none';
+    applyBackgroundStyles();
+    updateCanvasPagination();
+    markAsDirty();
+  }
+
   // MARK STATUS AS UN-SAVED
   function markAsDirty() {
     isDirty = true;
@@ -1489,8 +1559,8 @@ document.addEventListener('DOMContentLoaded', () => {
     if (footerImageOptions) footerImageOptions.style.display = 'none';
     applyBackgroundStyles();
     bodyEditor.innerHTML = '<p>Digite o conteúdo do novo modelo de documento aqui...</p>';
-    headerEditor.innerHTML = '<div style="text-align: center; color: #00652c; font-weight: bold; font-size: 18px; border-bottom: 2px solid #00652c; padding-bottom: 8px;">LOGOTIPO DA EMPRESA</div>';
-    footerEditor.innerHTML = '<div style="text-align: center; color: #6b7280; font-size: 11px; border-top: 1px solid #e5e7eb; padding-top: 8px;">Página 1 de 1</div>';
+    headerEditor.innerHTML = '<p><br></p>';
+    footerEditor.innerHTML = '<p><br></p>';
     scanDetectedVariables();
     updateCanvasPagination();
     markAsDirty();
@@ -1509,13 +1579,16 @@ document.addEventListener('DOMContentLoaded', () => {
       cleanBodyHtml = `<div class="page-background-layer" data-bg-src="${currentBgUrl}"><img src="${currentBgUrl}" alt="Background" /></div>` + cleanBodyHtml;
     }
 
+    const headerTextContent = headerEditor.innerText ? headerEditor.innerText.trim() : '';
+    const footerTextContent = footerEditor.innerText ? footerEditor.innerText.trim() : '';
+
     const payload = {
       id: currentTemplateId,
       name: title,
       description: `Template criado via editor Superdoc em ${new Date().toLocaleDateString('pt-BR')}`,
       html: cleanBodyHtml,
-      headerHtml: headerSection.style.display !== 'none' ? headerEditor.innerHTML : '',
-      footerHtml: footerSection.style.display !== 'none' ? footerEditor.innerHTML : '',
+      headerHtml: (headerSection.style.display !== 'none' && headerTextContent && !headerTextContent.includes('LOGOTIPO DA EMPRESA')) ? headerEditor.innerHTML : '',
+      footerHtml: (footerSection.style.display !== 'none' && footerTextContent) ? footerEditor.innerHTML : '',
       headerImageUrl: currentHeaderImageUrl,
       headerImageWidth: headerImageWidthInput ? headerImageWidthInput.value : '100%',
       headerImageHeight: headerImageHeightInput ? headerImageHeightInput.value : '100',
