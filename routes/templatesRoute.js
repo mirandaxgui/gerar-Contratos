@@ -166,7 +166,7 @@ router.delete('/:id', async (req, res) => {
 router.post('/:id/gerar', async (req, res) => {
   try {
     const { id } = req.params;
-    const { campos, format = 'html', retornaPdf = false, bgUrl, headerImageUrl, headerImageWidth, headerImageHeight, headerImageAlign, headerImageFit, footerImageUrl, footerImageWidth, footerImageHeight, footerImageAlign, footerImageFit, bgSize, bgOpacity, bgPaddingTop, bgMarginTop, bgMarginLeft, bgMarginRight, bgMarginSide } = req.body || {};
+    const { campos, format = 'html', retornaPdf = false, showPageNumbers, bgUrl, headerImageUrl, headerImageWidth, headerImageHeight, headerImageAlign, headerImageFit, footerImageUrl, footerImageWidth, footerImageHeight, footerImageAlign, footerImageFit, bgSize, bgOpacity, bgPaddingTop, bgMarginTop, bgMarginLeft, bgMarginRight, bgMarginSide } = req.body || {};
     
     console.log(`⚡ [API /templates/${id}/gerar] Solicitação de geração recebida! (retornaPdf=${retornaPdf || req.query.download === 'true'})`);
 

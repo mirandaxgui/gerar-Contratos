@@ -1794,7 +1794,7 @@ document.addEventListener('DOMContentLoaded', () => {
       tempDiv.innerHTML = unwrappedHtml;
     }
 
-    tempDiv.querySelectorAll('.canvas-page-bg, .canvas-page-footer, .canvas-header-img, .page-background-layer').forEach(el => el.remove());
+    tempDiv.querySelectorAll('.canvas-page-bg, .canvas-page-footer, .canvas-header-img, .canvas-footer-img, .page-background-layer').forEach(el => el.remove());
 
     return tempDiv.innerHTML;
   }
@@ -1842,7 +1842,16 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
       }
 
-      bodyEditor.innerHTML = singlePageHeaderHtml + cleanHtml;
+      let singlePageFooterHtml = '';
+      if (currentFooterImageUrl) {
+        singlePageFooterHtml = `
+          <div class="canvas-footer-img" style="${isFooterFullBleed ? 'position: absolute; bottom: 0; left: 0; width: 100%; z-index: 2; padding: 0; margin: 0;' : 'position: relative; z-index: 1; padding: 0 15mm 15px 15mm; width: 100%; margin-top: 20px;'}">
+            <img src="${currentFooterImageUrl}" style="width: ${footerWidth}; max-height: ${footerHeight}; height: auto; object-fit: ${footerFit}; display: block; margin: ${isFooterFullBleed ? '0' : footerAlignMargin};" />
+          </div>
+        `;
+      }
+
+      bodyEditor.innerHTML = singlePageHeaderHtml + cleanHtml + singlePageFooterHtml;
       
       if (bodySection) {
         bodySection.style.paddingTop = `${paddingTop}px`;
