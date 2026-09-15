@@ -44,13 +44,13 @@ export async function criarEnvelope(nomeEmpresa, deadline_at) {
     }
 }
 
-export async function enviarDocumentoPDF(envelopeId, base64PDF, nomeEmpresa) {
+export async function enviarDocumentoPDF(envelopeId, base64PDF, cardId) {
     try {
         const payload = {
             data: {
                 type: 'documents',
                 attributes: {
-                    filename: `CONTRATO_${nomeEmpresa.replace(/[\/\\:*?"<>|]/g, '-')}.pdf`,
+                    filename: `proposta_${cardId.replace(/[\/\\:*?"<>|]/g, '-')}.pdf`,
                     content_base64: base64PDF
                 }
             }
@@ -302,14 +302,16 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
 
         const base64PDF = `data:application/pdf;base64,${Buffer.from(pdfBuffer).toString('base64')}`;
 
-        const documentoId = await enviarDocumentoPDF(envelopeId, base64PDF, nomeEmpresa);
+        const cardIdFinal = dados.pipefyCardId || dados.idCard || null;
+
+
+        const documentoId = await enviarDocumentoPDF(envelopeId, base64PDF, cardIdFinal);
 
         const signersIds = await criarSignatarios(envelopeId, dados.vendedorSigner, dados.clienteSigner, dados.witnessSigner);
         await criarRequisitos(envelopeId, documentoId, signersIds, dados.roleVendedorSigner);
         await atualizarEnvelope(envelopeId, deadlineFormatado);
         await enviarNotificacao(envelopeId);
 
-        const cardIdFinal = dados.pipefyCardId || dados.idCard || null;
         const statusFieldIdFinal = dados.pipefyStatusFieldId || "status_do_contrato_clicksign";
         const documentFieldIdFinal = dados.pipefyDocumentFieldId || "contrato_assinado";
 
