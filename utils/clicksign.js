@@ -85,7 +85,7 @@ export async function criarSignatarios(envelopeId, vendedorSigner, clienteSigner
     try {
         const fabricioSigner = {
             name: 'Fabricio Devechi',
-            email: 'fabricio.devechi@demaisaude.com'
+            email: 'guilherme.miranda@demaisaude.com'
         };
 
         // Checando se witnessSigner existe antes de adicioná-lo ao array
