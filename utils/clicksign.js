@@ -1,3 +1,6 @@
+import { supabase } from './supabaseClient.js';
+import { atualizarCampoCardPipefy, handleErrorPipefy } from './pipefyUpload.js';
+
 const ACCESS_TOKEN = process.env.CLICKSIGN_ACCESS_TOKEN;
 const BASE_URL = 'https://app.clicksign.com/api/v3';
 
@@ -144,13 +147,13 @@ async function criarRequisitos(envelopeId, documentoId, signersIds, roleVendedor
     console.log("🔍 Criando requisitos para signatários:", { envelopeId, documentoId, signersIds, roleVendedorSigner });
     try {
         let vendedorId, clienteId, witnessId, fabricioId;
-        
+
         // Verifique o número de signatários antes de desestruturar os IDs
         if (signersIds.length === 3) {
-           [vendedorId, clienteId, fabricioId] = signersIds; 
+            [vendedorId, clienteId, fabricioId] = signersIds;
         }
         if (signersIds.length > 3) {
-           [vendedorId, clienteId, fabricioId, witnessId] = signersIds; 
+            [vendedorId, clienteId, fabricioId, witnessId] = signersIds;
         }
 
         let requisitos = [];
@@ -294,7 +297,7 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
         deadline_at.setDate(0);
         const deadlineFormatado = deadline_at.toISOString().slice(0, 19) + ".000-03:00";
 
-        const nomeEmpresa = dados.campos.nomeCredenciada || dados.campos.nomeEmpresa || nomeEmpresa;
+        const nomeEmpresa = dados.campos?.nomeCredenciada || dados.campos?.nomeEmpresa || "Empresa";
         const envelopeId = await criarEnvelope(nomeEmpresa, deadlineFormatado);
 
         const base64PDF = `data:application/pdf;base64,${Buffer.from(pdfBuffer).toString('base64')}`;
@@ -306,10 +309,51 @@ export async function enviarParaClicksign(dados, pdfBuffer) {
         await atualizarEnvelope(envelopeId, deadlineFormatado);
         await enviarNotificacao(envelopeId);
 
-        return { success: true, envelopeId, documentoId };
+        const cardIdFinal = dados.pipefyCardId || dados.idCard || null;
+        const statusFieldIdFinal = dados.pipefyStatusFieldId || "status_do_contrato_clicksign";
+        const documentFieldIdFinal = dados.pipefyDocumentFieldId || "contrato_assinado";
+
+        // Gravar no Supabase DB e atualizar Pipefy
+        if (supabase) {
+            console.log(`💾 Registrando envelope ${envelopeId} no Supabase DB (Card Pipefy: ${cardIdFinal || "N/A"})...`);
+            const { error: dbError } = await supabase
+                .from("contratos_clicksign_integracao")
+                .insert({
+                    pipefy_card_id: cardIdFinal ? String(cardIdFinal) : null,
+                    clicksign_envelope_id: envelopeId,
+                    clicksign_document_id: documentoId,
+                    pipefy_status_field_id: statusFieldIdFinal,
+                    pipefy_document_field_id: documentFieldIdFinal,
+                    status: "running",
+                    metadata: { templateId: dados.modelo || dados.templateId, campos: dados.campos },
+                });
+
+            if (dbError) {
+                console.error("❌ Erro ao salvar registro no Supabase DB:", dbError);
+            } else {
+                console.log("✅ Registro salvo com sucesso em contratos_clicksign_integracao.");
+            }
+
+            if (cardIdFinal) {
+                console.log(`📡 Atualizando status no Pipefy (Card: ${cardIdFinal}) para 'Em Assinatura'...`);
+                await atualizarCampoCardPipefy(String(cardIdFinal), statusFieldIdFinal, "Em Assinatura");
+            }
+        }
+
+        return {
+            success: true,
+            envelopeId,
+            documentId: documentoId,
+            pipefyCardId: cardIdFinal ?? null,
+            pipefyStatusFieldId: statusFieldIdFinal,
+            pipefyDocumentFieldId: documentFieldIdFinal,
+        };
 
     } catch (error) {
         console.error("❌ Erro geral em enviarParaClicksign:", error);
-        return { success: false, error: error.message };
+        const erroMsg = error?.stack || error?.message || String(error);
+        const cardIdParam = dados?.pipefyCardId || dados?.idCard || "Card N/A";
+        await handleErrorPipefy(`GERAR CONTRATO PDF, ${cardIdParam}`, erroMsg);
+        return { success: false, error: error?.message || String(error) };
     }
 }

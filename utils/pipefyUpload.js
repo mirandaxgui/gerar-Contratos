@@ -129,3 +129,68 @@ export async function atualizarCampoCardPipefy(cardId, fieldId, pathArquivo) {
   }
 }
 
+/** Cria um card de erro no Pipefy em caso de falha na integração */
+export async function handleErrorPipefy(quem_solicita, mais_detalhes) {
+  try {
+    const PIPEFY_TOKEN = getPipefyToken();
+    if (!PIPEFY_TOKEN) {
+      console.warn("⚠️ PIPEFY_TOKEN ausente. Não foi possível criar card de erro no Pipefy.");
+      return;
+    }
+
+    const detalhesStr = typeof mais_detalhes === "object"
+      ? JSON.stringify(mais_detalhes)
+      : String(mais_detalhes || "");
+
+    const quemSanitizado = (quem_solicita || "").replace(/["\\]/g, '\\"').replace(/\n/g, ' ');
+    const detalhesSanitizados = detalhesStr.replace(/["\\]/g, '\\"').replace(/\n/g, ' ');
+
+    const mutation = `
+      mutation {
+        createCard(input: {
+          pipe_id: "305879331",
+          fields_attributes: [
+            {
+              field_id: "quem_est_solicitando",
+              field_value: "${quemSanitizado}"
+            },
+            {
+              field_id: "mais_detalhes",
+              field_value: "${detalhesSanitizados}"
+            },
+            {
+              field_id: "o_que",
+              field_value: "ERRO"
+            },
+            {
+              field_id: "tipo_de_solicita_o",
+              field_value: "Desenvolvimento"
+            }
+          ]
+        }) {
+          card {
+            id
+          }
+        }
+      }
+    `;
+
+    console.log(`🚨 Criando Card Erro no Pipefy para: ${quem_solicita}`);
+    const response = await axios.post(
+      PIPEFY_API,
+      { query: mutation },
+      {
+        headers: {
+          Authorization: `Bearer ${PIPEFY_TOKEN}`,
+          "Content-Type": "application/json",
+        },
+      }
+    );
+    console.log("📥 Retorno do Card Erro no Pipefy:", JSON.stringify(response.data));
+  } catch (err) {
+    console.error("❌ Erro ao criar card de erro no Pipefy:", err.message);
+  }
+}
+
+
+
