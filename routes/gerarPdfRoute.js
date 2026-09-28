@@ -844,7 +844,7 @@ router.post('/gerar-pdf', async (req, res) => {
     // ✅ Se o payload tiver idCard, envia o PDF também para o Pipefy
     if (dados.idCard && !dados.enviarParaClicksign) {
       try {
-        const nomeArquivo = `proposta_${dados.idCard}.pdf`;
+        const nomeArquivo = dados.fileName || `proposta_${dados.idCard}.pdf`;
         console.log(`📄 Gerando presigned URL para ${nomeArquivo}...`);
 
         // 1️⃣ Cria URL presigned no Pipefy
