@@ -83,22 +83,9 @@ app.use('/api/templates', templatesRoute);
 app.use('/public', express.static(path.join(__dirname, 'public')));
 app.use('/assets', express.static(path.join(__dirname, 'assets')));
 
-// Serve os arquivos estáticos da pasta 'build' do React
-app.use(express.static(path.join(__dirname, 'build')));
-
 // Rota para o Editor Visual de Templates
 app.get(['/templates', '/templates/{*path}'], (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'templates', 'index.html'));
-});
-
-// Rota para servir o formulário React na raiz
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
-});
-
-// Rota para servir o formulário React na raiz
-app.get('/colaboradores', (req, res) => {
-  res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 app.use('/api/v3/', formSolicRoute); // Usando a rota para formSolicitações
